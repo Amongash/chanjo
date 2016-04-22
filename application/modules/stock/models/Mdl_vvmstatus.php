@@ -9,7 +9,7 @@ class Mdl_Vvmstatus extends CI_Model
 	}
 	function get_vvm(){
 		$this->db->select('id,name');
-        $query = $this->db->get('m_vvm_status');
+        $query = $this->db->get('tbl_vvm');
         return $query->result();
 	}
 

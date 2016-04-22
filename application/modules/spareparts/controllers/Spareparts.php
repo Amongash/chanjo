@@ -152,14 +152,14 @@ class Spareparts extends MY_Controller {
      function submit (){
       // Modules::run('secure_tings/ni_met');
       $this->load->library('form_validation');
-      $this->form_validation->set_rules('equipment', 'Equipment Model', 'required|xss_clean');
-      $this->form_validation->set_rules('etype', 'Type of Equipment', 'required|xss_clean');
-      $this->form_validation->set_rules('e_name', 'Type of Part', 'required|xss_clean');
-      $this->form_validation->set_rules('brand', 'Equipment Brand', 'required|xss_clean');
-      $this->form_validation->set_rules('catalogue', 'Equipment Catalogue No.', 'required|xss_clean');
-      $this->form_validation->set_rules('unit_price', 'Equipment Unit Price', 'required|xss_clean');
-      $this->form_validation->set_rules('date_purchased', 'Date of Purchase', 'required|xss_clean');
-      $this->form_validation->set_rules('quantity', 'Quantity', 'required| is_natural_no_zero|xss_clean');
+      $this->form_validation->set_rules('equipment', 'Equipment Model', 'required');
+      $this->form_validation->set_rules('etype', 'Type of Equipment', 'required');
+      $this->form_validation->set_rules('e_name', 'Type of Part', 'required');
+      $this->form_validation->set_rules('brand', 'Equipment Brand', 'required');
+      $this->form_validation->set_rules('catalogue', 'Equipment Catalogue No.', 'required');
+      $this->form_validation->set_rules('unit_price', 'Equipment Unit Price', 'required');
+      $this->form_validation->set_rules('date_purchased', 'Date of Purchase', 'required');
+      $this->form_validation->set_rules('quantity', 'Quantity', 'required| is_natural_no_zero');
 
 
       $update_id = $this->input->post('update_id', TRUE);
@@ -202,7 +202,7 @@ class Spareparts extends MY_Controller {
       function update_save (){
       // Modules::run('secure_tings/ni_met');
       $this->load->library('form_validation');
-      $this->form_validation->set_rules('quantity', 'Quantity', 'required|is_natural_no_zero|xss_clean');
+      $this->form_validation->set_rules('quantity', 'Quantity', 'required|is_natural_no_zero');
 
 
       $update_id = $this->input->post('update_id', TRUE);

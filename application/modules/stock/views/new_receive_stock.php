@@ -17,7 +17,7 @@
   <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
     <div class="form-group">
       <b>S11 #</b>
-      <?php $data=array('name' => 's11','id'=> 's11','class'=>'form-control','value'=>$receipts[0]['S11']); echo form_input($data);?>
+      <?php $data=array('name' => 's11','id'=> 's11','class'=>'form-control','value'=>''); echo form_input($data);?>
     </div>
   </div>
   <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -54,10 +54,10 @@
    <tbody>
 
 <?php foreach ($receipts as $vaccine) { ?>
-     <tr align="center" receive_row="<?php echo $vaccine['ID'] ?>"> 
-     <td><?php echo $vaccine['Vaccine_name']?></td>
-     <?php echo form_hidden('vaccine[]',$vaccine['ID']);?>
-     <td><?php $data=array('name' => 'batch_no[]','id'=>'batch_no','class'=>'batch_no form-control','value'=>$vaccine['batch_no'],'readonly'=>''); echo form_input($data);?></td>
+     <tr align="center" receive_row="<?php echo $vaccine['id'] ?>"> 
+     <td><?php echo $vaccine['vaccine_name']?></td>
+     <?php echo form_hidden('vaccine[]',$vaccine['id']);?>
+     <td><?php $data=array('name' => 'batch_no[]','id'=>'batch_no','class'=>'batch_no form-control','value'=>$vaccine['batch'],'readonly'=>''); echo form_input($data);?></td>
      <td><?php $data=array('name' => 'expiry_date[]','id'=> 'expiry_date','class'=>'form-control expiry_date', 'type'=>'date','value'=>$vaccine['expiry_date'],'readonly'=>''); echo form_input($data);?></td>
      <td><?php $data=array('name' => 'quantity_ordered[]','id'=> 'quantity_ordered','class'=>'quantity_ordered form-control','value'=>$vaccine['amount_ordered'],'readonly'=>''); echo form_input($data);?></td>
      <td><?php $data=array('name' => 'quantity_received[]','id'=> 'quantity_received','class'=>'quantity_received form-control','type'=>'number','min'=>'0','value'=>$vaccine['amount_issued']); echo form_input($data);?></td>

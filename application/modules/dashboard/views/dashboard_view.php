@@ -4,18 +4,25 @@
         <div class="col-lg-12">
 
             <div class="col-md-6">
-                <div id="table" class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped">
+                <div class="table-responsive">
+                <?php 
+                 if (isset($_GET['loc'])) {
+                    $user_level = (int)$_GET['loc']+1;
+                }
+                ?>
+                    <table id="best" class="table table-bordered table-hover table-striped">
                         <thead>
-                            <tr>
-                                <?php if ($user_level == '1' || $user_level == '2') { ?>
+                             <tr>
+                                <?php if ($user_level == '1') { ?>
+                                 <th>
+                                    <h5 class="content-header text-info">3 Best Performing Regions</h5></th>
+                                <?php }elseif($user_level == '2') { ?>
                                 <th>
                                     <h5 class="content-header text-info">3 Best Performing Counties</h5></th>
                                 <?php }elseif($user_level == '3') { ?>
                                 <th>
-                                    <h5 class="content-header text-info">3 Best Performing </br>SubCounties</h5></th>
-
-                                <?php }elseif($user_level == '4') { ?>
+                                    <h5 class="content-header text-info">3 Best Performing </br>Sub-counties</h5></th>
+                                <?php }else { ?>
                                 <th>
                                     <h5 class="content-header text-info">3 Best Performing </br>Facilities</h5></th>
                                 <?php } ?>
@@ -26,21 +33,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($best as $row) {?>
+                         <?php foreach($best as $row) {?>
                             <tr>
-                                <?php if ($user_level == '2') { ?>
-                                <td><?php echo $row['county_name'] ?></td>
+                                <?php if ($user_level == '1') { ?>
+                                <td><a href="<?php echo base_url('dashboard/index?loc=1&name='.$row['name']) ?>"><?php echo $row['name'] ?></a></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
+                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                                <?php }elseif($user_level == '2') { ?>
+                                <td><a href="<?php echo base_url('dashboard/index?loc=2&name='.$row['name']) ?>"><?php echo $row['name'] ?></a></td>
+                                <td><?php echo $row['totaldpt3'] ?></td>
+                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
                                 <?php }elseif($user_level == '3') { ?>
-                                <td><?php echo $row['subcounty_name'] ?></td>
+                                <td><a href="<?php echo base_url('dashboard/index?loc=3&name='.$row['name']) ?>"><?php echo $row['name'] ?></a></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
-                                <?php }elseif($user_level == '4') { ?>
-                                <td><?php echo $row['facility_name'] ?></td>
+                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                                <?php }else{ ?>
+                                <td><?php echo $row['name'] ?></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
-                            </tr><?php } ?> <?php } ?>
+                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                            </tr><?php }} ?>
                         </tbody>
                     </table>
                     <hr>
@@ -53,19 +64,27 @@
             <div class="col-md-6">
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped">
+                
+                    <table id="worst" class="table table-bordered table-hover table-striped">
                         <thead>
+                        
                             <tr>
-                                <?php if ($user_level == '1' || $user_level == '2') { ?>
+                                <?php if ($user_level == '1') { ?>
+                                 <th>
+                                    <h5 class="content-header text-info">3 Poor Performing Regions</h5></th>
+                                <?php }elseif($user_level == '2') { ?>
                                 <th>
                                     <h5 class="content-header text-info">3 Poor Performing Counties</h5></th>
                                 <?php }elseif($user_level == '3') { ?>
                                 <th>
-                                    <h5 class="content-header text-info">3 Poor Performing </br>SubCounties</h5></th>
+                                    <h5 class="content-header text-info">3 Poor Performing </br>Sub-counties</h5></th>
                                 <?php }elseif($user_level == '4') { ?>
                                 <th>
                                     <h5 class="content-header text-info">3 Poor Performing </br>Facilities</h5></th>
-                                <?php } ?>
+                                <?php }else{ ?>
+                                 <th>
+                                    <h5 class="content-header text-info">3 Poor Performing </br>Facilities</h5></th>
+                                 <?php } ?>
                                 <th>
                                     <h5 class="content-header text-info">DPT </br>Coverage %</h5></th>
                                 <th>
@@ -73,21 +92,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php  foreach($worst as $row) {   ?>
+                        <?php  foreach($worst as $row) {   ?>
                             <tr>
-                                <?php if ($user_level == '2') { ?>
-                                <td><?php echo $row['county_name'] ?></td>
+                                <?php if ($user_level == '1') { ?>
+                                <td><a href="<?php echo base_url('dashboard/index?loc=1&name='.$row['name']) ?>"><?php echo $row['name'] ?></a></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
+                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                                <?php }elseif($user_level == '2') { ?>
+                                <td><a href="<?php echo base_url('dashboard/index?loc=2&name='.$row['name']) ?>"><?php echo $row['name'] ?></a></td>
+                                <td><?php echo $row['totaldpt3'] ?></td>
+                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
                                 <?php }elseif($user_level == '3') { ?>
-                                <td><?php echo $row['subcounty_name'] ?></td>
+                                <td><a href="<?php echo base_url('dashboard/index?loc=3&name='.$row['name']) ?>"><?php echo $row['name'] ?></a></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
-                                <?php }elseif($user_level == '4') { ?>
-                                <td><?php echo $row['facility_name'] ?></td>
+                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                                <?php }else{ ?>
+                                <td><?php echo $row['name'] ?></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
-                            </tr><?php } ?> <?php } ?>
+                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                            </tr><?php }} ?>
                         </tbody>
                     </table>
                     <hr>
@@ -143,16 +166,30 @@
     </div>
 </div>
 
+
 <script type="text/javascript">
+    <?php 
+    if ($user_level == '1') {
+        $option = '1';
+    } elseif ($user_level == '2') {
+        $option = '2'; 
+    } elseif ($user_level == '3') {
+        $option = '3';
+    } elseif ($user_level == '4') {
+        $option = '4';
+    }
+    ?>
+    
+  
 </script>
 
-
 <script type="text/javascript">
-    nam ="";
-    $.getJSON("<?php echo base_url(); ?>dashboard/get_chart", function(ty) {
-        $.each(ty, function(name, value) {
-            nam = name;
-            val = value;
+    nam = "";
+    url = "<?php echo base_url('dashboard/get_stock_balance/'.$station);?>";
+    $.getJSON(url, function(data) {
+        $.each(data, function(key, value) {
+            nam = value.name;
+            val = value.y;
         });
         $('#morris-bar-chart').highcharts({
             chart: {
@@ -180,13 +217,13 @@
                 }
             },
             xAxis: {
-                 categories: nam,
+                 categories: console.log(nam),
                 title: {
                     text: 'Vaccine/Diluent'
                 }
             },
             series: [{
-                data: ty,
+                data: data,
                 name: "stock level"
             }]
         });
@@ -196,45 +233,47 @@
 
 
 <script type="text/javascript">
-    nam ="";
-    $.getJSON("<?php echo base_url(); ?>dashboard/months_of_stock", function(mts) {
-        $.each(mts, function(name, value) {
-            nam = name;
-            val = value;
-        });
-        $('#morris-line-chart').highcharts({
+    // nam ="";
+    // url = "<?php echo base_url('dashboard/months_of_stock/'.$station);?>";
+    // $.getJSON(url, function(mts) {
+    //     $.each(mts, function(name, value) {
+    //         nam = name;
+    //         val = value;
+    //     });
+    //     $('#morris-line-chart').highcharts({
 
-            chart: {
-                type: 'column'
-            },
-            credits: {
-                enabled: false
-            },
-            title: {
-                text: "Months of Stock"
-            },
-            yAxis: {
-                title: {
-                    text: 'No of Months'
-                }
-            },
-            xAxis: {
-                 categories: nam,
-                title: {
-                    text: 'Vaccine/Diluent'
-                }
-            },
-            series: [{
-                data: mts,
-                name: "months of stock"
-            }]
-        });
-    });
+    //         chart: {
+    //             type: 'column'
+    //         },
+    //         credits: {
+    //             enabled: false
+    //         },
+    //         title: {
+    //             text: "Months of Stock"
+    //         },
+    //         yAxis: {
+    //             title: {
+    //                 text: 'No of Months'
+    //             }
+    //         },
+    //         xAxis: {
+    //              categories: nam,
+    //             title: {
+    //                 text: 'Vaccine/Diluent'
+    //             }
+    //         },
+    //         series: [{
+    //             data: mts,
+    //             name: "months of stock"
+    //         }]
+    //     });
+    // });
 </script>
 
 <script type="text/javascript">
     nam ="";
-    $.getJSON("<?php echo base_url(); ?>dashboard/get_coverage", function(mim) {
+    url = "<?php echo base_url('dashboard/get_coverage?loc='.$loc.'&name='.$station);?>";
+    $.getJSON(url, function(mim) {
         $.each(mim, function(name, value) {
             nam = name;
             val = value;
@@ -266,7 +305,7 @@
                 x: -20
             },
             xAxis: {
-                categories: nam,
+                categories: console.log(nam),
                 title: {
                     text: 'Months'
                 }

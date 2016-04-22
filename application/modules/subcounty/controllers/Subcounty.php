@@ -109,12 +109,12 @@ function get_data_from_post(){
           function submit (){
             
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('subcounty_name', 'Sub County Name', 'required|xss_clean');
-        $this->form_validation->set_rules('county_id', 'County Name', 'required|xss_clean');
-        $this->form_validation->set_rules('population', 'Estimated Total Population', 'required|xss_clean');
-        $this->form_validation->set_rules('population_one', 'Estimated Population Under One', 'required|xss_clean');
-        $this->form_validation->set_rules('population_women', 'Estimated Population of Women', 'required|xss_clean');
-        $this->form_validation->set_rules('no_facilities', 'Number of Health Facilities', 'required|xss_clean');
+        $this->form_validation->set_rules('subcounty_name', 'Sub County Name', 'required');
+        $this->form_validation->set_rules('county_id', 'County Name', 'required');
+        $this->form_validation->set_rules('population', 'Estimated Total Population', 'required');
+        $this->form_validation->set_rules('population_one', 'Estimated Population Under One', 'required');
+        $this->form_validation->set_rules('population_women', 'Estimated Population of Women', 'required');
+        $this->form_validation->set_rules('no_facilities', 'Number of Health Facilities', 'required');
         $this->form_validation->set_error_delimiters('<p class="red_text semi-bold">'.'*', '</p>');        
         $update_id = $this->input->post('update_id', TRUE);
         if ($this->form_validation->run() == FALSE)

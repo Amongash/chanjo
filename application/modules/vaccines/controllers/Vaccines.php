@@ -34,7 +34,7 @@ class Vaccines extends MY_Controller
 
         $this->pagination->initialize($config);
         // $data['query'] = $this->mdl_region->get('id', $config['per_page'], $this->uri->segment(3));
-        $data['records'] = $this->db->get('m_vaccines', $config['per_page'], $this->uri->segment(3));
+        $data['records'] = $this->db->get('tbl_vaccines', $config['per_page'], $this->uri->segment(3));
         //$this->load->view('display', $data);
         $data['module'] = "vaccines";
         $data['view_file'] = "list_vaccines_view";
@@ -60,7 +60,7 @@ class Vaccines extends MY_Controller
         $this->load->model('mdl_vaccines');
 
         if (!isset($update_id)) {
-            $update_id = $this->input->post('update_id', $id);
+            $update_id = $this->input->post('update_id');
             $data['mavaccine'] = $this->mdl_vaccines->getVaccine();
         }
 
@@ -111,15 +111,14 @@ class Vaccines extends MY_Controller
         $query = $this->get_where($update_id);
 
         foreach ($query->result() as $row) {
-            $data['Vaccine_name'] = $row->Vaccine_name;
-            $data['Doses_required'] = $row->Doses_required;
-            $data['Wastage_factor'] = $row->Wastage_factor;
-            $data['Vaccine_formulation'] = $row->Vaccine_formulation;
-            $data['Mode_administration'] = $row->Mode_administration;
-            $data['Vaccine_presentation'] = $row->Vaccine_presentation;
-            $data['Fridge_compart'] = $row->Fridge_compart;
-            $data['Vaccine_pck_vol'] = $row->Vaccine_pck_vol;
-            $data['Vaccine_price_dose'] = $row->Vaccine_price_dose;
+            $data['Vaccine_name'] = $row->vaccine_name;
+            $data['Doses_required'] = $row->doses_required;
+            $data['Wastage_factor'] = $row->wastage_factor;
+            $data['Vaccine_formulation'] = $row->vaccine_formulation;
+            $data['Mode_administration'] = $row->mode_administration;
+            $data['Vaccine_presentation'] = $row->vaccine_presentation;
+            $data['Vaccine_pck_vol'] = $row->vaccine_pck_vol;
+            $data['Vaccine_price_dose'] = $row->vaccine_price_dose;
 
 
         }
@@ -130,15 +129,15 @@ class Vaccines extends MY_Controller
     {
 
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('Vaccine_name', 'Vaccine Name', 'required|alpha_dash|xss_clean');
-        $this->form_validation->set_rules('Doses_required', 'Doses Required', 'required|integer|xss_clean');
-        $this->form_validation->set_rules('Wastage_factor', 'Wastage Factor', 'required|decimal|xss_clean');
-        $this->form_validation->set_rules('Vaccine_formulation', 'Vaccine Formulation', 'required||xss_clean');
-        $this->form_validation->set_rules('Mode_administration', 'Mode of Administration', 'required||xss_clean');
-        $this->form_validation->set_rules('Vaccine_presentation', 'Vaccine Presentation', 'required||xss_clean');
+        $this->form_validation->set_rules('Vaccine_name', 'Vaccine Name', 'required|alpha_dash');
+        $this->form_validation->set_rules('Doses_required', 'Doses Required', 'required|integer');
+        $this->form_validation->set_rules('Wastage_factor', 'Wastage Factor', 'required|decimal');
+        $this->form_validation->set_rules('Vaccine_formulation', 'Vaccine Formulation', 'required');
+        $this->form_validation->set_rules('Mode_administration', 'Mode of Administration', 'required');
+        $this->form_validation->set_rules('Vaccine_presentation', 'Vaccine Presentation', 'required');
 
-        $this->form_validation->set_rules('Vaccine_pck_vol', 'Vaccine Packed Volume(cm3/dose)', 'required|numeric|xss_clean');
-        $this->form_validation->set_rules('Vaccine_price_dose', 'Vaccine Price($USD/Dose)', 'required|numeric|xss_clean');
+        $this->form_validation->set_rules('Vaccine_pck_vol', 'Vaccine Packed Volume(cm3/dose)', 'required|numeric');
+        $this->form_validation->set_rules('Vaccine_price_dose', 'Vaccine Price($USD/Dose)', 'required|numeric');
         $this->form_validation->set_error_delimiters('<p class="red_text semi-bold">' . '*', '</p>');
         $update_id = $this->input->post('update_id', TRUE);
         if ($this->form_validation->run() == FALSE) {
@@ -167,11 +166,6 @@ class Vaccines extends MY_Controller
         redirect('vaccines');
     }
 
-    /*function getVaccine(){
-    $this->load->model('mdl_vaccines');
-    $query = $this->mdl_vaccines->getVaccine();
-    return $query;
-    }*/
 
     function get($order_by)
     {
@@ -190,7 +184,7 @@ class Vaccines extends MY_Controller
     function get_where($id)
     {
         $this->load->model('mdl_vaccines');
-        $query = $this->mdl_vaccines->get_where($id);
+        $query = $this->mdl_vaccines->get_all($id);
         return $query;
     }
 

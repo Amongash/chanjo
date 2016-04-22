@@ -8,21 +8,21 @@ parent::__construct();
 }
 
 function get_table() {
-    $table = "m_vaccines";
+    $table = "tbl_vaccines";
     return $table;
 }
 
 function getVaccine(){
-		
-        $call_procedure="CALL GetAllVaccines()";
+        
+        $call_procedure="call get_vaccines()";
         $query=$this->db->query($call_procedure);
         $query->next_result();
         return $query->result_array();
     }
     function get_vaccine_details(){
-    	$this->db->select('ID,Vaccine_name, Vaccine_formulation,Mode_administration');
-        $this->db->order_by('Vaccine_name','asc');
-        $query = $this->db->get('m_vaccines');
+        $this->db->select('id,vaccine_name, vaccine_formulation,mode_administration');
+        $this->db->order_by('vaccine_name','asc');
+        $query = $this->db->get('tbl_vaccines');
         return $query->result_array();
     }
     
@@ -42,10 +42,17 @@ $query=$this->db->get($table);
 return $query;
 }
 
+function get_all($id){
+$table = $this->get_table();
+$this->db->where('id', $id);
+$query=$this->db->get($table);
+return $query;
+}
+
 function get_where($id){
 $table = $this->get_table();
-$this->db->select('Vaccine_name');
-$this->db->where('ID', $id);
+$this->db->select('vaccine_name');
+$this->db->where('id', $id);
 $query=$this->db->get($table);
 return $query;
 }

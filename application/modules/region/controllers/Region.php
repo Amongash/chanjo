@@ -4,6 +4,7 @@ class Region extends MY_Controller
 
 function __construct() {
 parent::__construct();
+Modules::run('secure_tings/is_logged_in');
 }
 
 
@@ -33,7 +34,7 @@ public function index()
             
             $this->pagination->initialize($config);
           // $data['query'] = $this->mdl_region->get('id', $config['per_page'], $this->uri->segment(3));
-            $data['records'] = $this->db->get('m_region', $config['per_page'], $this->uri->segment(3));
+            $data['records'] = $this->db->get('tbl_regions', $config['per_page'], $this->uri->segment(3));
            //$this->load->view('display', $data);
             $data['module']="region";
             $data['view_file']="list_region_view";
@@ -99,9 +100,9 @@ function get_data_from_post(){
                foreach ($query->result() as $row){
                    $data['region_name'] = $row->region_name;
                    $data['region_headquarter'] = $row->region_headquarter;
-				   $data['region_manager'] = $row->region_manager;
-				   $data['region_manager_phone'] = $row->region_manager_phone;
-				   $data['region_manager_email'] = $row->region_manager_email;
+        				   $data['region_manager'] = $row->region_manager;
+        				   $data['region_manager_phone'] = $row->region_manager_phone;
+        				   $data['region_manager_email'] = $row->region_manager_email;
 				   
             
                }
@@ -111,11 +112,11 @@ function get_data_from_post(){
           function submit (){
             
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('region_name', 'region Name', 'required|xss_clean');
-        $this->form_validation->set_rules('region_headquarter', 'region Headquarter', 'required|xss_clean');
-    		$this->form_validation->set_rules('region_manager', 'region manager', 'required|xss_clean');
-    		$this->form_validation->set_rules('region_manager_phone', '', 'required|xss_clean');
-    		$this->form_validation->set_rules('region_manager_email', '', 'required|xss_clean');
+        $this->form_validation->set_rules('region_name', 'region Name', 'required');
+        $this->form_validation->set_rules('region_headquarter', 'region Headquarter', 'required');
+    		$this->form_validation->set_rules('region_manager', 'region manager', 'required');
+    		$this->form_validation->set_rules('region_manager_phone', '', 'required');
+    		$this->form_validation->set_rules('region_manager_email', '', 'required');
     		$this->form_validation->set_error_delimiters('<p class="red_text semi-bold">'.'*', '</p>');             
         $update_id = $this->input->post('update_id', TRUE);
         if ($this->form_validation->run() == FALSE)

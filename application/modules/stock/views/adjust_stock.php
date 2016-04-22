@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-lg-12">
         <?php
-        $form_attributes = array('id' => 'physical_stock_fm','class'=>'form-inline','role'=>'form');
+        $form_attributes = array('id' => 'physical_stock_fm','class'=>'','role'=>'form');
         echo form_open('',$form_attributes);?>
 
         <div id="physical_stock">
@@ -11,12 +11,12 @@
 
 
                     <thead>
-                    <th align="center">Vaccine Name</th>
-                    <th >Batch Number</th>
-                    <th >Quantity</th>
-                    <th >Reason</th>
-                    <th >Adjustment</th>
-                    <th >More Info</th>
+                    <th style="width:9%;" >Vaccine/Diluents</th>
+                    <th style="width:9%;" >Batch No.</th>
+                    <th style="width:9%;" >Stock </br>Quantity</th>
+                    <th style="width:15%;">Reason</th>
+                    <th style="width:15%;">Adjustment</th>
+                    <th style="width:15%;">More Info</th>
                    
 
                     </thead>
@@ -27,7 +27,7 @@
                         <td> <select name="vaccine" class="form-control vaccine" id="vaccine" required>
                                 <option value="" selected="selected">Select Vaccine</option>
                                 <?php foreach ($vaccines as $vaccine) {
-                                    echo "<option value='".$vaccine['ID']."'>".$vaccine['Vaccine_name']."</option>";
+                                    echo "<option value='".$vaccine['id']."'>".$vaccine['vaccine_name']."</option>";
                                 }?>
                             </select>
                         </td>
@@ -45,8 +45,8 @@
                                 <option value="Vaccine Damage" >Vaccine Damage</option>
                             </select></td>
                         <td>
-                            <input type="radio" id="adjustment" value="add" name="adjustment" class="form-control" >Add
-                            <input type="radio" id="adjustment" value="ded" name="adjustment" class="form-control" >Deduct
+                           <label class="radio-inline"><input type="radio" name="adjustment" value="add" id="adjustment">Add</label>
+                            <label class="radio-inline"><input type="radio" name="adjustment" value="ded" id="adjustment">Deduct</label>
                         </td>
                         <td><?php  $data = array('name'=> 'comment','id'=> 'comment','rows'=> '2','cols'=> '14','class'=> 'form-control comment'); echo form_textarea($data);?></td>
 						<td hidden><?php $data=array('name' => 'row_id','id'=> 'row_id','class'=>'form-control row_id' , 'hidden'=>'' ); echo form_input($data);?></td>

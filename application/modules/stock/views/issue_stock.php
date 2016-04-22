@@ -35,7 +35,7 @@
             <div class="col-lg-3">
                 <div class="panel-body">
                     <b>Date Issued</b>
-                    <?php $data = array('name' => 'date_issued', 'required' => 'true', 'id' => 'datepicker', 'required' => 'true', 'class' => 'form-control');
+                    <?php $data = array('name' => 'date_issued', 'required' => 'true', 'id' => 'datepicker', 'required' => 'true', 'type' => 'date', 'class' => 'form-control');
                     echo form_input($data); ?>
 
                 </div>
@@ -69,7 +69,7 @@
                             <td><select name="vaccine" class="form-control vaccine" id="vaccine" required="true">
                                     <option value="">Select Vaccine</option>
                                     <?php foreach ($vaccines as $vaccine) {
-                                        echo "<option value='" . $vaccine['ID'] . "'>" . $vaccine['Vaccine_name'] . "</option>";
+                                        echo "<option value='" . $vaccine['id'] . "'>" . $vaccine['vaccine_name'] . "</option>";
                                     } ?>
                                 </select></td>
                             <td><select name="batch_no" class="form-control batch_no" id="batch_no"

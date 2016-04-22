@@ -15,12 +15,12 @@
         <tbody>
 
              <?php foreach ($vaccines as $vaccine) {
-              $ledger_url = base_url().'stock/get_vaccine_ledger/'.$vaccine['ID'];
+              $ledger_url = base_url().'stock/get_vaccine_ledger/'.$vaccine['id'];
               ?>
               <tr>
-                    <td><?php echo $vaccine['Vaccine_name']?></td>
-                    <td><?php echo $vaccine['Vaccine_formulation']?></td>
-                    <td><?php echo $vaccine['Mode_administration']?></td>  
+                    <td><?php echo $vaccine['vaccine_name']?></td>
+                    <td><?php echo $vaccine['vaccine_formulation']?></td>
+                    <td><?php echo $vaccine['mode_administration']?></td>  
                     <td align="center"><a href="<?php echo $ledger_url ?>" class="btn btn-success btn-xs"> view vaccine ledger <i class="fa  fa-book"></i> </a></td>
 
               </tr>

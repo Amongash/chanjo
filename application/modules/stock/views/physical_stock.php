@@ -43,7 +43,7 @@ echo form_open('',$form_attributes);?>
                      <td> <select name="vaccine" class="form-control vaccine" id="vaccine" required>
 		                 <option value="" selected="selected">Select Vaccine</option>
 		                 <?php foreach ($vaccines as $vaccine) { 
-		                     echo "<option value='".$vaccine['ID']."'>".$vaccine['Vaccine_name']."</option>";
+		                     echo "<option value='".$vaccine['id']."'>".$vaccine['vaccine_name']."</option>";
 		                     }?>
                         </select>
                      </td>
@@ -53,6 +53,7 @@ echo form_open('',$form_attributes);?>
              		<td> <?php $data = array('name' => 'date_of_count', 'required' => 'true', 'id' => 'date_of_count', 'required' => 'true', 'class' => 'form-control date_of_count cells'); echo form_input($data); ?></td>
              		<td><?php $data=array('name' => 'available_quantity','id'=> 'available_quantity','class'=>'form-control available_quantity cells','disabled'=>'','required'=>'' ); echo form_input($data);?></td>
              		<td><?php $data=array('name' => 'physical_count','required'=>'true','type'=>'Number', 'min'=>'0','id'=>'physical_count' ,'class'=>'form-control physical_count cells','required'=>'' ); echo form_input($data);?></td>
+					<td hidden><?php $data=array('name' => 'status','id'=> 'status','class'=>'form-control status' , 'hidden'=>'' ); echo form_input($data);?></td>
 					<td hidden><?php $data=array('name' => 'row_id','id'=> 'row_id','class'=>'form-control row_id' , 'hidden'=>'' ); echo form_input($data);?></td>
              		<td class="small">
                                 <a href="#" class="add btn"><span class="label label-success"><i
@@ -135,10 +136,12 @@ echo form_open('',$form_attributes);?>
 			    var physical_count = cloned_object.find(".physical_count");
 				physical_count.attr('id',physical_count_id);
 
+				var status_id = "status" + next_physical_row;
+			    var status = cloned_object.find(".status");
+				status.attr('id',status_id);
 
-				var row_id = "row_id" + next_physical_row;
-			    var id = cloned_object.find(".row_id");
-				id.attr('id',row_id);
+
+
 
                 cloned_object .insertAfter( thisRow ).find( 'input' ).val( '' );
              
@@ -148,8 +151,7 @@ echo form_open('',$form_attributes);?>
              $(this).closest('tr').remove();});
 
 
-           $("#physical_stock_fm").submit(function(e)
-         {
+           $("#physical_stock_fm").submit(function(e){
 			         	e.preventDefault();//STOP default action
 			         	var vaccine_count=0;
 			         	$.each($(".vaccine"), function(i, v) {
@@ -165,9 +167,9 @@ echo form_open('',$form_attributes);?>
 		   var count_date = retrieveFormValues_Array('date_of_count');
 		   var available_quantity = retrieveFormValues_Array('available_quantity');
 		   var physical_count = retrieveFormValues_Array('physical_count');
-		   var id = retrieveFormValues_Array('row_id');
+		 
 
-
+		    var dat = new Array();
 
 		   	for(var i = 0; i < vaccine_count; i++) {
 		   		var get_vaccine=vaccines[i];
@@ -176,13 +178,27 @@ echo form_open('',$form_attributes);?>
 		   		var get_date=count_date[i];
 		   		var get_quantity=available_quantity[i];
 				var get_count=physical_count[i];
-				var get_id=id[i];
+
+
+				 data = {
+                    "vaccine_id": get_vaccine,
+                    "batch_no": get_batch,
+                    "date_of_count": get_date,
+                    "available_quantity": get_quantity,
+                    "physical_count": get_count,
+                    "expiry_date": get_expiry
+ 		            };
+                dat.push(data);
+            }
+            batch = JSON.stringify(dat);
 
 					    $.ajax(
 					    {
 					        url : formURL,
 					        type: "POST",
-					        data : {"vaccine":get_vaccine,"batch_no":get_batch,"expiry_date":get_expiry,"date_of_count":get_date,"available_quantity":get_quantity,"physical_count":get_count,"id":get_id},
+					        data : {
+					        	"batch":batch
+					       		},
 					       
 					     success:function(data, textStatus, jqXHR) 
 					        {
@@ -194,7 +210,6 @@ echo form_open('',$form_attributes);?>
 					            //if fails      
 					        }
 					    });
-		 }
 		   // e.unbind(); //unbind. to stop multiple form submit.
            });
 
@@ -227,6 +242,7 @@ echo form_open('',$form_attributes);?>
 					    	stock_row.closest("tr").find(".batch_no ").append("<option value=''>Select batch </option> ");
 				    $.each(data,function(key,value){
 				    		stock_row.closest("tr").find(".batch_no").append("<option value='"+value.batch_number+"'>"+value.batch_number+"</option> ");
+				    		stock_row.closest("tr").find(".status").append("<option value='"+value.status+"'>"+value.status+"</option> ");
 			    		
 			    	});
 			    });

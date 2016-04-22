@@ -36,15 +36,15 @@
         <tbody>
         <?php $option=2 ; ?>
         <?php foreach ($orders as $order) { 
-         $ledger_url = base_url().'order/view_orders/'.$order['order_by'].'/'.$order['date_created'].'/'.$option.'/'.$order['order_id'].'/'.$order['status_name'];
-          $forward_url = base_url().'order/save_forwarded_order/'.$order['order_id'];
+         $ledger_url = base_url().'order/view_orders/'.$order['user_id'].'/'.$order['transaction_date'].'/'.$option.'/'.$order['id'].'/'.$order['status'];
+          $forward_url = base_url().'order/save_forwarded_order/'.$order['id'];
         
          ?>
         
               <tr>
-              <td><?php  echo $order['order_id']?></td>
-              <td><?php echo $order['station_id']?></td>
-              <td><?php echo $order['date_created']?></td>
+              <td><?php  echo $order['id']?></td>
+              <td><?php echo $order['station']?></td>
+              <td><?php echo $order['transaction_date']?></td>
           <?php
           if ($user_object['user_level']=='3') {?>
               <td>

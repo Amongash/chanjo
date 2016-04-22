@@ -37,14 +37,14 @@
                                 <tbody>
                                 <?php $option=1 ; ?>
                                 <?php foreach ($submitted_orders as $order) {
-                                $ledger_url = base_url().'order/view_orders/'.$order['order_by'].'/'.$order['date_created'].'/'.$option.'/'.$order['order_id'].'/'.$order['status_name'];
+                                $ledger_url = base_url().'order/view_orders/'.$order['user_id'].'/'.$order['transaction_date'].'/'.$option.'/'.$order['id'].'/'.$order['status'];
 
                                 ?>
 
                                 <tr>
-                                    <td><?php  echo $order['order_id']?></td>
-                                    <td><?php echo $order['date_created']?></td>
-                                    <td style="color:red"><?php echo $order['status_name']?></td>
+                                    <td><?php  echo $order['id']?></td>
+                                    <td><?php echo $order['transaction_date']?></td>
+                                    <td style="color:red"><?php echo $order['status']?></td>
                                     <td><a href="<?php  echo $ledger_url ?>" class="btn btn-danger btn-xs">View <i class="fa fa-eye"></i></a></td>
                                     <?php }?>
                                 </tr>

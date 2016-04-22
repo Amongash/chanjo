@@ -1,6 +1,5 @@
-<div class="row" xmlns="http://www.w3.org/1999/html">
-    <div class="row">
-        <div class="col-sm-3 col-sm-6">
+<div class="row">
+    <div class="col-sm-3 col-sm-6">
             <div class="information green_info">
                 <div class="information_inner">
                     <div class="info green_symbols"><i class="fa fa-cubes icon"></i></div>
@@ -10,7 +9,8 @@
                 </div>
             </div>
         </div>
-
+    </div>
+ <div class="row">
         <div class="col-lg-12">
             <div class="table-responsive">
                 <div class="well well-sm"><b>Stocks Ledger</b></div>

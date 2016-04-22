@@ -61,11 +61,11 @@ class Stock extends MY_Controller
         $this->load->library('table');
         $data['vaccines'] = $this->mdl_vaccines->getVaccine();
         $info['user_object'] = $this->get_user_object();
-        $station = $info['user_object']['user_level'];
-        $station_id = $info['user_object']['user_statiton'];
+        $level = $info['user_object']['user_level'];
+        $station = $info['user_object']['user_statiton'];
         
         $config['base_url'] = base_url().'/stock/list_issue_stock';
-        $config['total_rows'] =$this->mdl_order->count_placed_orders($station, $station_id);
+        $config['total_rows'] =$this->mdl_order->count_placed_orders($station, $level);
         $config['per_page'] = 10;
         $config['num_links'] = 4;
         $config["uri_segment"] = 3;
@@ -86,12 +86,12 @@ class Stock extends MY_Controller
 
         $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
         
-        $data['orders'] = $this->mdl_order->get_placed_orders($station, $station_id, $config['per_page'],$page);
+        $data['orders'] = $this->mdl_order->get_placed_orders($station,$level);
         
-        $data['all_orders'] = $this->mdl_order->get_all_placed_orders($station, $station_id, $config['per_page'],$page);
+        $data['all_orders'] = $this->mdl_order->get_all_placed_orders($station,$level);
         $this->pagination->initialize($config);
 
-        $data['submitted_orders'] = $this->mdl_order->get_submitted_orders($station, $station_id);
+        $data['submitted_orders'] = $this->mdl_order->get_submitted_orders($station,$level);
         $data['section'] = "Manage Stock";
         $data['subtitle'] = "Issue Stocks";
         $data['page_title'] = "Issue Stocks";
@@ -150,25 +150,24 @@ class Stock extends MY_Controller
         $this->load->model('vaccines/mdl_vaccines');
         $this->load->library('pagination');
         $this->load->library('table');
-        $info['user_object'] = $this->get_user_object();
-        $user_level = $info['user_object']['user_level'];
+        $data['user_object'] = $this->get_user_object();
+        $station = $data['user_object']['user_statiton'];
+        $level = $data['user_object']['user_level'];
         
-        $station_id = $info['user_object']['statiton_above'];
-        if ($user_level == 1) {
+        $station_above = $data['user_object']['statiton_above'];
+        if ($level == 1) {
             /*
             user_level = national
             retrieve all regions
             */
             $data['location'] = "National Arrival";
         } else {
-            $data['location'] = $station_id;
+            $data['location'] = $station_above;
         }
-        $station = $info['user_object']['user_level'];
-        $station_id = $info['user_object']['user_statiton'];
         $data['vaccines'] = $this->mdl_vaccines->getVaccine();
         
         $config['base_url'] = base_url().'/stock/list_receive_stock';
-        $config['total_rows'] =$this->mdl_order->count_placed_orders($station, $station_id);
+        $config['total_rows'] =$this->mdl_order->count_placed_orders($station, $level);
         $config['per_page'] = 10;
         $config['num_links'] = 4;
         $config["uri_segment"] = 3;
@@ -189,22 +188,21 @@ class Stock extends MY_Controller
 
         $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
         
-        $data['orders'] = $this->mdl_order->get_placed_orders($station, $station_id, $config['per_page'],$page);
+        $data['orders'] =  $this->mdl_order->get_placed_orders($station, $level);
         
-        $data['all_orders'] = $this->mdl_order->get_all_placed_orders($station, $station_id, $config['per_page'],$page);
+        $data['all_orders'] = $this->mdl_order->get_all_placed_orders($station, $level);
         $this->pagination->initialize($config);
 
-        $data['submitted_orders'] = $this->mdl_order->get_submitted_orders($station, $station_id);
+        $data['submitted_orders'] = $this->mdl_order->get_submitted_orders($station, $level);
         $data['section'] = "Manage Stock";
         $data['subtitle'] = "Receive Stocks";
         $data['page_title'] = "Receive Stocks";
         $data['module'] = "stock";
-        if ($station == '1') {
+        if ($level == '1') {
             $data['view_file'] = "receive_stock";
         } else {
             $data['view_file'] = "list_receive_stock";
         }
-        $data['user_object'] = $this->get_user_object();
         $data['main_title'] = $this->get_title();
         //breadcrumbs
         $this->load->library('make_bread');
@@ -387,21 +385,21 @@ class Stock extends MY_Controller
         $query = $this->mdl_stock->get_all_physical_counts($id, $station_id);
         $data = array();
         $no = $_POST['start'];
-        foreach ($query->result() as $bal) {
+        foreach ($query as $bal) {
             $no++;
             $row = array();
-            $row[] = date("Y-m-d", strtotime($bal->date_of_count));
-            $row[] = $bal->Vaccine_name;
-            $row[] = $bal->batch_number;
-            $row[] = $bal->expiry_date;
-            $row[] = $bal->stock_balance;
+            $row[] = date("Y-m-d", strtotime($bal['date_of_count']));
+            $row[] = $bal['vaccine_name'];
+            $row[] = $bal['batch'];
+            $row[] = $bal['expiry_date'];
+            $row[] = $bal['stock_balance'];
             $data[] = $row;
 
         }
         $output = array(
             "draw" => $_POST['draw'],
-            "recordsTotal" => $this->mdl_stock->get_all_physical_counts($id, $station_id)->num_rows(),
-            "recordsFiltered" => $this->mdl_stock->get_all_physical_counts($id, $station_id)->num_rows(),
+            
+
             "data" => $data,
         );
 
@@ -423,9 +421,9 @@ class Stock extends MY_Controller
             $no++;
             $row = array();
 
-            $row[] = $bal['batch_number'];
+            $row[] = $bal['batch'];
             $row[] = $bal['expiry_date'];
-            $row[] = $bal['stock_balance'];
+            $row[] = $bal['balance'];
             $data[] = $row;
 
         }
@@ -471,7 +469,7 @@ class Stock extends MY_Controller
             $row[] = $bal->amount_received;
             $row[] = $bal->batch_no;
             $row[] = $bal->expiry_date;
-            $row[] =  '<a class="btn btn-sm btn-primary" onclick="remove_duplicate('.$bal->id.')" title="Remove"> Remove</a>';
+            $row[] =  '<a class="btn btn-sm btn-primary" onclick="remove_duplicate()" title="Remove"> Remove</a>';
     
             $data[] = $row;
 
@@ -545,7 +543,7 @@ class Stock extends MY_Controller
             echo (0);
         }else {
             foreach ($query as $val) {
-                echo $val->stock_balance;
+                echo $val['stock_balance'];
             }
              
         }
@@ -574,7 +572,7 @@ class Stock extends MY_Controller
         $selected_vaccine = $this->input->post('selected_vaccine');
         $this->load->model('stock/mdl_stock');
         $data = $this->mdl_stock->get_batches($selected_vaccine, $station_id);
-        /* echo json_encode($selected_vaccine);*/
+        
         echo json_encode($data);
 
     }
@@ -607,11 +605,11 @@ class Stock extends MY_Controller
 
                 foreach ($query as $row) {
                     //var_dump($query);
-                    $data['vaccine_id'] = $row->vaccine_id;
-                    $data['batch_no'] = $row->batch_number;
+                    $data['vaccine_id'] = $row['vaccine_id'];
+                    $data['batch_no'] = $row['batch'];
                     // $data['expiry_date'] = $row->expiry_date;
                     // $data['vvm_status'] = $row->name;
-                    $data_array['issue_row' . $row->vaccine_id][] = $data;
+                    $data_array['issue_row' . $row['vaccine_id']][] = $data;
 
                 }
 
@@ -620,7 +618,7 @@ class Stock extends MY_Controller
         } else{
             echo json_encode($data_array);
         }
-        // $this->output->enable_profiler(TRUE);
+         // $this->output->enable_profiler(TRUE);
     }
 
 
@@ -759,28 +757,46 @@ class Stock extends MY_Controller
     function save_physical_count()
     {
         Modules::run('secure_tings/is_logged_in');
-        $data['user_object'] = $this->get_user_object();
-        $station_name = $data['user_object']['user_statiton'];
-        $user_id = $data['user_object']['user_id'];
-        $user_level = $data['user_object']['user_level'];
-        $save_data = array(
-            'vaccine_id' => $this->input->post('vaccine'),
-            'batch_number' => strtoupper($this->input->post('batch_no')),
-            'expiry_date' => $this->input->post('expiry_date'),
-            'available_quantity' => $this->input->post('available_quantity'),
-            'date_of_count' => $this->input->post('date_of_count'),
-            'date_recorded' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'))),
-            'physical_count' => $this->input->post('physical_count'),
-            'discrepancy' => $this->input->post('available_quantity')-$this->input->post('physical_count'),
-            'station_id' => $station_name,
-            'user_id' => $user_id,
-            'station_level' => $user_level,
-            'receive_id' => $this->input->post('id')
+        $info['user_object'] = $this->get_user_object();
 
-        );
-        $this->load->model('stock/mdl_stock');
-        $this->mdl_stock->save_physical_count($save_data);
+
+        $date_recorded = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')));
+        $user_id = $info['user_object']['user_id'];
+        $level = $info['user_object']['user_level'];
+        $station= $info['user_object']['user_statiton'];
+        $type = "3";
+
+        $batch = stripcslashes($_POST['batch']);
+        $batch = json_decode($batch, TRUE);
+
+        $array = array();
+        $data_array = array();
+        foreach ($batch as $item) {
+
+            $array['transaction_date'] = $item['date_of_count'];
+            $array['type'] = $type;
+            $array['timestamp'] = $date_recorded;
+            $array['user_id'] = $user_id;
+            $array['level'] = $level;
+            $array['station'] = $station;
+
+            $this->db->insert('tbl_transaction', $array);
+            $request_id = $this->db->insert_id();
+            
+           
+            $data_array['vaccine_id'] = $item['vaccine_id'];
+            $data_array['batch'] = $item['batch_no'];
+            $data_array['transaction_quantity'] = $item['physical_count'];
+            $data_array['current_quantity'] = $item['available_quantity'];
+            $data_array['expiry_date'] = $item['expiry_date'];
+            $data_array['transaction_id'] = $request_id;
+
+            $this->db->insert('tbl_transaction_items', $data_array);
+            echo json_encode($data_array);
+            }
+            
         $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Stock physical count updated successfully!</div>');
+        redirect('stock/list_inventory', 'refresh');
 
     }
 
@@ -795,7 +811,7 @@ class Stock extends MY_Controller
         $this->load->model('vaccines/mdl_vaccines');
         $data['vaccines'] = $this->mdl_vaccines->getVaccine();
         $this->load->model('mdl_stock');
-        $data['issues'] = $this->mdl_stock->get_order_to_issue($order_id, $station_name);
+        $data['issues'] = $this->mdl_stock->get_order_to_issue($order_id);
         $data['order_infor'] = $this->mdl_stock->get_order_infor($order_id);
         $data['module'] = "stock";
         $data['view_file'] = "new_issue_stock";
@@ -819,29 +835,35 @@ class Stock extends MY_Controller
     {
         //Modules::run('secure_tings/is_logged_in');
         //Issue Stock Information
-        $data2['user_object2'] = $this->get_user_object();
-        $data3['user_object3'] = $this->get_user_object();
+        $data['user_object'] = $this->get_user_object();
 
 
         $order_id = $this->input->post('order');
         $S11 = $this->input->post('s11');
         $date_issued = $this->input->post('date_issued');
-        $date_recorded = $this->input->post('date_recorded');
-        $user_id = $data2['user_object2']['user_id'];
-        $user_level = $data2['user_object2']['user_level'];
-        $station_name = $data3['user_object3']['user_statiton'];
+        $issued_to = $this->input->post('issued_to');
+        $date_recorded = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')));
+        $user_id = $data['user_object']['user_id'];
+        $user_level = $data['user_object']['user_level'];
+        $station_name = $data['user_object']['user_statiton'];
+        $type = "2";
+        $status = "issued";
 
+        $issue_array['request_id'] = $order_id;
+        $issue_array['transaction_voucher'] = $S11;
+        $issue_array['transaction_date'] = $date_issued;
+        $issue_array['to_from'] = $issued_to;
+        $issue_array['type'] = $type;
+        $issue_array['status'] = $status;
+        $issue_array['timestamp'] = $date_recorded;
+        $issue_array['user_id'] = $user_id;
+        $issue_array['level'] = $user_level;
+        $issue_array['station'] = $station_name;
 
-        $issue_array['order_id'] = $order_id;
-        $issue_array['S11'] = $S11;
-        $issue_array['date_issued'] = $date_issued;
-        $issue_array['date_recorded'] = $date_recorded;
-        $issue_array['issued_by_user'] = $user_id;
-        $issue_array['issued_by_station_level'] = $user_level;
-        $issue_array['issued_by_station_id'] = $station_name;
+        $this->db->insert('tbl_transaction', $issue_array);
 
-        $this->db->insert('m_issue_stock', $issue_array);
         $issue_id = $this->db->insert_id();
+        $this->db->query("call set_issued_status('$order_id')");
 
         // Issue Stock Item Information
         $vaccine = $this->input->post('vaccine');
@@ -858,14 +880,13 @@ class Stock extends MY_Controller
 
         foreach ($vaccine as $vaccines) {
             $issue_array[$issue_counter]['vaccine_id'] = $vaccine[$issue_counter];
-            $issue_array[$issue_counter]['batch_no'] = $batch_no[$issue_counter];
+            $issue_array[$issue_counter]['batch'] = $batch_no[$issue_counter];
             $issue_array[$issue_counter]['expiry_date'] = $expiry_date[$issue_counter];
-            $issue_array[$issue_counter]['vvm_status'] = $vvm_status[$issue_counter];
-            $issue_array[$issue_counter]['stock_on_hand'] = $stock_quantity[$issue_counter];
-            $issue_array[$issue_counter]['amount_ordered'] = $amount_ordered[$issue_counter];
-            $issue_array[$issue_counter]['amount_issued'] = $amount_issued[$issue_counter];
+            $issue_array[$issue_counter]['vvm'] = $vvm_status[$issue_counter];
+            $issue_array[$issue_counter]['current_quantity'] = $stock_quantity[$issue_counter];
+            $issue_array[$issue_counter]['transaction_quantity'] = $amount_issued[$issue_counter];
             $issue_array[$issue_counter]['comment'] = $comment[$issue_counter];
-            $issue_array[$issue_counter]['issue_id'] = $issue_id[$issue_counter];
+            $issue_array[$issue_counter]['transaction_id'] = $issue_id[$issue_counter];
 
             $issue_counter++;
         }
@@ -875,9 +896,9 @@ class Stock extends MY_Controller
         foreach ($main_array as $key => $value) {
             foreach ($value as $keyvac => $valuevac) {
                 foreach ($valuevac as $keys => $values) {
-                    if ($keys == "issue_id") {
-                        $temp[$keyvac]['order_id'] = $order_id;
-                        $temp[$keyvac]['issue_id'] = $issue_id;
+                    if ($keys == "transaction_id") {
+                        // $temp[$keyvac]['order_id'] = $order_id;
+                        $temp[$keyvac]['transaction_id'] = $issue_id;
                     } else {
                         $temp[$keyvac][$keys] = $values;
                     }
@@ -890,7 +911,7 @@ class Stock extends MY_Controller
         }
         echo json_encode($temp);
 
-        $this->db->insert_batch('m_issue_stock_item', $temp);
+        $this->db->insert_batch('tbl_transaction_items', $temp);
 
         $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Stocks have been issued successfully</div>');
         redirect('order/list_orders');
@@ -899,30 +920,31 @@ class Stock extends MY_Controller
     function save_issued_stock()
     {
         Modules::run('secure_tings/is_logged_in');
-        $data2['user_object2'] = $this->get_user_object();
-        $data3['user_object3'] = $this->get_user_object();
+        $info['user_object'] = $this->get_user_object();
 
 
         $issued_to = $this->input->post('issued_to');
         $S11 = $this->input->post('s11');
         $date_issued = $this->input->post('date_issued');
-        $date_recorded = $this->input->post('date_recorded');
-        $user_id = $data2['user_object2']['user_id'];
-        $user_level = $data2['user_object2']['user_level'];
-        $station_name = $data3['user_object3']['user_statiton'];
+        $date_recorded = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')));
+        $user_id = $info['user_object']['user_id'];
+        $level = $info['user_object']['user_level'];
+        $station= $info['user_object']['user_statiton'];
+        $type = "2";
+        $status = "issued";
 
+        $issue_array['transaction_date'] = $date_issued;
+        $issue_array['transaction_voucher'] = $S11;
+        $issue_array['to_from'] = $issued_to;
+        $issue_array['type'] = $type;
+        $issue_array['timestamp'] = $date_recorded;
+        $issue_array['user_id'] = $user_id;
+        $issue_array['level'] = $level;
+        $issue_array['station'] = $station;
 
-        //$issue_array['order_id']=$order_id;
-        $issue_array['S11'] = $S11;
-        $issue_array['date_issued'] = $date_issued;
-        $issue_array['issued_to'] = $issued_to;
-        $issue_array['date_recorded'] = $date_recorded;
-        $issue_array['issued_by_user'] = $user_id;
-        $issue_array['issued_by_station_level'] = $user_level;
-        $issue_array['issued_by_station_id'] = $station_name;
+        $this->db->insert('tbl_transaction', $issue_array);
 
-        $this->db->insert('m_issue_stock', $issue_array);
-        $issue_id = $this->db->insert_id();
+        $request_id = $this->db->insert_id();
 
         $batch = stripcslashes($_POST['batch']);
         $batch = json_decode($batch, TRUE);
@@ -932,12 +954,11 @@ class Stock extends MY_Controller
 
         foreach ($batch as $item) {
             $issue_array[$issue_counter]['vaccine_id'] = $item['vaccine_id'];
-            $issue_array[$issue_counter]['batch_no'] = $item['batch_no'];
+            $issue_array[$issue_counter]['batch'] = $item['batch_no'];
             $issue_array[$issue_counter]['expiry_date'] = $item['expiry_date'];
-            $issue_array[$issue_counter]['vvm_status'] = $item['vvm_status'];
-            $issue_array[$issue_counter]['amount_ordered'] = $item['amount_ordered'];
-            $issue_array[$issue_counter]['amount_issued'] = $item['amount_issued'];
-            $issue_array[$issue_counter]['issue_id'] = $issue_id[$issue_counter];
+            $issue_array[$issue_counter]['vvm'] = $item['vvm_status'];
+            $issue_array[$issue_counter]['transaction_quantity'] = $item['amount_issued'];
+            $issue_array[$issue_counter]['transaction_id'] = $request_id[$issue_counter];
 
             $issue_counter++;
         }
@@ -947,8 +968,8 @@ class Stock extends MY_Controller
         foreach ($main_array as $key => $value) {
             foreach ($value as $keyvac => $valuevac) {
                 foreach ($valuevac as $keys => $values) {
-                    if ($keys == "issue_id") {
-                       $temp[$keyvac]['issue_id'] = $issue_id;
+                    if ($keys == "transaction_id") {
+                       $temp[$keyvac]['transaction_id'] = $request_id;
                     } else {
                         $temp[$keyvac][$keys] = $values;
                     }
@@ -959,7 +980,7 @@ class Stock extends MY_Controller
             }
             // echo json_encode($temp);
 
-            $this->db->insert_batch('m_issue_stock_item', $temp);
+            $this->db->insert_batch('tbl_transaction_items', $temp);
 
         }
 
@@ -999,34 +1020,36 @@ class Stock extends MY_Controller
     {
         Modules::run('secure_tings/is_logged_in');
         //Receive Stock Information
-        $data2['user_object2'] = $this->get_user_object();
+        $data['user_object'] = $this->get_user_object();
 
-        $issue_id = $this->input->post('issue_id');
         $order_id = $this->input->post('order_id');
         $S11 = $this->input->post('s11');
         $date_received = $this->input->post('date_received');
-        $date_recorded = $this->input->post('date_recorded');
-        $user_id = $data2['user_object2']['user_id'];
-        $user_level = $data2['user_object2']['user_level'];
-        $station_name = $data2['user_object2']['user_statiton'];
+        $date_recorded = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')));
+        $user_id = $data['user_object']['user_id'];
+        $level = $data['user_object']['user_level'];
+        $station = $data['user_object']['user_statiton'];
+        $type = "1";
+        $status = "received";
 
-        $receive_array['issue_id'] = $issue_id;
-        $receive_array['order_id'] = $order_id;
-        $receive_array['S11'] = $S11;
-        $receive_array['date_received'] = $date_received;
-        $receive_array['date_recorded'] = $date_recorded;
-        $receive_array['received_by_user'] = $user_id;
-        $receive_array['station_level'] = $user_level;
-        $receive_array['station_id'] = $station_name;
+        $receive_array['transaction_voucher'] = $S11;
+        $receive_array['request_id'] = $order_id;
+        $receive_array['transaction_date'] = $date_received;
+        $receive_array['timestamp'] = $date_recorded;
+        $receive_array['type'] = $type;
+        $receive_array['status'] = $status;
+        $receive_array['user_id'] = $user_id;
+        $receive_array['level'] = $level;
+        $receive_array['station'] = $station;
 
-        $this->db->insert('m_receive_stock', $receive_array);
+        $this->db->insert('tbl_transaction', $receive_array);
         $receive_id = $this->db->insert_id();
 
+        $this->db->query("call set_received_status('$order_id')");
         // Receive Stock Item Information
         $vaccine = $this->input->post('vaccine');
         $batch_no = $this->input->post('batch_no');
         $expiry_date = $this->input->post('expiry_date');
-        $amount_ordered = $this->input->post('quantity_ordered');
         $amount_received = $this->input->post('quantity_received');
         $vvm_status = $this->input->post('vvm_status');
         $comment = $this->input->post('comment');
@@ -1036,13 +1059,12 @@ class Stock extends MY_Controller
 
         foreach ($vaccine as $vaccines) {
             $receive_array[$receive_counter]['vaccine_id'] = $vaccine[$receive_counter];
-            $receive_array[$receive_counter]['batch_no'] = $batch_no[$receive_counter];
+            $receive_array[$receive_counter]['batch'] = $batch_no[$receive_counter];
             $receive_array[$receive_counter]['expiry_date'] = $expiry_date[$receive_counter];
-            $receive_array[$receive_counter]['vvm_status'] = $vvm_status[$receive_counter];
-            $receive_array[$receive_counter]['amount_ordered'] = $amount_ordered[$receive_counter];
-            $receive_array[$receive_counter]['amount_received'] = $amount_received[$receive_counter];
-            $receive_array[$receive_counter]['comment'] = $comment[$receive_counter];
-            $receive_array[$receive_counter]['receive_id'] = $receive_id[$receive_counter];
+            $receive_array[$receive_counter]['vvm'] = $vvm_status[$receive_counter];
+            $receive_array[$receive_counter]['transaction_quantity'] = $amount_received[$receive_counter];
+            //$receive_array[$receive_counter]['comment'] = $comment[$receive_counter];
+            $receive_array[$receive_counter]['transaction_id'] = $receive_id[$receive_counter];
 
             $receive_counter++;
         }
@@ -1052,8 +1074,8 @@ class Stock extends MY_Controller
         foreach ($main_array as $key => $value) {
             foreach ($value as $keyvac => $valuevac) {
                 foreach ($valuevac as $keys => $values) {
-                    if ($keys == "receive_id") {
-                        $temp[$keyvac]['receive_id'] = $receive_id;
+                    if ($keys == "transaction_id") {
+                        $temp[$keyvac]['transaction_id'] = $receive_id;
                     } else {
                         $temp[$keyvac][$keys] = $values;
                     }
@@ -1064,7 +1086,7 @@ class Stock extends MY_Controller
 
         }
 
-        $this->db->insert_batch('m_receive_stock_item', $temp);
+        $this->db->insert_batch('tbl_transaction_items', $temp);
 
         $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Received stocks have been saved successfully</div>');
         redirect('order/list_orders', 'refresh');
@@ -1078,22 +1100,26 @@ class Stock extends MY_Controller
 
         $S11 = $this->input->post('s11');
         $date_received = $this->input->post('date_received');
-        $date_recorded = $this->input->post('date_recorded');
+        $date_recorded = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')));
         $received_from = $this->input->post('received_from');
+        $type = "1";
+        $status = "received";
         $user_id = $data['user_object']['user_id'];
-        $user_level = $data['user_object']['user_level'];
-        $station_name = $data['user_object']['user_statiton'];
+        $level = $data['user_object']['user_level'];
+        $station = $data['user_object']['user_statiton'];
 
-//        $receive_array['order_id']=$order_id;
-        $receive_array['S11'] = $S11;
-        $receive_array['date_received'] = $date_received;
-        $receive_array['date_recorded'] = $date_recorded;
-        $receive_array['received_from'] = $received_from;
-        $receive_array['received_by_user'] = $user_id;
-        $receive_array['station_level'] = $user_level;
-        $receive_array['station_id'] = $station_name;
+        $receive_array['transaction_voucher'] = $S11;
+        $receive_array['transaction_date'] = $date_received;
+        $receive_array['timestamp'] = $date_recorded;
+        $receive_array['type'] = $type;
+        $receive_array['status'] = $status;
+        $receive_array['to_from'] = $received_from;
+        $receive_array['user_id'] = $user_id;
+        $receive_array['level'] = $level;
+        $receive_array['station'] = $station;
 
-        $this->db->insert('m_receive_stock', $receive_array);
+        $this->db->insert('tbl_transaction', $receive_array);
+
         $receive_id = $this->db->insert_id();
 
         $batch = stripcslashes($_POST['batch']);
@@ -1104,12 +1130,12 @@ class Stock extends MY_Controller
 
         foreach ($batch as $item) {
             $receive_array[$receive_counter]['vaccine_id'] = $item['vaccine_id'];
-            $receive_array[$receive_counter]['batch_no'] = $item['batch_no'];
+            $receive_array[$receive_counter]['batch'] = $item['batch_no'];
             $receive_array[$receive_counter]['expiry_date'] = $item['expiry_date'];
-            $receive_array[$receive_counter]['vvm_status'] = $item['vvm_status'];
+            $receive_array[$receive_counter]['vvm'] = $item['vvm_status'];
             $receive_array[$receive_counter]['comment'] = $item['comment'];
-            $receive_array[$receive_counter]['amount_received'] = $item['amount_received'];
-            $receive_array[$receive_counter]['receive_id'] = $receive_id[$receive_counter];
+            $receive_array[$receive_counter]['transaction_quantity'] = $item['amount_received'];
+            $receive_array[$receive_counter]['transaction_id'] = $receive_id[$receive_counter];
 
             $receive_counter++;
         }
@@ -1119,15 +1145,15 @@ class Stock extends MY_Controller
         foreach ($main_array as $key => $value) {
             foreach ($value as $keyvac => $valuevac) {
                 foreach ($valuevac as $keys => $values) {
-                    if ($keys == "receive_id") {
-                        $temp[$keyvac]['receive_id'] = $receive_id;
+                    if ($keys == "transaction_id") {
+                        $temp[$keyvac]['transaction_id'] = $receive_id;
                     } else {
                         $temp[$keyvac][$keys] = $values;
                     }
                 }
 
             }
-            $this->db->insert_batch('m_receive_stock_item', $temp);
+            $this->db->insert_batch('tbl_transaction_items', $temp);
 
         }
 

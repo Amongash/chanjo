@@ -141,9 +141,9 @@ function get_data_from_post(){
           function submit (){
             
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('county_name', 'County Name', 'required|xss_clean');
-        $this->form_validation->set_rules('county_headquarter', 'County Headquarter', 'required|xss_clean');
-        $this->form_validation->set_rules('region_id', 'Region', 'required|xss_clean');
+        $this->form_validation->set_rules('county_name', 'County Name', 'required');
+        $this->form_validation->set_rules('county_headquarter', 'County Headquarter', 'required');
+        $this->form_validation->set_rules('region_id', 'Region', 'required');
         $this->form_validation->set_error_delimiters('<p class="red_text semi-bold">'.'*', '</p>');
                 
         $update_id = $this->input->post('update_id', TRUE);

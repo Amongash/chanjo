@@ -38,17 +38,14 @@ class Order extends MY_Controller
         $this->load->model('vaccines/mdl_vaccines');
         $this->load->model('order/mdl_order');
         $data['vaccines'] = $this->mdl_vaccines->getVaccine();
-        $data2['user_object2'] = $this->get_user_object();
-        $data3['user_object3'] = $this->get_user_object();
-        $station_level = $data2['user_object2']['user_level'];
-        $station_id = $data3['user_object3']['user_statiton'];
-        $data['order_vaccines'] = $this->mdl_order->calc_orders($station_id, $station_level);
-        $data['order_details'] = $this->mdl_order->get_last_order_details($station_id);
+        $info['user_object'] = $this->get_user_object();
+        $station_level = $info['user_object']['user_level'];
+        $station_id = $info['user_object']['user_statiton'];
         $data['section'] = "Vaccines";
         $data['subtitle'] = "Request Stock";
         $data['page_title'] = "Manage Stock";
         $data['module'] = "order";
-        $data['view_file'] = "create_order_form";
+        $data['view_file'] = "create_request";
         $data['user_object'] = $this->get_user_object();
         $data['main_title'] = $this->get_title();
         //breadcrumbs
@@ -68,13 +65,13 @@ class Order extends MY_Controller
     {
         Modules::run('secure_tings/is_logged_in');
         $data['user_object'] = $this->get_user_object();
-        $station = $data['user_object']['user_level'];
-        $station_id = $data['user_object']['user_statiton'];
+        $station = $data['user_object']['user_statiton'];
+        $level = $data['user_object']['user_level'];
         $this->load->model('order/mdl_order');
         $this->load->library('pagination');
         $this->load->library('table');
         $config['base_url'] = base_url().'/order/list_orders';
-        $config['total_rows'] =$this->mdl_order->count_placed_orders($station, $station_id);
+        $config['total_rows'] =$this->mdl_order->count_placed_orders($station, $level);
         $config['per_page'] = 10;
         $config['num_links'] = 4;
         $config["uri_segment"] = 3;
@@ -94,23 +91,22 @@ class Order extends MY_Controller
         $config['last_tagl_close'] = "</li>";
 
         $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-        $data['orders'] = $this->mdl_order->get_placed_orders($station, $station_id, $config['per_page'],$page);
+        $data['orders'] = $this->mdl_order->get_placed_orders($station, $level);
         
-        $data['all_orders'] = $this->mdl_order->get_all_placed_orders($station, $station_id, $config['per_page'],$page);
+        $data['all_orders'] = $this->mdl_order->get_all_placed_orders($station, $level);
         $this->pagination->initialize($config);
     
 
-        $data['submitted_orders'] = $this->mdl_order->get_submitted_orders($station, $station_id);
+        $data['submitted_orders'] = $this->mdl_order->get_submitted_orders($station, $level);
         $data['section'] = "Manage Stock";
         $data['subtitle'] = "Request Stocks";
         $data['page_title'] = "Request Stocks";
         $data['module'] = "order";
-        if ($station == '1') {
+        if ($level == '1') {
             $data['view_file'] = "adm_list_order_view";
         } else {
             $data['view_file'] = "list_order_view";
         }
-        $data['user_object'] = $this->get_user_object();
         $data['main_title'] = $this->get_title();
 
         //breadcrumbs
@@ -148,7 +144,7 @@ class Order extends MY_Controller
         $this->make_bread->add('View Request', '', 0);
 
         $data['breadcrumb'] = $this->make_bread->output();
-        //
+        // $this->output->enable_profiler();
         echo Modules::run('template/' . $this->redirect($this->session->userdata['logged_in']['user_group']), $data);
 
     }
@@ -176,80 +172,7 @@ class Order extends MY_Controller
     }
 // Function to save the orders. Order items are posted to this function,
 // where they are stored in an array to be stored in the database
-    function save_order()
-    {
-        Modules::run('secure_tings/is_logged_in');
-        //Order Information
-        $data2['user_object2'] = $this->get_user_object();
-        $data3['user_object3'] = $this->get_user_object();
-
-        $user_level = $data2['user_object2']['user_level'];
-        $station_name = $data3['user_object3']['user_statiton'];
-        $date_created = $this->input->post('created');
-        $order_destination = $this->input->post('order_destination');
-        $user_id = $this->input->post('user');
-        $order_array['station_level'] = $user_level;
-        $order_array['station_id'] = $station_name;
-        $order_array['date_created'] = $date_created;
-        $order_array['order_destination'] = $order_destination;
-        $order_array['order_by'] = $user_id;
-        $this->db->insert('m_order', $order_array);
-        $order_id = $this->db->insert_id();
-
-
-        //Order item information
-        $stock_on_hand = $this->input->post("stock_on_hand");
-        $min_stock = $this->input->post("min_stock");
-        $max_stock = $this->input->post("max_stock");
-        $first_expiry_date = $this->input->post("first_expiry_date");
-        $quantity_dose = $this->input->post("quantity_dose");
-        $vaccines = $this->input->post('vaccine');
-        //echo '<pre>';
-        //print_r($vaccines);die();
-
-        $vaccine_array = array();
-        $vaccine_counter = 0;
-
-        foreach ($vaccines as $vaccine) {
-
-            $vaccine_array[$vaccine_counter]['vaccine_id'] = $vaccines[$vaccine_counter];
-            $vaccine_array[$vaccine_counter]['stock_on_hand'] = $stock_on_hand[$vaccine_counter];
-            $vaccine_array[$vaccine_counter]['min_stock'] = $min_stock[$vaccine_counter];
-            $vaccine_array[$vaccine_counter]['max_stock'] = $max_stock[$vaccine_counter];
-            $vaccine_array[$vaccine_counter]['first_expiry'] = $first_expiry_date[$vaccine_counter];
-            $vaccine_array[$vaccine_counter]['qty_order_doses'] = $quantity_dose[$vaccine_counter];
-            $vaccine_array[$vaccine_counter]['order_id'] = $order_id[$vaccine_counter];
-
-            $vaccine_counter++;
-
-        }
-
-
-        $main_array['own_vaccine'] = $vaccine_array;
-
-        // Add assigned order id to order items
-        foreach ($main_array as $key => $value) {
-            foreach ($value as $keyvac => $valuevac) {
-                foreach ($valuevac as $keys => $values) {
-                    if ($keys == "order_id") {
-                        $temp[$keyvac]['order_id'] = $order_id;
-                    } else {
-                        $temp[$keyvac][$keys] = $values;
-                    }
-
-                }
-
-            }
-
-        }
-
-        $this->db->insert_batch('order_item', $temp);
-
-        $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Order submitted Successfully</div>');
-        redirect('order/list_orders');
-
-    }
-
+    
     function save_forwarded_order($order_id)
     {
         Modules::run('secure_tings/is_logged_in');
@@ -262,6 +185,88 @@ class Order extends MY_Controller
         $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Order forwarded successfully to <strong>' . $statiton_above . '</strong>!</div>');
 
         redirect('order/list_orders');
+    }
+
+    function populate_request(){
+    	$vaccine_id = NULL;
+    	if(is_null($vaccine_id)){
+    		$vaccine_id = $this->input->post('selected_vaccine');
+    		if(is_numeric($vaccine_id)){
+	    		$this->load->model('order/mdl_order');
+		    	$info['user_object'] = $this->get_user_object();
+		    	$station = $info['user_object']['user_statiton'];
+		        $level = $info['user_object']['user_level'];
+		    	$query = $this->mdl_order->calculate_request($station,$level,$vaccine_id);
+		    	echo json_encode($query);
+		    }
+    	}else{
+    		echo json_encode(0);
+    	}	
+    }
+
+    function save_request(){
+    	Modules::run('secure_tings/is_logged_in');
+        $info['user_object'] = $this->get_user_object();
+
+       	
+        $transaction_date = $this->input->post('transaction_date');
+        $to_from = $this->input->post('to_from');
+        
+        $user_id  = $info['user_object']['user_id'];
+        $station = $info['user_object']['user_statiton'];
+        $level = $info['user_object']['user_level'];
+       
+        $request_array['user_id'] = $user_id;
+        $request_array['transaction_date'] = $transaction_date;
+        $request_array['timestamp'] = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')));
+        $request_array['to_from'] = $to_from;
+        $request_array['station'] = $station;
+        $request_array['level'] = $level;
+
+        $this->db->insert('tbl_request', $request_array);
+        $request_id = $this->db->insert_id();
+
+        $batch = stripcslashes($_POST['batch']);
+        $batch = json_decode($batch, TRUE);
+
+        $request_array = array();
+        $request_counter = 0;
+
+        foreach ($batch as $item) {
+            $request_array[$request_counter]['vaccine_id'] = $item['vaccine_id'];
+            $request_array[$request_counter]['transaction_quantity'] = $item['quantity'];
+            $request_array[$request_counter]['current_quantity'] = $item['current'];
+            $request_array[$request_counter]['max_quantity'] = $item['max_stock'];
+            $request_array[$request_counter]['min_quantity'] = $item['min_stock'];
+            $request_array[$request_counter]['expiry_date'] = $item['expiry'];
+          
+            $request_array[$request_counter]['request_id'] = $request_id[$request_counter];
+
+            $request_counter++;
+        }
+
+        $main_array['requests'] = $request_array;
+        // Add assigned issue id to issue items
+        foreach ($main_array as $key => $value) {
+            foreach ($value as $keyvac => $valuevac) {
+                foreach ($valuevac as $keys => $values) {
+                    if ($keys == "request_id") {
+                       $temp[$keyvac]['request_id'] = $request_id;
+                    } else {
+                        $temp[$keyvac][$keys] = $values;
+                    }
+
+
+                }
+
+            }
+             
+
+            $this->db->insert_batch('tbl_request_items', $temp);
+           
+        }
+        $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Request submitted Successfully</div>');
+
     }
 
 

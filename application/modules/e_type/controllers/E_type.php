@@ -111,8 +111,8 @@ public function index()
 
         Modules::run('secure_tings/ni_met');
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('name', 'Spare Part Type', 'required|xss_clean');
-         $this->form_validation->set_rules('equipment', 'Equipment Name', 'required|xss_clean');
+        $this->form_validation->set_rules('name', 'Spare Part Type', 'required');
+         $this->form_validation->set_rules('equipment', 'Equipment Name', 'required');
         $this->form_validation->set_error_delimiters('<p class="red_text semi-bold">'.'*', '</p>');
 
 

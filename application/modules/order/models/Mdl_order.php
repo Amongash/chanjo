@@ -7,17 +7,24 @@ function __construct() {
 parent::__construct();
 }
 
+    
+    function calculate_request($station,$level,$vaccine_id){
+        $call_procedure="call calculate_request('$station',$level,$vaccine_id)";
+        $query=$this->db->query($call_procedure);
+        $query->next_result();
+        return $query->result_array();
+    }
     // Get a list of orders placed to your station
 
-    function get_placed_orders($station,$station_id,$limit, $offset = 0){
-        $call_procedure="CALL get_placed_orders($station,'$station_id',$limit, $offset)";
+    function get_placed_orders($station,$level){
+        $call_procedure="call get_pending_requests('$station',$level)";
         $query=$this->db->query($call_procedure);
         $query->next_result();
         return $query->result_array();
     }
 
-    function count_placed_orders($station,$station_id){
-        $call_procedure="CALL count_placed_orders($station,'$station_id')";
+    function count_placed_orders($station,$level){
+        $call_procedure="call get_pending_requests('$station',$level)";
         $query=$this->db->query($call_procedure);
         $query->next_result();
         return $query->num_rows();
@@ -31,29 +38,22 @@ parent::__construct();
     }
 
     // Get list of orders you have submitted
-    function get_submitted_orders($station,$station_id){
-        $call_procedure="CALL get_submitted_orders($station,'$station_id')";
+    function get_submitted_orders($station,$level){
+        $call_procedure="call get_submitted_requests('$station',$level)";
         $query=$this->db->query($call_procedure);
         $query->next_result();
         return $query->result_array();
     }
 
         // Get list of all placed orders
-    function get_all_placed_orders($station,$station_id,$limit, $offset = 0){
-        $call_procedure="CALL get_all_placed_orders($station,'$station_id',$limit, $offset)";
+    function get_all_placed_orders($station,$level){
+       	$call_procedure="call get_requests('$station',$level)";
         $query=$this->db->query($call_procedure);
         $query->next_result();
         return $query->result_array();
     }
 
-    //  This function calculates the values of maxstock, minstock
-    function calc_orders($station_id,$station_level){
-        $call_procedure="CALL calc_orders('$station_id',$station_level)";
-        $query=$this->db->query($call_procedure);
-        $query->next_result();
-        return $query->result_array();
 
-    }
 
     function forward_orders($station_level,$order_id){
         $call_procedure="CALL forward_order('$station_level',$order_id)";
@@ -61,17 +61,12 @@ parent::__construct();
         return $query;
     }
 // Get a list of items in an order 
-function get_order_items($order_id,$order_by,$date_created){
-    
-        $this->db->select('CONCAT(mu.f_name," ",mu.l_name) as order_by,o.date_created as order_date,o.station_id,mv.Vaccine_name,oi.stock_on_hand, oi.min_stock, oi.max_stock,oi.first_expiry, oi.qty_order_doses as quantity_ordered',false);
-        $this->db->from('m_order o');
-        $this->db->join('m_users mu', 'mu.id=o.order_by', 'inner');
-        $this->db->join('order_item oi', 'oi.order_id=o.order_id', 'inner');
-        $this->db->join('m_vaccines mv ', 'mv.ID=oi.vaccine_id', 'inner');
-	    $this->db->where(array('o.order_id' => $order_id,'o.order_by' => $order_by,'o.date_created'=>$date_created,'oi.qty_order_doses !='=>0));
-        $query = $this->db->get();
+    function get_order_items($order_id,$order_by,$date_created){
+        $call_procedure="call get_request_items($order_id,$order_by,'$date_created')";
+        $query=$this->db->query($call_procedure);
+        $query->next_result();
         return $query->result_array();
-}                    
+    }                    
 function get($order_by){
 $table = $this->get_table();
 $this->db->order_by($order_by);

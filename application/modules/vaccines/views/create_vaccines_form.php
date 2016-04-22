@@ -3,18 +3,17 @@
     <div class="col-lg-4 col-lg-offset-4">
       <?php 
       $administration = array(
-          "Intramuscular Injection" => "Intramuscular Injection",
-          "Oral Administration" => "Oral Administration",
-          "Subcutaneous Injection" => "Subcutaneous Injection",
           "Intradermal Injection" => "Intradermal Injection",
-          "Intranasal Spray Application" => "Intranasal Spray Application"
+          "Intramuscular Injection" => "Intramuscular Injection",
+          "Intranasal Spray Application" => "Intranasal Spray Application",
+          "Oral Administration" => "Oral Administration",
+          "Subcutaneous Injection" => "Subcutaneous Injection"
       );
 
       ?>
       <?php 
       $formulation = array(
           "Liquid"=>"Liquid",
-          "Tablet"=>"Tablet",
           "Semi-liquid"=>"Semi-liquid"
       );
       ?>

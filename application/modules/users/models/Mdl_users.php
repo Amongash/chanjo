@@ -8,7 +8,7 @@ class Mdl_users extends CI_Model {
             }
 
             function get_table() {
-                $table = "m_users";
+                $table = "tbl_users";
                 return $table;
             }
 
@@ -64,47 +64,47 @@ class Mdl_users extends CI_Model {
           function getRegion(){
         	//$condition = "username =" . "'" . $username . "'";
               $this->db->select('id,region_name');
-              $query = $this->db->get("m_region");
+              $query = $this->db->get("tbl_regions");
               return $query->result();
           }
 
           function get_counties(){
 
             $this->db->select('id,county_name');
-            $query = $this->db->get('m_county');
+            $query = $this->db->get('tbl_counties');
             return $query->result();
         }
         function get_subcounty(){
 
             $this->db->select('id,subcounty_name');
-            $query = $this->db->get('m_subcounty');
+            $query = $this->db->get('tbl_subcounties');
             return $query->result();
         }
         function get_facilities(){
 
             $this->db->select('id,facility_name');
-            $query = $this->db->get('m_facility');
+            $query = $this->db->get('tbl_facilities');
             return $query->result();
         }
 
         function get_user_groups(){
 
             $this->db->select('id,name');
-            $query = $this->db->get('m_group');
+            $query = $this->db->get('tbl_user_groups');
             return $query->result();
         }
 
         function get_user_levels(){
 
             $this->db->select('id,name');
-            $query = $this->db->get('user_levels');
+            $query = $this->db->get('tbl_user_levels');
             return $query->result();
         }
 
         function get_userRegion_id($user_id){
 
             $this->db->select('id');
-            $this->db->from('region_userbase_view');
+            $this->db->from('v_regions_userbase');
             $this->db->where('user_id',$user_id);
             return $this->db->get();
 
@@ -113,7 +113,7 @@ class Mdl_users extends CI_Model {
         function get_userRegion($user_id){
 
             $this->db->select('region_name');
-            $this->db->from('region_userbase_view');
+            $this->db->from('v_regions_userbase');
             $this->db->where('user_id',$user_id);
             return $this->db->get();
 
@@ -122,7 +122,7 @@ class Mdl_users extends CI_Model {
          function get_userCounty_id($user_id){
 
             $this->db->select('id');
-            $this->db->from('county_userbase_view');
+            $this->db->from('v_counties_userbase');
             $this->db->where('user_id',$user_id);
             return $this->db->get();
 
@@ -132,7 +132,7 @@ class Mdl_users extends CI_Model {
         function get_userCounty($user_id){
 
             $this->db->select('county_name');
-            $this->db->from('county_userbase_view');
+            $this->db->from('v_counties_userbase');
             $this->db->where('user_id',$user_id);
             return $this->db->get();
 
@@ -141,7 +141,7 @@ class Mdl_users extends CI_Model {
          function get_userSubcounty_id($user_id){
 
             $this->db->select('id');
-            $this->db->from('subcounty_userbase');
+            $this->db->from('v_subcounties_userbase');
             $this->db->where('user_id',$user_id);
             return $this->db->get();
 
@@ -150,7 +150,7 @@ class Mdl_users extends CI_Model {
         function get_userSubcounty($user_id){
 
             $this->db->select('subcounty_name');
-            $this->db->from('subcounty_userbase');
+            $this->db->from('v_subcounties_userbase');
             $this->db->where('user_id',$user_id);
             return $this->db->get();
 
@@ -159,7 +159,7 @@ class Mdl_users extends CI_Model {
         function get_userFacility_id($user_id){
 
             $this->db->select('id');
-            $this->db->from('facility_userbase_view');
+            $this->db->from('v_facilities_userbase');
             $this->db->where('user_id',$user_id);
             return $this->db->get();
 
@@ -167,7 +167,7 @@ class Mdl_users extends CI_Model {
         function get_userFacility($user_id){
 
             $this->db->select('facility_name');
-            $this->db->from('facility_userbase_view');
+            $this->db->from('v_facilities_userbase');
             $this->db->where('user_id',$user_id);
             return $this->db->get();
 
@@ -175,7 +175,7 @@ class Mdl_users extends CI_Model {
 
         function loadcountyfromregion($region_id) {
 
-            $query = $this->db->query("SELECT county_name FROM `m_county` WHERE region_id = '{$region_id}'"); 
+            $query = $this->db->query("SELECT county_name FROM `tbl_counties` WHERE region_id = '{$region_id}'"); 
             if ($query->num_rows > 0) {
                 return $query->result();
             }
@@ -183,7 +183,7 @@ class Mdl_users extends CI_Model {
 
         function loadsubcountyfromcounty($county_id) {
 
-            $query = $this->db->query("SELECT subcounty_name FROM `m_subcounty` WHERE county_id = '{$county_id}'"); 
+            $query = $this->db->query("SELECT subcounty_name FROM `tbl_subcounties` WHERE county_id = '{$county_id}'"); 
             if ($query->num_rows > 0) {
                 return $query->result();
             }
@@ -192,7 +192,7 @@ class Mdl_users extends CI_Model {
 
         function loadfacilityfromsubcouty($subcounty_id) {
 
-            $query = $this->db->query("SELECT facility_name FROM `m_facility` WHERE `subcounty_id` = '{$subcounty_id}'"); 
+            $query = $this->db->query("SELECT facility_name FROM `tbl_facilities` WHERE `subcounty_id` = '{$subcounty_id}'"); 
             if ($query->num_rows > 0) {
                 return $query->result();
             }
@@ -244,7 +244,7 @@ class Mdl_users extends CI_Model {
         // Query to insert data in database
                 $this->db->insert($table, $data);
                 $data_base['user_id'] = $this->db->insert_id();
-                $this->db->insert('user_base', $data_base);
+                $this->db->insert('tbl_user_base', $data_base);
                 if ($this->db->affected_rows() > 0) {
                     return true;
                 }
@@ -296,14 +296,14 @@ class Mdl_users extends CI_Model {
 
         function getCountyByRegion($id){
             $this->db->select("id, county_name");
-            $this->db->from('m_county');
+            $this->db->from('tbl_counties');
             $this->db->where('region_id', $id);
             $query = $this->db->get();
             return $query->result();
         }
         function getSubcountyByCounty($id){
             $this->db->select("id, subcounty_name");
-            $this->db->from('m_subcounty');
+            $this->db->from('tbl_subcounties');
             $this->db->where('county_id', $id);
             $query = $this->db->get();
             return $query->result();
@@ -311,7 +311,7 @@ class Mdl_users extends CI_Model {
 
         function getFacilityBySubcounty($id){
             $this->db->select("id, facility_name");
-            $this->db->from('m_facility');
+            $this->db->from('tbl_facilities');
             $this->db->where('subcounty_id', $id);
             $query = $this->db->get();
             return $query->result();

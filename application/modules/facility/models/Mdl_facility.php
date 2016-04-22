@@ -3,9 +3,9 @@
 
 class Mdl_Facility extends CI_Model {
 var $order = array('id' => 'desc');
-var $column = array('mf.id', 'mf.facility_name', 'officer_incharge', 'vaccine_carrier', 'cold_box','subcounty_name', 'county_name', 'region_name');
-var $fridge_columns = array('m_facility.facility_name', 'm_facility_fridges.refrigerator_id', 'Model', 'Manufacturer', 'temperature_monitor_no', 'main_power_source');
-var $facility_fridges = array('m_facility_fridges.refrigerator_id',  'm_fridges.Model', 'm_fridges.Manufacturer', 'temperature_monitor_no', 'main_power_source','refrigerator_age');
+var $column = array('mf.id', 'facility_name', 'officer_incharge', 'vaccine_carrier', 'cold_box','subcounty_name', 'county_name', 'region_name');
+var $fridge_columns = array('tbl_facilities.facility_name', 'tbl_facility_fridges.refrigerator_id', 'Model', 'Manufacturer', 'temperature_monitor_no', 'main_power_source');
+var $facility_fridges = array('tbl_facility_fridges.refrigerator_id',  'tbl_fridges.Model', 'tbl_fridges.Manufacturer', 'temperature_monitor_no', 'main_power_source','refrigerator_age');
 
 function __construct() {
 parent::__construct();
@@ -14,7 +14,7 @@ parent::__construct();
 
 
 function get_table() {
-$table = "m_facility";
+$table = "tbl_facilities";
 return $table;
 }
 
@@ -27,20 +27,22 @@ $this->search_order($station_id);
 	{
         if ($station_id!=NULL){
 			$this->db->select($this->column);
-			$this->db->from('m_facility mf');
-			$this->db->join('m_subcounty', 'm_subcounty.id = mf.subcounty_id');
-			$this->db->join('m_county', 'm_county.id = mf.county_id');
-			$this->db->join('m_region', 'm_county.region_id = m_region.id');
+			$this->db->from('tbl_facilities mf');
+			$this->db->join('tbl_subcounties', 'tbl_subcounties.id = mf.subcounty_id');
+			$this->db->join('tbl_counties', 'tbl_counties.id = mf.county_id');
+			$this->db->join('tbl_regions', 'tbl_counties.region_id = tbl_regions.id');
+			$this->db->join('tbl_facility_details', 'tbl_facility_details.facility_id = mf.id', 'left');
 			$this->db->where('county_name',$station_id);
 			$this->db->or_where('subcounty_name',$station_id);
 			$this->db->or_where('region_name',$station_id);
 
 		}else{
 			$this->db->select($this->column);
-			$this->db->from('m_facility mf');
-			$this->db->join('m_subcounty', 'm_subcounty.id = mf.subcounty_id');
-			$this->db->join('m_county', 'm_county.id = mf.county_id');
-			$this->db->join('m_region', 'm_county.region_id = m_region.id');
+			$this->db->from('tbl_facilities mf');
+			$this->db->join('tbl_subcounties', 'tbl_subcounties.id = mf.subcounty_id');
+			$this->db->join('tbl_counties', 'tbl_counties.id = mf.county_id');
+			$this->db->join('tbl_regions', 'tbl_counties.region_id = tbl_regions.id');
+			$this->db->join('tbl_facility_details', 'tbl_facility_details.facility_id = mf.id', 'left');
 		}
 		$i = 0;
 
@@ -88,10 +90,10 @@ return $query->num_rows();
 
 private function _get_fridges_query($id){
 $this->db->select($this->facility_fridges);    
-$this->db->from('m_facility');
-$this->db->join('m_facility_fridges', 'm_facility.id = m_facility_fridges.facility_id');
-$this->db->join('m_fridges', 'm_facility_fridges.refrigerator_id = m_fridges.id');
-$this->db->where('m_facility.id',$id);
+$this->db->from('tbl_facilities');
+$this->db->join('tbl_facility_fridges', 'tbl_facilities.id = tbl_facility_fridges.facility_id');
+$this->db->join('tbl_fridges', 'tbl_facility_fridges.refrigerator_id = tbl_fridges.id');
+$this->db->where('tbl_facilities.id',$id);
 
 $i = 0;
 
@@ -117,17 +119,17 @@ else if(isset($this->order))
 
 function get_fridges($id){
 $this->db->select($this->fridge_columns);    
-$this->db->from('m_facility');
-$this->db->join('m_facility_fridges', 'm_facility.id = m_facility_fridges.facility_id');
-$this->db->join('m_fridges', 'm_facility_fridges.refrigerator_id = m_fridges.id');	
-$this->db->where('m_fridges.id',$id);
+$this->db->from('tbl_facilities');
+$this->db->join('tbl_facility_fridges', 'tbl_facilities.id = tbl_facility_fridges.facility_id');
+$this->db->join('tbl_fridges', 'tbl_facility_fridges.refrigerator_id = tbl_fridges.id');	
+$this->db->where('tbl_fridges.id',$id);
 $query = $this->db->get();
 return $query->row();
 }
 
 function get_fridge_model(){
 $this->db->select('id, Model, Manufacturer');    
-$this->db->from('m_fridges');
+$this->db->from('tbl_fridges');
 $query = $this->db->get();
 return $query->result();
 }
@@ -155,9 +157,13 @@ return $query;
 }
 
 function get_where($id){
-$table = $this->get_table();
-$this->db->where('id', $id);
-$query=$this->db->get($table);
+$this->db->from('tbl_facilities mf');
+$this->db->join('tbl_subcounties', 'tbl_subcounties.id = mf.subcounty_id');
+$this->db->join('tbl_counties', 'tbl_counties.id = mf.county_id');
+$this->db->join('tbl_regions', 'tbl_counties.region_id = tbl_regions.id');
+$this->db->join('tbl_facility_details', 'tbl_facility_details.facility_id = mf.id', 'left');
+$this->db->where('mf.id', $id);
+$query=$this->db->get();
 return $query;
 }
 
@@ -179,6 +185,20 @@ $this->db->where('id', $id);
 $this->db->update($table, $data);
 }
 
+function _update_details($id, $data){
+$table = "tbl_facility_details";
+$this->db->where('facility_id', $id);
+$this->db->update($table, $data);
+if ($this->db->affected_rows() > 0) {
+	return true;
+} else {
+	$facility_id = $id;
+	$data['facility_id'] = $facility_id;
+	$this->db->insert($table, $data);
+}
+
+}
+
 function _delete($id){
 $table = $this->get_table();
 $this->db->where('id', $id);
@@ -186,18 +206,18 @@ $this->db->delete($table);
 }
 
 function _insert_fridge($data){
-$table = 'm_facility_fridges';
+$table = 'tbl_facility_fridges';
 $this->db->insert($table, $data);
 }
 
 function _update_fridge($id, $data){
-$table = 'm_facility_fridges';
+$table = 'tbl_facility_fridges';
 $this->db->where('refrigerator_id', $id);
 $this->db->update($table, $data);
 }
 
 function _delete_fridge($id){
-$table = 'm_facility_fridges';
+$table = 'tbl_facility_fridges';
 $this->db->where('refrigerator_id', $id);
 $this->db->delete($table);
 }
@@ -218,7 +238,7 @@ return $num_rows;
 }
 
 function count_fridges($column, $value) {
-$table = "m_facility_fridges";
+$table = "tbl_facility_fridges";
 $this->db->where($column, $value);
 $query=$this->db->get($table);
 $num_rows = $query->num_rows();

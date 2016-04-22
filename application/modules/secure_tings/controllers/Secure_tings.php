@@ -20,10 +20,10 @@ function kuchocha($password){
 }
 
 function is_logged_in(){
-if(!isset($this->session->userdata['logged_in'])){
-         	$this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-danger text-center">RESTRICTED PAGE. <br />Login to gain access</div>');
-           redirect('/'); 
-        }
+	if(!isset($this->session->userdata['logged_in'])){
+		$this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-danger text-center">RESTRICTED PAGE. <br />Login to gain access</div>');
+		redirect('/'); 
+    }
 }
 
 

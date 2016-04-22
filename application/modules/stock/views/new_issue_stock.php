@@ -10,7 +10,7 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
 	<div class="col-lg-3">
 	  <div class="panel-body">
 	  <b>Issue To</b>
-	   <?php $data=array('name' => 'issued_to','id'=> 'issued_to','class'=>'form-control','value'=>$order_infor[0]['station_id'],'readonly'=>'readonly'); echo form_input($data);?>
+	   <?php $data=array('name' => 'issued_to','id'=> 'issued_to','class'=>'form-control','value'=>$order_infor[0]['station'],'readonly'=>'readonly'); echo form_input($data);?>
 		
 		</div>
 	</div>
@@ -32,7 +32,7 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
 	  <div class="col-lg-3">
 		  <div class="panel-body">
 		  <b>Order Number</b>
-		    <?php $data=array('name' => 'order','id'=> 'order','class'=>'form-control', 'value'=>$order_infor[0]['order_id'], 'readonly'=>'readonly'); echo form_input($data);?>
+		    <?php $data=array('name' => 'order','id'=> 'order','class'=>'form-control', 'value'=>$order_infor[0]['id'], 'readonly'=>'readonly'); echo form_input($data);?>
 		
 	 			</div>
 	  </div>
@@ -41,9 +41,12 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
 </div>
 
 <div id="stock_issue" class="row">
-<div class="col-lg-12">
-<div class="table-responsive">
-<div class="well well-sm"><b>Vaccine Details</b></div>
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <div class="well well-sm"><b>Vaccine Details</b></div>
+
+
+                    <table class="table table-bordered table-hover table-striped">
 
 
 
@@ -63,7 +66,7 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
 <tbody>
 		<?php foreach ($issues as $vaccine) {?>
 				<tr align="center" value="issue_row<?php echo $vaccine['vaccine_id'] ?>" id="issue_row<?php echo $vaccine['vaccine_id'] ?>" >
-					<td><?php echo $vaccine['Vaccine_name']?></td>
+					<td><?php echo $vaccine['vaccine_name']?></td>
 					<input type="hidden" value="<?php echo $vaccine['vaccine_id']?>" name="vaccine[]" id="vaccine">
 					<style type="text/css">
 					input[id="available_quantity"]{
@@ -76,11 +79,11 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
 						</select>
 				    </td>
 					<td><?php $data=array('name' => 'expiry_date[]','id'=> 'expiry_date'.$vaccine['vaccine_id'],'class'=>'form-control expiry_date','readonly'=>'','value'=>''); echo form_input($data);?></td>
-					<td><?php $data=array('name' => 'amt_ordered[]','id'=> 'amt_ordered'.$vaccine['vaccine_id'],'class'=>'form-control amt_ordered','value'=>$vaccine['qty_order_doses'],'readonly'=>''); echo form_input($data);?></td>
+					<td><?php $data=array('name' => 'amt_ordered[]','id'=> 'amt_ordered'.$vaccine['vaccine_id'],'class'=>'form-control amt_ordered','value'=>$vaccine['transaction_quantity'],'readonly'=>''); echo form_input($data);?></td>
 					<td><?php $data=array('name' => 'available_quantity[]','id'=> 'available_quantity'.$vaccine['vaccine_id'],'class'=>'form-control available_quantity','value'=>'','readonly'=>''); echo form_input($data);?></td>
-					<td><?php $data=array('name' => 'amt_issued[]','id'=> 'amt_issued'.$vaccine['vaccine_id'],'class'=>'form-control amt_issued','type' =>'number',' min' => '0','value'=>$vaccine['qty_order_doses']); echo form_input($data);?></td>
+					<td><?php $data=array('name' => 'amt_issued[]','id'=> 'amt_issued'.$vaccine['vaccine_id'],'class'=>'form-control amt_issued','type' =>'number',' min' => '0','value'=>$vaccine['transaction_quantity']); echo form_input($data);?></td>
 					<td><?php $data=array('name' => 'vvm_status[]','id'=> 'vvm_status'.$vaccine['vaccine_id'],'class'=>'form-control  vvm_s','value'=>''); echo form_input($data);?></td>
-					<td><textarea name="comment[]" id="comment"></textarea></td>
+					<td><textarea name="comment[]" id="comment" class="form-control"></textarea></td>
 	
 
 						</tr>
@@ -113,8 +116,10 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
         </div>
     </div>  
 </div>
+<?php $data=array('name' => 'issued_to','value'=>$order_infor[0]['station']); echo form_hidden($data);?>
+
 <?php
-        echo form_hidden('date_recorded',date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'))));
+    
 		echo form_close();?>
 	
 
@@ -141,7 +146,7 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
         var request=$.ajax({
                url: _url,
                type: 'post',
-               data: {"selected_batch":TableData, "order_id":<?php echo $order_infor[0]['order_id'];?>},
+               data: {"selected_batch":TableData, "order_id":<?php echo $order_infor[0]['id'];?>},
 
           });
           request.done(function(data){
@@ -183,7 +188,7 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
 							var request=$.ajax({
 								     url: _url,
 								     type: 'post',
-								     data: {"selected_batch":selected_batch, "order_id":<?php echo $order_infor[0]['order_id'];?>},
+								     data: {"selected_batch":selected_batch, "order_id":<?php echo $order_infor[0]['id'];?>},
 
 						    });
 						    request.done(function(data){

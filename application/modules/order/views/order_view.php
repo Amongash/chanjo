@@ -3,7 +3,7 @@
         <?php
         $level = $user_object['user_level'];
         $form_attributes = array('id' => 'view_orderfm', 'class' => 'form-inline', 'role' => 'form');
-        echo form_open('', $form_attributes); ?>
+        echo form_open('', $form_attributes);?>
 
     </div>
 </div>
@@ -13,7 +13,7 @@
 
     <table class="table table-bordered table-striped" id="store_infor_tbl">
         <tr>
-            <td style="width:50%">Store Name : <?php print_r($orderitems[0]['station_id']); ?> </td>
+            <td style="width:50%">Store Name : <?php print_r($orderitems[0]['station']); ?> </td>
             <td>Order Date: <?php print_r($orderitems[0]['order_date']); ?></td>
         </tr>
         <tr>
@@ -40,17 +40,17 @@
                 <tbody>
                 <?php
                 foreach ($orderitems as $orderitems) {
-                $stock_on_hand = $orderitems['stock_on_hand'];
-                $min_stock = $orderitems['min_stock'];
-                $max_stock = $orderitems['max_stock'];
-                $first_expiry = $orderitems['first_expiry'];
+                $stock_on_hand = $orderitems['current_quantity'];
+                $min_stock = $orderitems['min_quantity'];
+                $max_stock = $orderitems['max_quantity'];
+                $first_expiry = $orderitems['expiry_date'];
                 $quantity_ordered = $orderitems['quantity_ordered'];
                 $order_by = $orderitems['order_by'];
-                $vaccine = $orderitems['Vaccine_name'];
+                $vaccine = $orderitems['vaccine_name'];
 
                 ?>
                 <tr align="center" order_row="1">
-                    <td><?php echo $orderitems['Vaccine_name'] ?></td>
+                    <td><?php echo $vaccine ?></td>
 
 
                     <td><?php $data = array('name' => 'stock_on_hand', 'id' => 'stock_on_hand', 'class' => 'form-control stock_on_hand_', 'readonly' => 'readonly', 'value' => $stock_on_hand);

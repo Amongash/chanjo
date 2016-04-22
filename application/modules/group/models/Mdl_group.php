@@ -8,7 +8,7 @@ parent::__construct();
 }
 
 function get_table() {
-    $table = "m_group";
+    $table = "tbl_user_groups";
     return $table;
 }
 

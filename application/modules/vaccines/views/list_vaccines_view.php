@@ -22,12 +22,12 @@
                                 <tbody>
                                     <?php
                                     foreach ($records->result() as $row){
-                                        $edit_url = base_url().'vaccines/create/'.$row->ID;
-                                        $delete_url = base_url().'vaccines/delete/'.$row->ID;
+                                        $edit_url = base_url().'vaccines/create/'.$row->id;
+                                        $delete_url = base_url().'vaccines/delete/'.$row->id;
                                       ?>
                                     <tr>
-                                        <td><?php echo $row->Vaccine_name ?></td>
-                                        <td><?php echo $row->Mode_administration ?></td>
+                                        <td><?php echo $row->vaccine_name ?></td>
+                                        <td><?php echo $row->mode_administration ?></td>
                                         <td align="center"><a href="<?php echo $edit_url ?>"><i class="fa fa-edit"></i></a></td>
                                         <td align="center"><a href="<?php echo $delete_url ?>"><i class="fa fa-trash-o"></i></td>
                                        

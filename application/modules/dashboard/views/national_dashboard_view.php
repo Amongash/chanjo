@@ -32,16 +32,16 @@
                                 <?php if ($user_level == '1' || $user_level == '2') { ?>
                                 <td><?php echo $row['county_name'] ?></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
+                                <td><?php echo($row['totaldpt3'] - $row['totaldpt1']) ?></td>
                                 <?php }elseif($user_level == '3') { ?>
                                 <td><?php echo $row['subcounty_name'] ?></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
+                                <td><?php echo($row['totaldpt3'] - $row['totaldpt1']) ?></td>
 
                                 <?php }elseif($user_level == '4') { ?>
                                 <td><?php echo $row['facility_name'] ?></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
+                                <td><?php echo($row['totaldpt3'] - $row['totaldpt1']) ?></td>
                             </tr><?php } ?> <?php } ?>
                         </tbody>
                     </table>
@@ -80,16 +80,16 @@
                                 <?php if ($user_level == '1' || $user_level == '2') { ?>
                                 <td><?php echo $row['county_name'] ?></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
+                                <td><?php echo($row['totaldpt3'] - $row['totaldpt1']) ?></td>
                                 <?php }elseif($user_level == '3') { ?>
                                 <td><?php echo $row['subcounty_name'] ?></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
+                                <td><?php echo($row['totaldpt3'] - $row['totaldpt1']) ?></td>
 
                                 <?php }elseif($user_level == '4') { ?>
                                 <td><?php echo $row['facility_name'] ?></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo($row['totaldpt3'] - $row['totaldpt3']) ?></td>
+                                <td><?php echo($row['totaldpt3'] - $row['totaldpt1']) ?></td>
                             </tr><?php } ?> <?php } ?>
                         </tbody>
                     </table>

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
         <?php
-        $form_attributes = array('id' => 'stock_received_fm', 'method' => 'post', 'class' => 'form-inline', 'role' => 'form');
+        $form_attributes = array('id' => 'stock_received_fm', 'method' => 'post', 'class' => '', 'role' => 'form');
         echo form_open('', $form_attributes); ?>
 
         <div class="well well-sm"><b>Transaction Details</b></div>
@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="panel-body">
-                    <b>Origin</b>
+                    <b>Origin</b><br>
                     <?php $data = array('name' => 'received_from', 'id' => 'received_from', 'class' => 'form-control', 'value' => $location, 'readonly' => '');
                     echo form_input($data); ?>
                 </div>
@@ -23,8 +23,8 @@
             </div>
             <div class="col-lg-3">
                 <div class="panel-body">
-                    <b>Date Received</b>
-                    <?php $data = array('name' => 'date_received', 'id' => 'date_received', 'class' => 'form-control', 'required' => '', 'type' => 'date', 'autocomplete' => 'off');
+                    <b>Date Received</b><br>
+                    <?php $data = array('name' => 'date_received', 'id' => 'date_received', 'class' => 'form-control', 'required' => '', 'autocomplete' => 'off');
                     echo form_input($data); ?>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                         <td><select name="vaccine" class="vaccine form-control" id="vaccine" required>
                                 <option value="">Select Vaccine</option>
                                 <?php foreach ($vaccines as $vaccine) {
-                                    echo "<option value='" . $vaccine['ID'] . "'>" . $vaccine['Vaccine_name'] . "</option>";
+                                    echo "<option value='" . $vaccine['id'] . "'>" . $vaccine['vaccine_name'] . "</option>";
                                 } ?>
                             </select></td>
 

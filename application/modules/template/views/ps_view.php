@@ -259,19 +259,13 @@
 
     <script src="<?php echo base_url() ?>assets/js/common-script.js"></script>
     <script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
-    <script src="<?php echo base_url() ?>assets/js/jquery.sparkline.js"></script>
-    <script src="<?php echo base_url() ?>assets/js/sparkline-chart.js"></script>
     <script src="<?php echo base_url() ?>assets/js/graph.js"></script>
     <script src="<?php echo base_url() ?>assets/js/edit-graph.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/kalendar/kalendar.js" type="text/javascript"></script>
     <script src="<?php echo base_url() ?>assets/plugins/kalendar/edit-kalendar.js" type="text/javascript"></script>
 
-    <!--<script src="--><?php //echo base_url() ?>
-    <!--assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>-->
     <script src="<?php echo base_url() ?>assets/plugins/data-tables/jquery.dataTables.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.js"></script>
-    <script src="<?php echo base_url() ?>assets/plugins/sparkline/jquery.sparkline.js" type="text/javascript"></script>
-    <script src="<?php echo base_url() ?>assets/plugins/sparkline/jquery.customSelect.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/validation/parsley.min.js"></script>
 
 
@@ -279,10 +273,10 @@
 
 
     <script src="<?php echo base_url() ?>assets/js/jPushMenu.js"></script>
-    <script src="<?php echo base_url() ?>assets/js/side-chats.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/select2/js/select2.min.js"></script>
+    
     <script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/scroll/jquery.nanoscroller.js"></script>
-
 
 </body>
 

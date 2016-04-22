@@ -59,11 +59,7 @@ class Facility extends MY_Controller {
 
             $this->load->library('form_validation');
             $this->form_validation->set_rules('facility_name','Facility Name','trim|required');
-            // $this->form_validation->set_rules('region_id','Region','trim|required');
-            // $this->form_validation->set_rules('county_id','County','trim|required');
-            // $this->form_validation->set_rules('subcounty_id','Sub-county','trim|required');
-            // $this->form_validation->set_rules('refrigerator','refrigerator','trim|required');
-            // //$this->form_validation->set_rules('status','Status','trim|required');
+            
             $update_id = $this->input->post('update_id', TRUE);
             if ($this->form_validation->run() == FALSE)
             {   
@@ -73,13 +69,15 @@ class Facility extends MY_Controller {
             else
             {       
                    $data =  $this->get_data_from_post();
-                   
+                   //echo json_encode($data);
                    if(is_numeric($update_id)){
-                       $this->_update($update_id, $data);
+
+                       $this->_update($update_id, $data['facility']);
+                       $this->_update_details($update_id, $data['details']);
                        $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Facility details updated successfully!</div>');
 
                    } else {
-                       $this->_insert($data);
+                       $this->_insert($data['facility']);
                        $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">New Facility added successfully!</div>');
                    }
 
@@ -91,39 +89,39 @@ class Facility extends MY_Controller {
             $query = $this->get_where($update_id);
 
             foreach ($query->result() as $row){
-                  $data['facility_name'] = $row->facility_name;
-                  $data['staff'] = $row->staff;
-                  //$data['dhis_id'] = $row->dhis_id;
-                  $data['officer_incharge'] = $row->officer_incharge;
-                  $data['email'] = $row->email;
-                  $data['phone'] = $row->phone;
-                  $data['nearest_town'] = $row->nearest_town;
-                  $data['nearest_town_distance'] = $row->nearest_town_distance;
-                  $data['nearest_depot_distance'] = $row->nearest_depot_distance;
-                  $data['wcba_population'] = $row->wcba_population;
-                  $data['catchment_population'] = $row->catchment_population;
-                  $data['catchment_population_under_one'] = $row->catchment_population_under_one;
-                  $data['cold_box'] = $row->cold_box;
-                  $data['vaccine_carrier'] = $row->vaccine_carrier;
+                  $data['facility']['facility_name'] = $row->facility_name;
+                  $data['details']['staff'] = $row->staff;
+                 
+                  $data['details']['officer_incharge'] = $row->officer_incharge;
+                  $data['details']['email'] = $row->email;
+                  $data['details']['phone'] = $row->phone;
+                  $data['details']['nearest_town'] = $row->nearest_town;
+                  $data['details']['nearest_town_distance'] = $row->nearest_town_distance;
+                  $data['details']['nearest_depot_distance'] = $row->nearest_store_distance;
+                  $data['facility']['women_population'] = $row->women_population;
+                  $data['facility']['total_population'] = $row->total_population;
+                  $data['facility']['under_one_population'] = $row->under_one_population;
+                  $data['details']['cold_box']  = $row->cold_box;
+                  $data['details']['vaccine_carrier'] = $row->vaccine_carrier;
             }
-            return $data;
+            //echo(json_encode($data));
+             return $data;
       }
 
       function get_data_from_post(){
-            $data['facility_name']  =$this->input->post('facility_name', TRUE);
-            $data['staff']      = $this->input->post('staff', TRUE);
-            //$data['dhis_id']    = $this->input->post('dhis_id', TRUE);
-            $data['officer_incharge']=$this->input->post('officer_incharge', TRUE);
-            $data['email']      = $this->input->post('email', TRUE);
-            $data['phone']      = $this->input->post('phone', TRUE);
-            $data['nearest_town']   = $this->input->post('nearest_town', TRUE);
-            $data['nearest_town_distance']  = $this->input->post('nearest_town_distance', TRUE);
-            $data['nearest_depot_distance'] = $this->input->post('nearest_depot_distance', TRUE);
-            $data['wcba_population']    = $this->input->post('wcba_population', TRUE);
-            $data['catchment_population']   = $this->input->post('catchment_population', TRUE);
-            $data['catchment_population_under_one'] = $this->input->post('catchment_population_under_one', TRUE);   
-            $data['cold_box']         = $this->input->post('cold_box', TRUE);
-            $data['vaccine_carrier']    = $this->input->post('vaccine_carrier', TRUE);
+            $data['facility']['facility_name']  =$this->input->post('facility_name', TRUE);
+            $data['details']['staff']     = $this->input->post('staff', TRUE);
+            $data['details']['officer_incharge']=$this->input->post('officer_incharge', TRUE);
+            $data['details']['email']      = $this->input->post('email', TRUE);
+            $data['details']['phone']      = $this->input->post('phone', TRUE);
+            $data['details']['nearest_town']   = $this->input->post('nearest_town', TRUE);
+            $data['details']['nearest_town_distance']  = $this->input->post('nearest_town_distance', TRUE);
+            $data['details']['nearest_store_distance'] = $this->input->post('nearest_depot_distance', TRUE);
+            $data['facility']['women_population']    = $this->input->post('wcba_population', TRUE);
+            $data['facility']['total_population']   = $this->input->post('catchment_population', TRUE);
+            $data['facility']['under_one_population'] = $this->input->post('catchment_population_under_one', TRUE);   
+            $data['details']['cold_box']         = $this->input->post('cold_box', TRUE);
+            $data['details']['vaccine_carrier']    = $this->input->post('vaccine_carrier', TRUE);
             return $data;
         }
 
@@ -142,9 +140,10 @@ class Facility extends MY_Controller {
                   $row[] = $facility->cold_box;
 
                   //add html for action
-                  
-                  $row[] = '  <a class="btn btn-sm btn-primary" href="facility/create/'.$facility->id.'" title="Edit"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
-                              <a class="btn btn-sm btn-info"  href="facility/list_fridge/'.$facility->id.'" title="Add"><i class="glyphicon glyphicon-plus"></i> Fridge</a>';
+                  $edit_url = base_url('facility/create/'.$facility->id);
+                  $list_url = base_url('facility/list_fridge/'.$facility->id);
+                  $row[] = '  <a class="btn btn-sm btn-primary" href="'.$edit_url.'" title="Edit"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+                              <a class="btn btn-sm btn-info"  href="'.$list_url.'" title="Add"><i class="glyphicon glyphicon-plus"></i> Fridge</a>';
             
                   $data[] = $row;
             }
@@ -327,6 +326,10 @@ class Facility extends MY_Controller {
             $this->mdl_facility->_update($id, $data);
       }
 
+      function _update_details($id, $data){
+            $this->load->model('mdl_facility');
+            $this->mdl_facility->_update_details($id, $data);
+      }
       function _delete($id){
             $this->load->model('mdl_facility');
             $this->mdl_facility->_delete($id);

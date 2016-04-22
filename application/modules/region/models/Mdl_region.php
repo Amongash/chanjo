@@ -8,7 +8,7 @@ parent::__construct();
 }
 
 function get_table() {
-    $table = "m_region";
+    $table = "tbl_regions";
     return $table;
 }
 

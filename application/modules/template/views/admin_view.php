@@ -12,17 +12,15 @@
     <link href="<?php echo base_url() ?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="<?php echo base_url() ?>assets/css/animate.css" rel="stylesheet" type="text/css"/>
     <link href="<?php echo base_url() ?>assets/css/admin.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo base_url() ?>assets/plugins/select2/css/select2.min.css" rel="stylesheet">
     <link href="<?php echo base_url() ?>assets/plugins/jquery-daterangepicker/daterangepicker.css" rel="stylesheet">
     <link href="<?php echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.css" rel="stylesheet">
     <link href="<?php echo base_url() ?>assets/plugins/advanced-datatable/css/demo_page.css" rel="stylesheet">
     <link href="<?php echo base_url() ?>assets/plugins/advanced-datatable/css/demo_table.css" rel="stylesheet">
+    <link href="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/css/formValidation.min.css" rel="stylesheet">
 
-    <!--    <link href="--><?php //echo base_url() ?>
-    <!--assets/plugins/bootstrap-datetimepicker/css/datetimepicker.css" rel="stylesheet">-->
     <link href="<?php echo base_url() ?>assets/css/jquery-ui.css" rel="stylesheet">
 
-    <!--    <link href="--><?php //echo base_url() ?>
-    <!--assets/plugins/date-range-picker/css/jquery.comiseo.daterangepicker.css" rel="stylesheet" />-->
 
     <script src="<?php echo base_url() ?>assets/js/jquery-2.1.0.js"></script>
     <script src="<?php echo base_url() ?>assets/js/bootstrap.min.js"></script>
@@ -31,8 +29,7 @@
 
     <script src="<?php echo base_url() ?>assets/js/moment.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/jquery-daterangepicker/jquery.daterangepicker.js"></script>
-    <!--    <script src="--><?php //echo base_url() ?>
-    <!--assets/plugins/date-range-picker/js/jquery.comiseo.daterangepicker.js"></script>-->
+
     <script src="<?php echo base_url() ?>assets/plugins/highcharts/highcharts.js" type="text/javascript"></script>
     <script src="<?php echo base_url() ?>assets/plugins/highcharts/modules/no-data-to-display.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/highcharts/modules/exporting.js"></script>
@@ -81,7 +78,7 @@
                                     <li> <span class="new" id="all"><a href="#" class="pull-right">View All</a> </span> </li>
                                 </ul>
                             </li>
-                            <li class="dropdown"><a href="javascript:void(0);" data-toggle="dropdown"> notification
+                            <li class="dropdown"><a href="javascript:void(0);" data-toggle="dropdown"> Notifications
                                     <span class="badge badge color_2" id="count"></span> </a>
                                 <div class="dropdown-menu">
                                     <div class="top_pointer"></div>
@@ -215,8 +212,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Immunization
-                                        Performance</b> </a>
+                                <a href="<?php echo site_url("reports/stock_movement") ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Immunization
+                                        &emsp;&emsp;&emsp;Performance</b> </a>
                             </li>
                         </ul>
                     </li>
@@ -246,7 +243,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Policy & Notices</b>
+                                <a href="#"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Policy &amp; Notices</b>
                                 </a>
                             </li>
                         </ul>
@@ -285,7 +282,7 @@
                                         class="fa fa-circle"></i> <b>Add Sub-County</b> </a>
                             </li>
                             <li>
-                                <a href="<?php echo site_url('depot'); ?>"> <span>&nbsp;</span> <i
+                                <a href="<?php echo site_url('store'); ?>"> <span>&nbsp;</span> <i
                                         class="fa fa-circle"></i> <b>Add Store</b> </a>
                             </li>
                             <li>
@@ -332,7 +329,7 @@
                     </div>-->
                         <div class="block-web">
                             <div class="header">
-                                <h3 class="content-header text-info "><?php echo $user_object['user_statiton']; ?></h3>
+                                <h3 class="content-header text-info "><?php echo $page_header = (isset($page_header)) ? $page_header : $user_object['user_statiton']; ?></h3>
                             </div>
                             <div class="porlets-content">
                                 <?php $this->load->view($module . '/' . $view_file); ?>
@@ -354,54 +351,54 @@
 <!--\\\\\\\ wrapper end\\\\\\-->
 
 <script>
-    function notifications() {
-        url = "<?php echo site_url('notifications/get_notification_count');?>";
-        $.ajax({
-            url: url,
-            cache: false,
-            success: function (data) {
-                $("#count").html(data);
-            }
-        });
-    }
+    // function notifications() {
+    //     url = "<?php echo site_url('notifications/get_notification_count');?>";
+    //     $.ajax({
+    //         url: url,
+    //         cache: false,
+    //         success: function (data) {
+    //             $("#count").html(data);
+    //         }
+    //     });
+    // }
 
-    function tasks() {
-        url = "<?php echo site_url('notifications/task_count');?>";
-        $.ajax({
-            url: url,
-            cache: false,
-            success: function (data) {
+    // function tasks() {
+    //     url = "<?php echo site_url('notifications/task_count');?>";
+    //     $.ajax({
+    //         url: url,
+    //         cache: false,
+    //         success: function (data) {
                 
-                $(data).insertBefore("#all");
+    //             $(data).insertBefore("#all");
                 
-            }
-        });
-    }
+    //         }
+    //     });
+    // }
 
 
-    $(document).ready(function () {
+    // $(document).ready(function () {
 
-        notifications(); 
-        tasks(); 
+    //     notifications(); 
+    //     tasks(); 
 
-    });
+    // });
 
     //Refresh auto_load() function after 10000 milliseconds
-    setInterval(notifications, 2000);
-    setInterval(tasks, 2000);
+    // setInterval(notifications, 2000);
+    // setInterval(tasks, 2000);
 </script>
 
 <script src="<?php echo base_url() ?>assets/js/common-script.js"></script>
 <script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
 <script src="<?php echo base_url() ?>assets/js/jquery.sparkline.js"></script>
 <script src="<?php echo base_url() ?>assets/js/sparkline-chart.js"></script>
+<script src="<?php echo base_url() ?>assets/js/jquery.bootstrap.wizard.js"></script>
+
 <script src="<?php echo base_url() ?>assets/js/graph.js"></script>
 <script src="<?php echo base_url() ?>assets/js/edit-graph.js"></script>
 <script src="<?php echo base_url() ?>assets/plugins/kalendar/kalendar.js" type="text/javascript"></script>
 <script src="<?php echo base_url() ?>assets/plugins/kalendar/edit-kalendar.js" type="text/javascript"></script>
 
-<!--<script src="--><?php //echo base_url() ?>
-<!--assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>-->
 <script src="<?php echo base_url() ?>assets/plugins/data-tables/jquery.dataTables.min.js"></script>
 <script src="<?php echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.js"></script>
 <script src="<?php echo base_url() ?>assets/plugins/sparkline/jquery.sparkline.js" type="text/javascript"></script>
@@ -413,11 +410,14 @@
 
 
 <script src="<?php echo base_url() ?>assets/js/jPushMenu.js"></script>
+<script src="<?php echo base_url() ?>assets/plugins/select2/js/select2.min.js"></script>
 <script src="<?php echo base_url() ?>assets/js/side-chats.js"></script>
 <script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
 <script src="<?php echo base_url() ?>assets/plugins/scroll/jquery.nanoscroller.js"></script>
 
 
+<script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/formValidation.min.js"></script>
+<script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/framework/bootstrap.min.js"></script>
 </body>
 
 </html>

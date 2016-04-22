@@ -33,7 +33,7 @@ public function index()
             $config['last_tagl_close'] = "</li>";
             
             $this->pagination->initialize($config);
-            $data['records'] = $this->db->get('m_group', $config['per_page'], $this->uri->segment(3));
+            $data['records'] = $this->db->get('tbl_user_groups', $config['per_page'], $this->uri->segment(3));
             $data['section'] = "Configuration";
             $data['subtitle'] = "Group";
             $data['page_title'] = "Add group";
@@ -60,7 +60,7 @@ function create(){
             $this->load->model('mdl_group');
             
             if (!isset($update_id )){
-                $update_id = $this->input->post('update_id', $id);
+                $update_id = $this->input->post('update_id');
 				
             }
             
@@ -111,8 +111,8 @@ function get_data_from_post(){
           function submit (){
             
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('name', 'Group Name', 'required|xss_clean');
-        $this->form_validation->set_rules('description', 'Group Description', 'required|xss_clean');
+        $this->form_validation->set_rules('name', 'Group Name', 'required');
+        $this->form_validation->set_rules('description', 'Group Description', 'required');
         $this->form_validation->set_error_delimiters('<p class="red_text semi-bold">'.'*', '</p>');       
        
         $update_id = $this->input->post('update_id', TRUE);

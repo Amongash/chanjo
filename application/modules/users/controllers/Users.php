@@ -51,7 +51,7 @@ class Users extends MY_Controller
 
         $this->pagination->initialize($config);
         // $data['query'] = $this->mdl_region->get('id', $config['per_page'], $this->uri->segment(3));
-        $data['records'] = $this->db->get('user_details', $config['per_page'], $this->uri->segment(3));
+        $data['records'] = $this->db->get('v_user_details', $config['per_page'], $this->uri->segment(3));
         //$this->load->view('display', $data);
         $data['module'] = "users";
         $data['view_file'] = "list_user_view";
@@ -92,11 +92,11 @@ class Users extends MY_Controller
 
         $data['breadcrumb'] = $this->make_bread->output();
 
-        $this->form_validation->set_rules('first_name', 'First Name', 'required|xss_clean');
-        $this->form_validation->set_rules('last_name', 'Last Name', 'required|xss_clean');
-//        $this->form_validation->set_rules('username', 'Username', 'required|xss_clean');
-        $this->form_validation->set_rules('phone', 'Phone', 'required|xss_clean');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|xss_clean');
+        $this->form_validation->set_rules('first_name', 'First Name', 'required');
+        $this->form_validation->set_rules('last_name', 'Last Name', 'required');
+//        $this->form_validation->set_rules('username', 'Username', 'required');
+        $this->form_validation->set_rules('phone', 'Phone', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_error_delimiters('<p class="red_text semi-bold">' . '*', '</p>');
         if ($this->form_validation->run() === FALSE) {
 
@@ -124,8 +124,8 @@ class Users extends MY_Controller
     function change_pass()
     {
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('password', 'Password', 'required|xss_clean|matches[password_confirm]');
-        $this->form_validation->set_rules('password_confirm', 'Password Confirm', 'required|xss_clean|matches[password]');
+        $this->form_validation->set_rules('password', 'Password', 'required|matches[password_confirm]');
+        $this->form_validation->set_rules('password_confirm', 'Password Confirm', 'required|matches[password]');
         $this->form_validation->set_error_delimiters('<p class="red_text semi-bold">' . '*', '</p>');
         if ($this->form_validation->run() === FALSE) {
             redirect('users/profile');
@@ -147,7 +147,7 @@ class Users extends MY_Controller
         $update_id = $this->uri->segment(3);
 
         if (!isset($update_id)) {
-            $update_id = $this->input->post('update_id', $id);
+            $update_id = $this->input->post('update_id');
         }
 
         if (is_numeric($update_id)) {
@@ -241,20 +241,15 @@ class Users extends MY_Controller
     {
         Modules::run('secure_tings/is_logged_in');
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('f_name', 'First Name', 'required|xss_clean');
-        $this->form_validation->set_rules('l_name', 'Last Name', 'required|xss_clean');
-        $this->form_validation->set_rules('username', 'Username', 'required|xss_clean');
-        $this->form_validation->set_rules('phone', 'Phone', 'required|xss_clean');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|xss_clean');
-        $this->form_validation->set_rules('user_group', 'User Group', 'required|xss_clean');
-        $this->form_validation->set_rules('user_level', 'Access Level', 'required|xss_clean');
-        $this->form_validation->set_rules('password', 'Password', 'required|xss_clean|matches[passwordc]');
-        $this->form_validation->set_rules('passwordc', 'Password Confirm', 'required|xss_clean|matches[password]');
-        $this->form_validation->set_rules('national', 'National', 'xss_clean');
-        $this->form_validation->set_rules('regional', 'Region', 'xss_clean');
-        $this->form_validation->set_rules('countyuser', 'County', 'xss_clean');
-        $this->form_validation->set_rules('subcountyuser', 'Sub County', 'xss_clean');
-        $this->form_validation->set_rules('facilityuser', 'Facility', 'xss_clean');
+        $this->form_validation->set_rules('f_name', 'First Name', 'required');
+        $this->form_validation->set_rules('l_name', 'Last Name', 'required');
+        $this->form_validation->set_rules('username', 'Username', 'required');
+        $this->form_validation->set_rules('phone', 'Phone', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('user_group', 'User Group', 'required');
+        $this->form_validation->set_rules('user_level', 'Access Level', 'required');
+        $this->form_validation->set_rules('password', 'Password', 'required|matches[passwordc]');
+        $this->form_validation->set_rules('passwordc', 'Password Confirm', 'required|matches[password]');
         $this->form_validation->set_error_delimiters('<p class="red_text semi-bold">' . '*', '</p>');
         if ($this->form_validation->run() == FALSE) {
 

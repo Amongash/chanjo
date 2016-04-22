@@ -130,18 +130,18 @@ function get_data_from_post(){
           function submit (){
          // Modules::run('secure_tings/ni_met');    
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('user_statiton', 'User Base Station', 'required|xss_clean');
-        $this->form_validation->set_rules('facility', 'Facility Name', 'required|xss_clean');
-        $this->form_validation->set_rules('equipment', 'Equipment', 'required|xss_clean');
-        $this->form_validation->set_rules('serial_id', 'Serial', 'required|xss_clean');
-        $this->form_validation->set_rules('deffect', 'Deffect Description', 'required|xss_clean');
-        $this->form_validation->set_rules('actions', 'Action Description', 'required|xss_clean');
-        $this->form_validation->set_rules('reason_defects', 'Reasons', 'xss_clean');
-        $this->form_validation->set_rules('specific_defect', 'Specific Description', 'xss_clean');
-        $this->form_validation->set_rules('test_administered', 'Tests', 'xss_clean');
-        $this->form_validation->set_rules('comments', 'Comments', 'xss_clean');
-        $this->form_validation->set_rules('tech_name', 'Technician Name', 'required|xss_clean');
-        $this->form_validation->set_rules('tech_initials', 'Technician Initial', 'required|xss_clean');
+        $this->form_validation->set_rules('user_statiton', 'User Base Station', 'required');
+        $this->form_validation->set_rules('facility', 'Facility Name', 'required');
+        $this->form_validation->set_rules('equipment', 'Equipment', 'required');
+        $this->form_validation->set_rules('serial_id', 'Serial', 'required');
+        $this->form_validation->set_rules('deffect', 'Deffect Description', 'required');
+        $this->form_validation->set_rules('actions', 'Action Description', 'required');
+        $this->form_validation->set_rules('reason_defects', 'Reasons', '');
+        $this->form_validation->set_rules('specific_defect', 'Specific Description', '');
+        $this->form_validation->set_rules('test_administered', 'Tests', '');
+        $this->form_validation->set_rules('comments', 'Comments', '');
+        $this->form_validation->set_rules('tech_name', 'Technician Name', 'required');
+        $this->form_validation->set_rules('tech_initials', 'Technician Initial', 'required');
         
         $update_id = $this->input->post('update_id', TRUE);
         if ($this->form_validation->run() == FALSE)
