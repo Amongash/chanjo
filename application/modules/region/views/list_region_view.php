@@ -1,62 +1,74 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');?>
-  <div class="row">
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<div class="row">
     <div class="col-lg-12">
-<!--		 <a href="--><?php //echo site_url('region/submit');?><!--" class="btn btn-primary">Add Regions</a>-->
+        <!--         <a href="--><?php //echo site_url('region/submit');?>
+        <!--" class="btn btn-primary">Add Regions</a>-->
 
     </div>
-  </div>
-  <div class="row">
+</div>
+<div class="row">
 
-  <?php echo $this->session->flashdata('msg');  ?>
+    <?php echo $this->session->flashdata('msg'); ?>
     <div class="col-lg-12" style="margin-top: 10px;">
-     <div class="table-responsive">
-  <table class="table table-bordered table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Region Name</th>
-                                        <th>Region Manager</th>
-                                        <th>Region Manager Phone</th>
-                                        <th>Region Manager Email</th>
-                                        <td align="center"><b>Edit</b></td>
-                                        <td align="center"><b>Delete</b></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    foreach ($records->result() as $row){
-                                        $edit_url = base_url().'region/create/'.$row->id;
-                                        $delete_url = base_url().'region/delete/'.$row->id;
-                                      ?>
-                                    <tr>
-                                        <td><?php echo $row->region_name ?></td>
-                                        <td><?php echo $row->region_manager ?></td>
-                                        <td><?php echo $row->region_manager_phone ?></td>
-                                        <td><?php echo $row->region_manager_email ?></td>
-                                        <td align="center"><a href="<?php echo $edit_url ?>"><i class="fa fa-edit"></i></a></td>
-                                        <td align="center"><a href="<?php echo $delete_url ?>"><i class="fa fa-trash-o"></i></td>
-                                       
-                                    </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                    <hr>
-                    </br>
-                    
-                    <?php 
+        <div class="table-responsive">
+            <table id="table" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                <thead>
+                    <tr class="button"></tr>
+                    <tr>
+                        <th>Region Name</th>
+                        <th>Region Manager</th>
+                        <th>Region Manager Phone</th>
+                        <th>Region Manager Email</th>
+                        <td align="center"><b>Action</b></td>
+                    </tr>
+                </thead>
+                <tbody>
 
-                    //echo $this->table->generate($records);
-                    echo $this->pagination->create_links(); ?>
-                    
-                    
-                    
-                
-                        </div>
+                </tbody>
+            </table>
+            <hr>
+            </br>
 
-  <script type="text/javascript">
-window.setTimeout(function() {
-    $("#alert-message").fadeTo(500, 0).slideUp(500, function(){
-        $(this).remove(); 
-    });
-}, 5000);
+        </div>
 
-</script>
+        <script type="text/javascript">
+            var table;
+            $(document).ready(function() {
+                table = $('#table').DataTable({
+                    "sDom": '<l<t>ip>',
+                    "processing": true, //Feature control the processing indicator.
+                    "serverSide": true, //Feature control DataTables' server-side processing mode.
+
+                    // Load data for the table's content from an Ajax source
+                    "ajax": {
+                        "url": "<?php echo site_url('region/action_list') ?>",
+                        "type": "POST"
+                    },
+                    "dom": 'Bfrtip',
+                    "buttons": [
+                        'excelHtml5',
+                        'csvHtml5',
+                        'pdfHtml5',
+                    ],
+                    "responsive": {
+                        "details": {
+                            "type": 'column'
+                        }
+                    },
+
+                    //Set column definition initialisation properties.
+                    "columnDefs": [{
+                        "targets": [-1], //last column
+                        "orderable": true, //set not orderable
+                    }, ],
+
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            window.setTimeout(function() {
+                $("#alert-message").fadeTo(500, 0).slideUp(500, function() {
+                    $(this).remove();
+                });
+            }, 5000);
+        </script>

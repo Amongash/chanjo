@@ -312,12 +312,12 @@ class Users extends MY_Controller
                         'user_id' => $result[0]->id,
                         'user_fname' => $result[0]->f_name,
                         'user_lname' => $result[0]->l_name,
+                        'user_email' => $result[0]->email,
                         'user_group' => $result[0]->user_group,
                         'user_level' => $result[0]->user_level,
                         'logged_in' => TRUE
                     );
 
-                    // $save = json_encode($userdata);
 
                     // Add user data in session
                      $this->session->set_userdata('logged_in', $userdata);

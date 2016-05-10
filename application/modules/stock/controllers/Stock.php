@@ -245,28 +245,6 @@ class Stock extends MY_Controller
         $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Stock successfully received from <strong>' . $data['source'] . '</strong>!</div>');
     }
 
-    // function test(){
-    //     Modules::run('secure_tings/is_logged_in');
-
-    //     $data['module'] = "stock";
-    //     $data['view_file'] = "test";
-    //     $data['section'] = "manage stock";
-    //     $data['subtitle'] = "Stocks Legder";
-    //     $data['page_title'] = "Stocks Legder";
-    //     $data['user_object'] = $this->get_user_object();
-    //     $data['main_title'] = $this->get_title();
-    //     //
-    //     //breadcrumbs
-    //     $this->load->library('make_bread');
-    //     $this->make_bread->add('Manage Stock', '', 0);
-    //     $this->make_bread->add('Issue Stocks', 'stock/list_issue_stock', 0);
-    //     $this->make_bread->add('Issue Stocks Directly', '', 0);
-    //     $data['breadcrumb'] = $this->make_bread->output();
-    //     //
-    //     echo Modules::run('template/' . $this->redirect($this->session->userdata['logged_in']['user_group']), $data);
-
-    // }
-
     function issue_stock()
     {
         Modules::run('secure_tings/is_logged_in');
@@ -375,162 +353,38 @@ class Stock extends MY_Controller
 
     }
 
-    function vaccine_count()
-    {
+    function stock_data($id){
+      	$this->load->model('reports/mdl_reports');
+      	$info['user_object'] = $this->get_user_object();
+        $station = $info['user_object']['user_statiton'];
+		$transaction = $this->mdl_reports->get_transactions($station,$id);
+		$data = array();
+		$no = $_POST['start'];
+		foreach ($transaction as $val) {
+		      $no++;
+		      $row = array();    
+		      $row[] = $val->transaction_date;
+              $row[] = $val->type;
+		      $row[] = $val->to_from;
+              $row[] = $val->quantity;
+		     
+		      $row[] = $val->batch;
+              $row[] = $val->expiry;
+		      
+		      $row[] = $val->balance;
 
-        $id = $this->uri->segment(3);
-        $this->load->model('stock/mdl_stock');
-        $data['user_object'] = $this->get_user_object();
-        $station_id = $data['user_object']['user_statiton'];
-        $query = $this->mdl_stock->get_all_physical_counts($id, $station_id);
-        $data = array();
-        $no = $_POST['start'];
-        foreach ($query as $bal) {
-            $no++;
-            $row = array();
-            $row[] = date("Y-m-d", strtotime($bal['date_of_count']));
-            $row[] = $bal['vaccine_name'];
-            $row[] = $bal['batch'];
-            $row[] = $bal['expiry_date'];
-            $row[] = $bal['stock_balance'];
-            $data[] = $row;
+		      $data[] = $row;
+		}
 
-        }
-        $output = array(
-            "draw" => $_POST['draw'],
-            
+		$output = array(
+		  "draw" => $_POST['draw'],
+		  "recordsTotal" => $this->mdl_reports->count_transactions_filtered($station,$id),
+          "recordsFiltered" => $this->mdl_reports->count_transactions_filtered($station,$id),
+		  "data" => $data,
+		);
 
-            "data" => $data,
-        );
-
-        echo json_encode($output);
-
-    }
-
-    function batch_summary()
-    {
-
-        $id = $this->uri->segment(3);
-        $this->load->model('stock/mdl_stock');
-        $data['user_object'] = $this->get_user_object();
-        $station_id = $data['user_object']['user_statiton'];
-        $query = $this->mdl_stock->get_batch_stock_summary($id, $station_id);
-        $data = array();
-        $no = $_POST['start'];
-        foreach ($query->result_array() as $bal) {
-            $no++;
-            $row = array();
-
-            $row[] = $bal['batch'];
-            $row[] = $bal['expiry_date'];
-            $row[] = $bal['balance'];
-            $data[] = $row;
-
-        }
-        $output = array(
-            "draw" => $_POST['draw'],
-            "recordsTotal" => $this->mdl_stock->get_batch_stock_summary($id, $station_id)->num_rows(),
-            "recordsFiltered" => $this->mdl_stock->get_batch_stock_summary($id, $station_id)->num_rows(),
-            "data" => $data,
-        );
-
-        
-        echo json_encode($output);
-        // $this->output->enable_profiler(TRUE);
-    }
-
-    function ledger_in()
-    {
-        Modules::run('secure_tings/is_logged_in');
-        $id = $this->uri->segment(3);
-        $this->load->model('stock/mdl_stock');
-        $data['user_object'] = $this->get_user_object();
-        $station_id = $data['user_object']['user_statiton'];
-        
-        $date = $_POST['columns'][0]['search']['value'];
-        $range = explode("/", $date);
-        if(!empty($range[0] )){
-            $date = explode("/", $date);
-            $option = "in";
-            $query = $this->mdl_stock->show_data_by_date_range($option, $date, $id, $station_id);
-
-        }else{
-            $query = $this->mdl_stock->get_vaccine_ledger_in( $id, $station_id);
-        }
-        
-        $data = array();
-        
-        $no = $_POST['start'];
-        foreach ($query as $bal) {
-            $no++;
-            $row = array();
-            $row[] = date("Y-m-d", strtotime($bal->date_received));
-            $row[] = $bal->vaccine_name;
-            $row[] = $bal->amount_received;
-            $row[] = $bal->batch_no;
-            $row[] = $bal->expiry_date;
-            $row[] =  '<a class="btn btn-sm btn-primary" onclick="remove_duplicate()" title="Remove"> Remove</a>';
-    
-            $data[] = $row;
-
-        }
-        $output = array(
-            "draw" => $_POST['draw'],
-            "recordsTotal" => $this->mdl_stock->count_received_filtered($id, $station_id),
-            "recordsFiltered" => $this->mdl_stock->count_received_filtered($id, $station_id),
-            "data" => $data,
-        );
-
-        echo json_encode($output);
-
-    }
-
-    function ledger_out()
-    {
-        Modules::run('secure_tings/is_logged_in');
-        $id = $this->uri->segment(3);
-        $this->load->model('stock/mdl_stock');
-        $data['user_object'] = $this->get_user_object();
-        $station_id = $data['user_object']['user_statiton'];
-        
-        $date = $_POST['columns'][0]['search']['value'];
-        $range = explode("/", $date);
-        if(!empty($range[0])){
-            $date = explode("/", $date);
-            $option = "out";
-            $query = $this->mdl_stock->show_data_by_date_range($option, $date, $id, $station_id);
-
-        }else{
-            $query = $this->mdl_stock->get_vaccine_ledger_out($id, $station_id);
-        }
-        
-        $data = array();
-        $no = $_POST['start'];
-        foreach ($query as $bal) {
-            $no++;
-            $row = array();
-            $row[] = date("Y-m-d", strtotime($bal->date_issued));
-            $row[] = $bal->vaccine_name;
-            $row[] = $bal->issued_to;
-            $row[] = $bal->amount_issued;
-            $row[] = $bal->batch_no;
-            $row[] = $bal->expiry_date;
-            $data[] = $row;
-
-
-        }
-        $output = array(
-            "draw" => $_POST['draw'],
-            "recordsTotal" => $this->mdl_stock->count_issued_filtered($id, $station_id),
-            "recordsFiltered" => $this->mdl_stock->count_issued_filtered($id, $station_id),
-            "data" => $data,
-        );
-
-        echo json_encode($output);
-        // $this->output->enable_profiler(TRUE);
-
-    }
-
+		echo json_encode($output);
+      }
 
     function get_stock_balance($selected_vaccine)
     {
@@ -705,52 +559,43 @@ class Stock extends MY_Controller
     function save_adjust_stock()
     {
         Modules::run('secure_tings/is_logged_in');
-        $data['user_object'] = $this->get_user_object();
-        $station_name = $data['user_object']['user_statiton'];
-        $user_id = $data['user_object']['user_id'];
-        $user_level = $data['user_object']['user_level'];
+        $info['user_object'] = $this->get_user_object();
+
         $adjustment = $this->input->post('adjustment');
+        $user_id = $info['user_object']['user_id'];
+        $level = $info['user_object']['user_level'];
+        $station= $info['user_object']['user_statiton'];
+        $type= 4;
+        $batch = stripcslashes($_POST['batch']);
+        $batch = json_decode($batch, TRUE);
 
-
-        if (!is_null($adjustment) && !empty($adjustment)){
-            if($adjustment =='a'){
-               $save_data = array(
-                'vaccine_id' => $this->input->post('vaccine'),
-                'batch_no' => strtoupper($this->input->post('batch_no')),
-                'date_of_count' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'))),
-                'quantity' => $this->input->post('quantity'),
-                'adjustment' => 'Addition',
-                'reason' => $this->input->post('reason'),           
-                'info' => $this->input->post('comment'),           
-                'station_id' => $station_name,
-                'count_by_user_id' => $user_id,
-                'receive_id' => $this->input->post('id'),
-                'station_level' => $user_level,
-
-            );
+        $array = array();
+        $data_array = array();
+        foreach ($batch as $item ) {
+            $array['transaction_date'] = $item['date'];
+            $array['type'] = $type;
+            $array['timestamp'] = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')));
+            $array['user_id'] = $user_id;
+            $array['level'] = $level;
+            $array['station'] = $station;
             
-            }elseif ($adjustment == 'd') {
-               $save_data = array(
-                'vaccine_id' => $this->input->post('vaccine'),
-                'batch_no' => strtoupper($this->input->post('batch_no')),
-                'date_of_count' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'))),
-                'quantity' => $this->input->post('quantity'),
-                'adjustment' => 'Deduction',
-                'reason' => $this->input->post('reason'),           
-                'info' => $this->input->post('comment'),           
-                'station_id' => $station_name,
-                'count_by_user_id' => $user_id,
-                'receive_id' => $this->input->post('id'),
-                'station_level' => $user_level,
 
-            );
+            $this->db->insert('tbl_transaction', $array);
+            $request_id = $this->db->insert_id();
+            
+            $data_array['expiry_date'] = $item['expiry_date'];
+            $data_array['vaccine_id'] = $item['vaccine_id'];
+            $data_array['batch'] = $item['batch'];
+            $data_array['transaction_quantity'] = $item['quantity'];
+            $data_array['transaction_id'] = $request_id;
+
+            $this->db->insert('tbl_transaction_items', $data_array);
+            
             }
-        }
-
-        $this->load->model('stock/mdl_stock');
-        echo json_encode($save_data);
-        $this->mdl_stock->save_adjustment($save_data);
-        $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Stock adjustment has been carried out successfully!</div>');
+            
+            
+        $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Stock Adjustment updated successfully!</div>');
+        redirect('stock/list_inventory', 'refresh');
 
     }
 
@@ -957,6 +802,7 @@ class Stock extends MY_Controller
             $issue_array[$issue_counter]['batch'] = $item['batch_no'];
             $issue_array[$issue_counter]['expiry_date'] = $item['expiry_date'];
             $issue_array[$issue_counter]['vvm'] = $item['vvm_status'];
+            $issue_array[$issue_counter]['current_quantity'] = $item['quantity'];
             $issue_array[$issue_counter]['transaction_quantity'] = $item['amount_issued'];
             $issue_array[$issue_counter]['transaction_id'] = $request_id[$issue_counter];
 

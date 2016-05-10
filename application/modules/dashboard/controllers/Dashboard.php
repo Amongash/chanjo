@@ -130,6 +130,7 @@ Modules::run('secure_tings/is_logged_in');
       foreach ($query->result() as $row) {
         $data['name'] = $row->months;
         $data['y'] = (int)$row->bcg;
+        $data['z'] = (int)$row->dpt1;
          array_push($json_array, $data);
 
       }

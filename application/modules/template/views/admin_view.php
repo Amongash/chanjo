@@ -79,16 +79,27 @@
                                 </ul>
                             </li>
                             <li class="dropdown"><a href="javascript:void(0);" data-toggle="dropdown"> Notifications
-                                    <span class="badge badge color_2" id="count"></span> </a>
+                                    <span class="badge badge color_2" id="count"><?php echo $user_object['message_count']+$user_object['notice_count'] ?></span> </a>
                                 <div class="dropdown-menu">
                                     <div class="top_pointer"></div>
                                     <div class="box"><a href="<?php echo site_url('inbox'); ?>"> <span
-                                                class="block primery_6"> <i class="fa fa-envelope-o"></i> </span> <span
-                                                class="block_text">Inbox</span> </a></div>
+                                                class="block primery_6"><i class="fa fa-envelope-o"></i></span>
+                                            <span class="block_text">Inbox</span> </a>
+                                        <span class="badge badge"><?php echo $user_object['message_count'] ?></span>
+                                    </div>
+
+
 
                                     <div class="box"><a href="#"> <span class="block primery_6"> <i
                                                     class="fa fa-calendar-o"></i> </span> <span
                                                 class="block_text">Calendar</span> </a></div>
+
+                                    <div class="box"><a href="<?php echo site_url('uploads/view_all_notices'); ?>"> <span class="block primery_6">
+                                                <i class="glyphicon glyphicon-warning-sign"></i> </span>
+
+                                                <span class="block_text">Notice</span>
+                                            <span class="badge badge"><?php echo $user_object['notice_count'] ?></span>
+                                        </a></div>
 
 
                                 </div>
@@ -112,9 +123,52 @@
                     </ul>
                 </div>
 
+            </div>
+
+
+
+
+            <!--<div class="dropdown user_admin">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                                <img
+                                    src="<?php /*echo base_url()*/?>assets/images/user.jpg"/><span
+                                    class="user_adminname"><?php /*echo '<b> Hello ' . $user_object['user_fname'] . ' </b>'; */?></span>                                    <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <div class="top_pointer"></div>
+                                <li><a href="<?php /*echo site_url('users/profile'); */?>"><i class="fa fa-user"></i> Profile</a></li>
+                                <li><a href="<?php /*echo site_url('users/logout'); */?>"><i class="fa fa-power-off"></i> Logout</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </div>-->
+            </div>
+
+               <!-- <div class="container user_admin dropdown">
+                    <a href="javascript:void(0);" data-toggle="dropdown"><img
+                            src="<?php /*echo base_url() */?>assets/images/user.jpg"/><span
+                            class="user_adminname"><?php /*echo '<b> Hello ' . $user_object['user_fname'] . ' </b>'; */?></span>
+                        <b class="caret"></b> </a>
+                    <ul class="dropdown-menu">
+                        <div class="top_pointer"></div>
+                        <li><a href="<?php /*echo site_url('users/profile'); */?>"><i class="fa fa-user"></i> Profile</a></li>
+                        <li><a href="<?php /*echo site_url('users/logout'); */?>"><i class="fa fa-power-off"></i> Logout</a>
+                        </li>
+                    </ul>
+                </div>-->
+
+
+
+
                 <!-- <a href="javascript:;" class="toggle-menu menu-right push-body jPushMenuBtn rightbar-switch"><i class="fa fa-comment chat"></i></a>-->
 
-            </div>
+            <!--</div>-->
         </div>
         <!--\\\\\\\ header top bar end \\\\\\-->
     </div>
@@ -212,8 +266,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="<?php echo site_url("reports/stock_movement") ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Immunization
-                                        &emsp;&emsp;&emsp;Performance</b> </a>
+                                <a href="<?php echo site_url("reports/stock_transactions") ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Stock 
+                                Transactions</b> </a>
                             </li>
                         </ul>
                     </li>
@@ -243,7 +297,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Policy &amp; Notices</b>
+                                <a href="<?php echo site_url('uploads/notice'); ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Policy & Notices</b>
                                 </a>
                             </li>
                         </ul>
@@ -297,11 +351,28 @@
                                                            width="30" height="30"/><span class="theme_color">&nbsp;&nbsp;<b>NVIP
                                     Chanjo</b></span> <span class="plus"><i class="fa fa-plus"></i></span> </a>
                         <ul>
+		<li>
+		                <a href="javascript:void(0);"> <i class="fa fa-user"></i>PROFILE<span class="plus"><i
+		                            class="fa fa-plus"></i></span> </a>
+		                <ul>
+		                    <li>
+		                        <a href="<?php echo site_url('users/profile'); ?>"> <span>&nbsp;</span> <i class="fa fa-user"></i> <b>Profile</b> </a>
+		                    </li>
+		                    <li>
+		                        <a href="<?php echo site_url('users/logout'); ?>"> <span>&nbsp;</span> <i class="fa fa-power-off"></i> <b>Logout</b> </a>
+		                    </li>
+                        </ul>
+                    </li>
                             <li>
                                 <a href="#"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>ABOUT</b> </a>
                             </li>
                         </ul>
                     </li>
+
+
+                    
+
+
                 </ul>
             </div>
 
@@ -418,6 +489,17 @@
 
 <script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/formValidation.min.js"></script>
 <script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/framework/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.youClass').click(function(){
+            var menuItem = '<a class=" " href=" ">Log Out</a>';
+
+            $('.anotherClass').append('<li class=".youClass">'+ menuItem +'</li>');
+
+        });
+    });
+</script>
 </body>
+
 
 </html>

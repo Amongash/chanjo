@@ -23,6 +23,7 @@ function get_notification_count(){
   }
 
 
+
   function task_count(){
    
     $data['user_object'] = $this->get_user_object();

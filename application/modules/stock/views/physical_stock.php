@@ -26,10 +26,11 @@ echo form_open('',$form_attributes);?>
 
 </style>
 	<thead>
+		<th >Date of count</th>
 		<th align="center">Vaccine Name</th>
 		<th >Batch Number</th>
 		<th >Expiry Date</th>
-		<th >Date of count</th>
+		
 		<th >Available Quantity</th>
 		<th > Physical Count</th>
 		<th>Action</th>
@@ -40,6 +41,8 @@ echo form_open('',$form_attributes);?>
 		
              	<tr physical_row="1">
              	<input type="hidden" name ="transaction_type" class="transaction_type" value="2">
+             		<td> <?php $data = array('name' => 'date_of_count', 'required' => 'true', 'id' => 'date_of_count', 'required' => 'true', 'class' => 'form-control date_of_count cells'); echo form_input($data); ?></td>
+             		
                      <td> <select name="vaccine" class="form-control vaccine" id="vaccine" required>
 		                 <option value="" selected="selected">Select Vaccine</option>
 		                 <?php foreach ($vaccines as $vaccine) { 
@@ -50,7 +53,6 @@ echo form_open('',$form_attributes);?>
              		<td> <select name="batch_no" class="form-control batch_no" id="batch_no" required ></select></td>
              		<td><?php $data=array('name' => 'expiry_date','id'=> 'expiry_date','class'=>'form-control expiry_date cells','disabled'=>''); echo form_input($data);?></td>
              		 
-             		<td> <?php $data = array('name' => 'date_of_count', 'required' => 'true', 'id' => 'date_of_count', 'required' => 'true', 'class' => 'form-control date_of_count cells'); echo form_input($data); ?></td>
              		<td><?php $data=array('name' => 'available_quantity','id'=> 'available_quantity','class'=>'form-control available_quantity cells','disabled'=>'','required'=>'' ); echo form_input($data);?></td>
              		<td><?php $data=array('name' => 'physical_count','required'=>'true','type'=>'Number', 'min'=>'0','id'=>'physical_count' ,'class'=>'form-control physical_count cells','required'=>'' ); echo form_input($data);?></td>
 					<td hidden><?php $data=array('name' => 'status','id'=> 'status','class'=>'form-control status' , 'hidden'=>'' ); echo form_input($data);?></td>

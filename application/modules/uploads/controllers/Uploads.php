@@ -25,6 +25,154 @@
             //
            echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data);
        }
+        function notice(){
+            $this->load->model('mdl_uploads');
+
+            $data['section'] = "NVIP Chanjo";
+            $data['subtitle'] = "Notice";
+            $data['page_title'] = "Notice";
+            $data['module'] = "uploads";
+            $data['view_file'] = "notice_v";
+            $data['user_object'] = $this->get_user_object();
+            $data['main_title'] = $this->get_title();
+            //breadcrumbs
+            $this->load->library('make_bread');
+            $this->make_bread->add('Notice', 0);
+            $data['breadcrumb'] = $this->make_bread->output();
+            //
+            echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data);
+
+        }
+        function view_all_notices(){
+            $this->load->model('mdl_uploads');
+
+            $data['section'] = "NVIP Chanjo";
+            $data['subtitle'] = "Notice";
+            $data['page_title'] = "Notice";
+            $data['module'] = "uploads";
+            $data['view_file'] = "viewall_notice_v";
+            $data['user_object'] = $this->get_user_object();
+            $data['main_title'] = $this->get_title();
+            //breadcrumbs
+            $this->load->library('make_bread');
+            $this->make_bread->add('Notice', 0);
+            $data['breadcrumb'] = $this->make_bread->output();
+
+            $user_id = $this->session->userdata['logged_in']['user_id'] ;
+            $this->load->model('mdl_uploads');
+            $querys = $this->mdl_uploads->get_all_notice_id($user_id);
+
+            $me = explode(',',$querys);
+            $length = count($me);
+            
+            for ($x = 0; $x < $length; $x++) {
+                $this->load->model('mdl_uploads');
+                $notices[] = $this->mdl_uploads->get_all_notice($me[$x]);
+            }
+
+
+            $notices2 = json_decode(json_encode($notices), True);
+
+            $data['notices'] = $notices2;
+
+
+
+            echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data);
+
+        }
+        function view_one_notice($id){
+            $this->load->model('mdl_uploads');
+
+            $data['section'] = "NVIP Chanjo";
+            $data['subtitle'] = "Notice";
+            $data['page_title'] = "Notice";
+            $data['module'] = "uploads";
+            $data['view_file'] = "view_notice_v";
+            $data['user_object'] = $this->get_user_object();
+            $data['main_title'] = $this->get_title();
+            //breadcrumbs
+            $this->load->library('make_bread');
+            $this->make_bread->add('Notice', 0);
+            $data['breadcrumb'] = $this->make_bread->output();
+
+            $user_id = $this->session->userdata['logged_in']['user_id'] ;
+            $this->load->model('mdl_uploads');
+            $notice = $this->mdl_uploads->get_all_notice($id);
+            $data['notice'] = json_decode(json_encode($notice), True);
+
+           
+
+
+
+            
+            echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data);
+
+        }
+        function mark_as_read($id){
+            $user_id = $this->session->userdata['logged_in']['user_id'] ;
+            $this->load->model('mdl_uploads');
+            $query = $this->mdl_uploads->get_all_notice_id($user_id);
+
+            $pieces = explode(",", $query);
+
+            $arr = array_diff($pieces, array($id));
+
+            $data = implode(",",$arr);
+
+               $mydata = array(
+                   'notice' => $data
+               );
+
+            $this->mdl_uploads->update_notice($user_id,$mydata);
+            redirect('uploads/view_all_notices','refresh');
+
+        }
+        function upload_notice(){
+            $notice_name = $this->input->post('notice_name', TRUE);
+            $notice_description = $this->input->post('notice_description', TRUE) ;
+            $user_id = $this->session->userdata['logged_in']['user_id'] ;
+            $data = array(
+                'notice_name' => $notice_name ,
+                'notice_description' => $notice_description ,
+                'user_id' => $user_id
+            );
+            $this->load->model('Mdl_uploads');
+            $id = $this->Mdl_uploads->insert_notice($data);
+            $query = $this->Mdl_uploads->get_user_base($user_id);
+            $user_base = json_decode(json_encode($query), True);
+
+            $national = $user_base[0]['national'];
+            $region = $user_base[0]['region'];
+            $county = $user_base[0]['county'];
+            $subcounty = $user_base[0]['subcounty'];
+            $facility = $user_base[0]['facility'];
+
+            //var_dump($national,$region,$county,$subcounty, $facility);
+
+
+            $me = $this->Mdl_uploads->update_users($national,$region,$county,$subcounty, $facility);
+            $np = json_decode(json_encode($me), True);
+
+            foreach ($np as $n){
+                $query = $this->Mdl_uploads->get_all_notice_id($n['user_id']);
+                if(!empty($query)){
+                    $query = $query.','.$id;
+
+                }else{
+                    $query = $id;
+
+
+                }
+
+                $data = array(
+                    'notice' => $query
+                );
+                $this->Mdl_uploads->update_notice($n['user_id'],$data);
+
+            }
+            redirect('uploads/notice');
+
+        }
 
 
 

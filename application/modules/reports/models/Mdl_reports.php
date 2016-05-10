@@ -1,30 +1,34 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Mdl_Reports extends CI_Model {
 	
-var $order = array('transaction_date' => 'desc');
-var $column = array('id','transaction_date','station','level','received','issued','count','balance');
+var $order = array('order' => 'desc');
+var $column = array('transaction_date','station','type','to_from','vaccine_name','batch','expiry','quantity','balance');
 
 	function __construct() {
 		parent::__construct();
 	}
 
 
-	function getRegion($condition){
+	function get_location($condition){
         if(!is_null($condition)){
-            $this->db->select('id,region_name');
-            $this->db->like($condition); 
+            $this->db->select('location');
+            $this->db->like($condition);
         }else{
-            $this->db->select('id,region_name');
+            $this->db->select('location');
         }
-        $query = $this->db->get("tbl_regions");      
+        
+        $query = $this->db->get('v_location');
         return $query->result();
+       
     }
 
-	 private function _get_datatables_query($station)
+	 private function _get_datatables_query($station,$id)
     {
         
-        $this->db->from('v_transactions');
+        $this->db->from('v_transactions_all');
         $this->db->where('station',$station);
+        $this->db->where('vaccine_id',$id);
+        $this->db->order_by('order','desc');
         $i = 0;
         foreach ($this->column as $item)
         {
@@ -45,17 +49,17 @@ var $column = array('id','transaction_date','station','level','received','issued
         }
     }
  
-    function get_transactions($station)
+    function get_transactions($station,$id)
     {
-        $this->_get_datatables_query($station);
+        $this->_get_datatables_query($station,$id);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
         return $query->result();
     }
 
-	function count_transactions_filtered($station){
-		$this->_get_datatables_query($station);
+	function count_transactions_filtered($station,$id){
+		$this->_get_datatables_query($station,$id);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}

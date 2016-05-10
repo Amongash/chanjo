@@ -8,7 +8,7 @@ parent::__construct();
 }
 
 function get_table() {
-    $table = "m_uploads";
+    $table = "tbl_uploads";
     return $table;
 }
 
@@ -104,4 +104,74 @@ $query = $this->db->query($mysql_query);
 return $query;
 }
 
+    function insert_notice($data){
+        $this->db->insert('tbl_notices', $data);
+        $id = $this->db->insert_id();
+        return $id;
+
+    }
+
+    function get_all_notice_id($user_id){
+        $this->db->select('notice');
+        $this->db->from('tbl_users');
+        $this->db->where('id',$user_id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->row()->notice;
+        }
+        return false;
+
+    }
+    function get_all_notice($id){
+        $this->db->select("id,notice_name,notice_description,user_id");
+        $this->db->from('tbl_notices');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    function get_user_base($user_id){
+        $this->db->select("id,national,region,county,subcounty,facility");
+        $this->db->from('tbl_user_base');
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get();
+        return $query->result();
+
+    }
+    function update_users($national,$region,$county,$subcounty, $facility){
+
+        $sql ="SELECT `user_id` FROM `user_base` WHERE national = $national";
+
+
+        if(!$region == 0){
+            $sql.=" AND region = $region";
+        }
+
+
+        if(!$county == 0){
+            $sql.="and county = $county";
+        }
+
+        if(!$subcounty == 0){
+            $sql.=" AND subcounty = $subcounty";
+        }
+
+        if(!$facility == 0){
+            $sql.=" AND facility = $facility";
+        }
+
+
+
+        $query = $this->db->query($sql)->result();
+        /*$query = $this->db->get($sql);*/
+        return $query;
+
+
+    }
+    function update_notice($user_id,$data){
+
+        $this->db->where('id', $user_id);
+        $this->db->update('tbl_users', $data);
+    }
+
 }
+

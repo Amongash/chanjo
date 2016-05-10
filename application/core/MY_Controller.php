@@ -86,9 +86,27 @@ class MY_Controller extends MX_Controller
 
     function get_user_object()
     {
+        //user emails
+        $mb = imap_open("{chi-rs31.websitehostserver.net:993/imap/ssl/novalidate-cert}INBOX", 'victor@wkdesigns.co.ke', 'smartguy123');
+
+        //count user emails
+        $message_count = imap_num_msg($mb);
+
+
+        //get notices
+        $user_id = $this->session->userdata['logged_in']['user_id'] ;
+        $this->load->model('uploads/mdl_uploads');
+        $querys = $this->mdl_uploads->get_all_notice_id($user_id);
+
+        $notice = explode(',',$querys);
+        $notice_count = count($notice);
+
+
+
         if (isset($this->session->userdata['logged_in'])) {
             $user_fname = ($this->session->userdata['logged_in']['user_fname']);
             $user_lname = ($this->session->userdata['logged_in']['user_lname']);
+            $user_email = ($this->session->userdata['logged_in']['user_email']);
             $user_group = ($this->session->userdata['logged_in']['user_group']);
             $user_level = ($this->session->userdata['logged_in']['user_level']);
             $user_id = ($this->session->userdata['logged_in']['user_id']);
@@ -141,13 +159,16 @@ class MY_Controller extends MX_Controller
             $data = array(
                 'user_fname' => $user_fname,
                 'user_lname' => $user_lname,
+                'user_email' => $user_email,
                 'user_group' => $user_group,
                 'user_level' => $user_level,
                 'user_id' => $user_id,
                 'user_statiton' => $user_statiton,
                 'user_statiton_id' => $user_statiton_id,
                 'statiton_above' => $statiton_above,
-                'path' => $path
+                'path' => $path,
+                'message_count'=>$message_count,
+                'notice_count'=>$notice_count
             );
             return $data;
 
@@ -185,6 +206,19 @@ class MY_Controller extends MX_Controller
 
         $title = 'NVIP Chanjo';
         return $title;
+    }
+
+    function getnumber_email(){
+        $mb = imap_open("{chi-rs31.websitehostserver.net:993/imap/ssl/novalidate-cert}INBOX", 'victor@wkdesigns.co.ke', 'smartguy123')
+        or die('Cannot connect: ' . print_r(imap_errors(), true));
+
+        //$messageCount = imap_num_msg($mb);
+        $data['message_count'] = imap_num_msg($mb);
+        
+       
+
+        //return $messageCount;
+
     }
 
     

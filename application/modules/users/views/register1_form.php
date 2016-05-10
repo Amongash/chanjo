@@ -161,20 +161,21 @@ $label = array('class' => 'col-xs-3 control-label');
                                     <div class="col-xs-5">
                                      <?php echo form_dropdown('regional', $region, set_value($regional), 'id="regional" class="form-control"');?>
                                     </div>
-                                    <div class="form-group" id="base3">
-                                        <label class="col-xs-3 control-label">Enter County Base</label>
-                                        <select name="countyuser" class="form-control" id="countyuser"></select>
-                                    </div>
-                                    <div class="form-group" id="base4">
-                                        <label class="col-xs-3 control-label">Enter Sub County Base</label>
-                                        <select name="subcountyuser" class="form-control" id="subcountyuser"></select>
-                                    </div>
-                                    <div class="form-group" id="base5">
-                                        <label class="col-xs-3 control-label">Enter Facility Base</label>
-                                        <select name="facilityuser" class="form-control" id="facilityuser"></select>
-
-                                    </div>
                                 </div>
+                                <div class="form-group" id="base3">
+                                    <label class="col-xs-3 control-label">Enter County Base</label>
+                                    <select name="countyuser" class="form-control" id="countyuser"></select>
+                                </div>
+                                <div class="form-group" id="base4">
+                                    <label class="col-xs-3 control-label">Enter Sub County Base</label>
+                                    <select name="subcountyuser" class="form-control" id="subcountyuser"></select>
+                                </div>
+                                <div class="form-group" id="base5">
+                                    <label class="col-xs-3 control-label">Enter Facility Base</label>
+                                    <select name="facilityuser" class="form-control" id="facilityuser"></select>
+
+                                </div>
+                                
                             </div>
 
                             <!-- Previous/Next buttons -->

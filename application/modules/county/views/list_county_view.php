@@ -1,64 +1,76 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');?>
-  <div class="row">
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<div class="row">
     <div class="col-lg-12">
-<!--      <a href="--><?php //echo site_url('county/create');?><!--" class="btn btn-primary">Add County</a>-->
+        <!--      <a href="--><?php //echo site_url('county/create');?>
+        <!--" class="btn btn-primary">Add County</a>-->
     </div>
-  </div>
-  <div class="row">
+</div>
+<div class="row">
 
 
-  <?php echo $this->session->flashdata('msg');  ?>
+    <?php echo $this->session->flashdata('msg'); ?>
     <div class="col-lg-12" style="margin-top: 10px;">
-     <div class="table-responsive">
-  <table class="table table-bordered table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>County Name</th>
-										                    <th>Population</th>
-										                    <th>Population One</th>
-										                    <th>Women Population</th>
-                                        <td align="center"><b>Edit</b></td>
-                                       
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    foreach ($records->result() as $row){
-                                        $edit_url = base_url().'county/create/'.$row->id;
-                                       
-                                      ?>
-                                    <tr>
-                                        <td><?php echo $row->county_name ?></td>
-                    					           <td><?php echo $row->population ?></td>
+        <div class="table-responsive">
+            <table id="table" class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>County Name</th>
+                        <th>Population</th>
+                        <th>Population One</th>
+                        <th>Women Population</th>
+                        <td align="center"><b>Action</b></td>
 
-										                    <td><?php echo $row->population_one ?></td>
-										                    <td><?php echo $row->population_women ?></td>
-										
-										<td align="center"><a href="<?php echo $edit_url ?>"><i class="fa fa-edit"></i></a></td>
+                    </tr>
+                </thead>
+                <tbody>
 
-                                       
-                                    </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                    <hr>
-                    </br>
-                    
-                    <?php 
-
-                    //echo $this->table->generate($records);
-                    echo $this->pagination->create_links(); ?>
+                </tbody>
+            </table>
+            <hr>
+            </br>
 
 
-     </div>
-                
-                        </div>
+        </div>
 
-  <script type="text/javascript">
-window.setTimeout(function() {
-    $("#alert-message").fadeTo(500, 0).slideUp(500, function(){
-        $(this).remove(); 
-    });
-}, 5000);
+    </div>
+    <script type="text/javascript">
+            var table;
+            $(document).ready(function() {
+                table = $('#table').DataTable({
+                    "sDom": '<l<t>ip>',
+                    "processing": true, //Feature control the processing indicator.
+                    "serverSide": true, //Feature control DataTables' server-side processing mode.
 
-</script>
+                    // Load data for the table's content from an Ajax source
+                    "ajax": {
+                        "url": "<?php echo site_url('county/action_list') ?>",
+                        "type": "POST"
+                    },
+                    "dom": 'Bfrtip',
+                    "buttons": [
+                        'excelHtml5',
+                        'csvHtml5',
+                        'pdfHtml5',
+                    ],
+                    "responsive": {
+                        "details": {
+                            "type": 'column'
+                        }
+                    },
+
+                    //Set column definition initialisation properties.
+                    "columnDefs": [{
+                        "targets": [-1], //last column
+                        "orderable": true, //set not orderable
+                    }, ],
+
+                });
+            });
+        </script>
+    <script type="text/javascript">
+        window.setTimeout(function() {
+            $("#alert-message").fadeTo(500, 0).slideUp(500, function() {
+                $(this).remove();
+            });
+        }, 5000);
+    </script>

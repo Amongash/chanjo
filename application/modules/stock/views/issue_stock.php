@@ -207,6 +207,7 @@
             var expiry_date = retrieveFormValues_Array('expiry_date');
             var vvm_status = retrieveFormValues_Array('vvm_status');
             var amt_ordered = retrieveFormValues_Array('amt_ordered');
+            var quantity = retrieveFormValues_Array('available_quantity');
             var amt_issued = retrieveFormValues_Array('amt_issued');
 
 
@@ -224,6 +225,7 @@
                 var get_expiry = expiry_date[i];
                 var get_amount_ordered = amt_ordered[i];
                 var get_amount_issued = amt_issued[i];
+                var get_quantity = quantity[i];
                 var get_vvm_status = vvm_status[i];
 
 
@@ -233,6 +235,7 @@
                     "expiry_date": get_expiry,
                     "amount_ordered": get_amount_ordered,
                     "amount_issued": get_amount_issued,
+                    "quantity": get_quantity,
                     "vvm_status": get_vvm_status
                 };
                 dat.push(data);

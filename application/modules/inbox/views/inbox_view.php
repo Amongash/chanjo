@@ -1,21 +1,24 @@
+<div class="row">
+    <div class="col-lg-12">
+    <?php echo $this->session->flashdata('msg');?>
+    <br>
+    </div>
+  </div>
 
+      
+      
        <div class="row">
-        <div class="col-sm-3 col-lg-2"> <a class="btn btn-danger btn-block btn-compose-email" href="compose.html">Compose Email</a>
+       
+        <div class="col-sm-3 col-lg-2"> <a class="btn btn-danger btn-block btn-compose-email" href="<?php echo site_url('inbox/compose'); ?>">Compose Email</a>
           <ul class="nav nav-pills nav-stacked nav-email">
-            <li class="active"> <a href="inbox.html"> <span class="badge pull-right">2</span> <i class="glyphicon glyphicon-inbox"></i> Inbox </a> </li>
+            <li class="active"> <span class="badge pull-right"><?php print_r($message_count)?></span> <i class="glyphicon glyphicon-inbox"></i> Inbox </li>
             <li><a href="#"><i class="glyphicon glyphicon-star"></i> Starred</a></li>
             <li><a href="#"><i class="glyphicon glyphicon-send"></i> Sent Mail</a></li>
-            <li> <a href="#"> <span class="badge pull-right">3</span> <i class="glyphicon glyphicon-pencil"></i> Draft </a> </li>
+            <li> <a href="#"> <span class="badge pull-right"></span> <i class="glyphicon glyphicon-pencil"></i> Draft </a> </li>
             <li><a href="#"><i class="glyphicon glyphicon-trash"></i> Trash</a></li>
           </ul>
           <div class="mb30"></div>
-          <h5 class="subtitle">Folders</h5>
-          <ul class="nav nav-pills nav-stacked nav-email mb20">
-            <li> <a href="#"> <span class="badge pull-right">2</span> <i class="glyphicon glyphicon-folder-open"></i> Conference </a> </li>
-            <li><a href="#"><i class="glyphicon glyphicon-folder-open"></i> Newsletter</a></li>
-            <li><a href="#"><i class="glyphicon glyphicon-folder-open"></i> Invitations</a></li>
-            <li> <a href="#"> <i class="glyphicon glyphicon-folder-open"></i> Promotions </a> </li>
-          </ul>
+          
         </div><!-- col-sm-3 -->
         
         <div class="col-sm-9 col-lg-10">
@@ -49,18 +52,57 @@
                 <button type="button" class="btn btn-white"><i class="glyphicon glyphicon-chevron-left"></i></button>
                 <button type="button" class="btn btn-white"><i class="glyphicon glyphicon-chevron-right"></i></button>
               </div>
-            </div> 
+            </div>
             
             <strong>Inbox</strong>
-            <p class="text-muted">Showing 1 - 15 of 230 messages</p>
+            <p class="text-muted">Showing <?php print_r($message_count)?> messages</p>
+            <!--<div class="table-responsive">
+              <table class="table table-email">
+                <tbody>
+
+                </tbody>
+              </table>-->
             <div class="table-responsive">
               <table class="table table-email">
                 <tbody>
-                  
+                <?php
+                foreach ($email as $mail){
+                  ?>
+
+                <tr class="read">
+                  <a href="">
+                  <td><div class="ckbox ckbox-primary">
+                      <input type="checkbox" id="checkbox1">
+                      <label for="checkbox1"></label>
+                    </div></td>
+                  <td><a class="btn-sm"  href="<?php echo site_url('inbox/getmail/'.$mail->msgno); ?>">Read</a></td>
+                  <td><div class="media">
+                      <div class="media-body"> <span class="media-meta pull-right"><?php echo "{$mail->date}";?></span>
+                        <h4 class="text-primary"><?php echo "{$mail->from}";?></h4>
+                        <small class="text-muted"></small>
+                        <p class="email-summary"><strong><?php echo "{$mail->subject}";?></strong> <?php echo "{$mail->subject}";?>  </p>
+                      </div>
+                    </div></td>
+                  </a>
+                </tr>
+
+                  <?php
+                  }
+                ?>
+
                 </tbody>
               </table>
+            </div><!-- /table-responsive --
             </div><!-- /table-responsive --> 
           </div><!--/ block-web --> 
         </div><!-- /col-sm-9 --> 
-      </div><!--/row--> 
-       
+      </div><!--/row-->
+       <script type="text/javascript">
+
+         window.setTimeout(function () {
+           $("#alert-message").fadeTo(500, 0).slideUp(500, function () {
+             $(this).remove();
+           });
+         }, 5000);
+
+       </script>

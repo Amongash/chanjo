@@ -16,8 +16,7 @@
 | environments.
 |
 */
-$config['base_url'] = 'http://'.$_SERVER['SERVER_NAME'].'/sample/';
-
+$config['base_url'] = 'http://'.$_SERVER['SERVER_NAME'].'/';
 /*
 |--------------------------------------------------------------------------
 | Index File

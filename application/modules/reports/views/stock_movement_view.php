@@ -63,11 +63,11 @@
 
                 <tr>
                     <th>Date</th>
-                    <th>Station</th>
-                    <th>Doses Received</th>
-                    <th>Doses Issued</th>
+                    <th>Type</th>
+                    <th>Vaccine</th>
+                    <th>Batch</th>
 
-                    <th>Physical Count</th>
+                    <th>Quantity</th>
                     <th>Stock Balance</th>
                   
                 </tr>
@@ -77,12 +77,12 @@
 
                 <tfoot>
                 <tr>
-                    <th>Date</th>
-                    <th>Station</th>
-                    <th>Doses Received</th>
-                    <th>Doses Issued</th>
-                    
-                    <th>Physical Count</th>
+                     <th>Date</th>
+                    <th>Type</th>
+                    <th>Vaccine</th>
+                    <th>Batch</th>
+
+                    <th>Quantity</th>
                     <th>Stock Balance</th>
                 </tr>
                 </tfoot>

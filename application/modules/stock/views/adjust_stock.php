@@ -4,18 +4,34 @@
         <?php
         $form_attributes = array('id' => 'physical_stock_fm','class'=>'','role'=>'form');
         echo form_open('',$form_attributes);?>
+<style type="text/css">
+    input[id="available_quantity"]{
+     background-color: #E0F2F7 !important 
+    }
+    td .cells{
+        width: 80% !important ;
+    }
 
+    .span {
+        margin-bottom:5px;
+        display: table-cell;
+    }
+    
+
+
+
+</style>
         <div id="physical_stock">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped">
 
 
                     <thead>
+                    <th style="width:9%;">Date</th>
                     <th style="width:9%;" >Vaccine/Diluents</th>
                     <th style="width:9%;" >Batch No.</th>
                     <th style="width:9%;" >Stock </br>Quantity</th>
                     <th style="width:15%;">Reason</th>
-                    <th style="width:15%;">Adjustment</th>
                     <th style="width:15%;">More Info</th>
                    
 
@@ -24,6 +40,8 @@
 
                     <tr physical_row="1">
                         <input type="hidden" name ="transaction_type" class="transaction_type" value="2">
+                        <td> <?php $data = array('name' => 'date_of_count', 'required' => 'true', 'id' => 'date_of_count', 'required' => 'true', 'class' => 'form-control date_of_count cells'); echo form_input($data); ?></td>
+                    
                         <td> <select name="vaccine" class="form-control vaccine" id="vaccine" required>
                                 <option value="" selected="selected">Select Vaccine</option>
                                 <?php foreach ($vaccines as $vaccine) {
@@ -36,7 +54,7 @@
                         <td><select name="reason" class="form-control reason" id="reason" required>
                                 <option value="" selected="selected">Select Reason</option>
                                 <option value="Breakage" >Breakage</option>
-                                <option value="Donation In" >Donation In</option>
+                                
                                 <option value="Donation Out" >Donation Out</option>
                                 <option value="Expiry" >Expiry</option>
                                 <option value="Miscount" >Miscount </option>
@@ -44,10 +62,8 @@
                                 <option value="VVM Change" >VVM Status Change</option>
                                 <option value="Vaccine Damage" >Vaccine Damage</option>
                             </select></td>
-                        <td>
-                           <label class="radio-inline"><input type="radio" name="adjustment" value="add" id="adjustment">Add</label>
-                            <label class="radio-inline"><input type="radio" name="adjustment" value="ded" id="adjustment">Deduct</label>
-                        </td>
+                        <?php $data=array('name' => 'expiry_date','id'=> 'expiry_date','class'=>'form-control expiry_date cells','disabled'=>''); echo form_hidden($data);?>
+                     
                         <td><?php  $data = array('name'=> 'comment','id'=> 'comment','rows'=> '2','cols'=> '14','class'=> 'form-control comment'); echo form_textarea($data);?></td>
 						<td hidden><?php $data=array('name' => 'row_id','id'=> 'row_id','class'=>'form-control row_id' , 'hidden'=>'' ); echo form_input($data);?></td>
              		
@@ -85,7 +101,7 @@
 
 
 <script type="text/javascript">
-
+$('#date_of_count').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker('setDate', null);
     // Add another row in the form on click add
 
     $('#physical_stock').delegate( '.add', 'click', function () {
@@ -139,42 +155,57 @@
 
         var vaccines = retrieveFormValues_Array('vaccine');
         var batch_no = retrieveFormValues_Array('batch_no');
+        var count_date = retrieveFormValues_Array('date_of_count');
         var quantity = retrieveFormValues_Array('quantity');
+        var expiry_date = retrieveFormValues_Array('expiry_date');
         var reason = retrieveFormValues_Array('reason');
         var id = retrieveFormValues_Array('row_id');
-        var adjustment = getRadioVal( document.getElementById('physical_stock_fm'), 'adjustment' );
+
         var comment = retrieveFormValues_Array('comment');
+        var dat = new Array();
 
         for(var i = 0; i < vaccine_count; i++) {
+            var get_date=count_date[i];
             var get_vaccine=vaccines[i];
             var get_batch=batch_no[i];
+            var get_expiry=expiry_date[i];
             var get_quantity=quantity[i];
             var get_reason=reason[i];
-            var get_adjustment=adjustment[i];
             var get_comment=comment[i];
             var get_id=id[i];
 
+             data = {
+                    "vaccine_id": get_vaccine,
+                    "batch": get_batch,
+                    "date": get_date,
+                    "quantity": get_quantity,
+                    "comment": get_comment,
+                    "expiry_date": get_expiry
+                    };
+                dat.push(data);
+            }
+            batch = JSON.stringify(dat);
 
-            $.ajax(
-                {
-                    url : formURL,
-                    type: "POST",
-                    data : {"vaccine":get_vaccine,"batch_no":get_batch,"quantity":get_quantity,"reason":get_reason,"adjustment":get_adjustment,"comment":get_comment,"id":get_id},
-                    /* dataType : json,*/
-                    success:function(data, textStatus, jqXHR)
-                    {
-                        window.location.replace('<?php echo base_url().'stock/list_inventory'?>');
-                        //data: return data from server
-                    },
-                    error: function(jqXHR, textStatus, errorThrown)
-                    {
-                        //if fails
-                    }
-                });
-        }
-        // e.unbind(); //unbind. to stop multiple form submit.
-    });
-
+             $.ajax(
+                        {
+                            url : formURL,
+                            type: "POST",
+                            data : {
+                                "batch":batch
+                                },
+                           
+                         success:function(data, textStatus, jqXHR) 
+                            {
+                                 window.location.replace('<?php echo base_url().'stock/list_inventory'?>');
+                                //data: return data from server
+                            },
+                         error: function(jqXHR, textStatus, errorThrown) 
+                            {
+                                //if fails      
+                            }
+                        });
+           // e.unbind(); 
+                    });
 
     $(document).on( 'change','.vaccine', function () {
         var stock_row=$(this);
