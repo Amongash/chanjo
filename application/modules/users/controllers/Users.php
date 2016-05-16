@@ -13,10 +13,10 @@ class Users extends MY_Controller
     function index(){
         $data['module']="users";
         $data['view_file']="login_form";
-        $data['main_title'] = $this->get_title();   
-       
+        $data['main_title'] = $this->get_title();
+
         if(!isset($this->session->userdata['logged_in'])){
-          echo Modules::run('template/home', $data); 
+          echo Modules::run('template/home', $data);
         }else{
           redirect('dashboard');
         }
@@ -304,6 +304,8 @@ class Users extends MY_Controller
 
                 $username = $this->input->post('username');
                 $result = $this->mdl_users->fetch_user_information($username);
+
+
                 if ($result != false) {
 
 
@@ -331,7 +333,7 @@ class Users extends MY_Controller
                         show_error('Please contact your system administrator.');
 
                      }
-                  
+
 
                 }
             } else {
@@ -504,14 +506,14 @@ class Users extends MY_Controller
         //$dir = __DIR__.'/../..';
         $this->load->library('directoryinfo');
         if (class_exists('directoryinfo')) {
-        	$sortedarray  = $this->directoryinfo->readDirectory($dir,true); 
+        	$sortedarray  = $this->directoryinfo->readDirectory($dir,true);
         	//echo $dir;
        		echo json_encode($sortedarray);
         }else{
         	echo json_encode('FALSE');
         }
-       
-        
+
+
     }
 
 }

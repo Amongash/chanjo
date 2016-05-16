@@ -51,7 +51,7 @@ $query_builder = TRUE;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
-$db['default']['password'] = 'T3mp0r@ry!*';
+$db['default']['password'] = '';
 $db['default']['database'] = 'my_dvi';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';

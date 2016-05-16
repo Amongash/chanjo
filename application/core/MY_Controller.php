@@ -214,13 +214,13 @@ class MY_Controller extends MX_Controller
 
         //$messageCount = imap_num_msg($mb);
         $data['message_count'] = imap_num_msg($mb);
-        
-       
+
+
 
         //return $messageCount;
 
     }
 
-    
+
 
 }
