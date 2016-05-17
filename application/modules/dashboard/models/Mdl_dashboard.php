@@ -19,17 +19,7 @@ class Mdl_dashboard extends CI_Model
         return $query->result();
     }
 
-    function get_stock_balance($station_id)
-    {
-        $this->db->select('vaccine_name, balance as stock_balance');
-        $this->db->from('v_vaccine_balance');
-        $array = array('station' => "$station_id");
-        $this->db->where($array);
-        $query = $this->db->get();
-        return $query;
-    }
-
-    function get_stock_balance_where($station_id, $vaccine)
+   function get_stock_balance_where($station_id, $vaccine)
     {
         $this->db->select('vaccine_name, stock_balance');
         $this->db->from('vaccine_stockbalance');
@@ -37,6 +27,29 @@ class Mdl_dashboard extends CI_Model
         $this->db->where($array);
         $query = $this->db->get();
         return $query->result();
+    }
+    function get_stock_balance($station)
+    {
+        $this->db->select('vaccine_name, sum(balance) as balance');
+        $this->db->from('v_vaccine_balance');
+        $this->db->where('station',$station);
+        $this->db->group_by('vaccine_name');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+
+
+    function get_stock_mos($station)
+    {
+
+      $this->db->select('vaccine_name, sum(balance) as balance');
+      $this->db->from('v_vaccine_balance');
+      $this->db->where('station',$station);
+      $this->db->group_by('vaccine_name');
+      $query = $this->db->get();
+      return $query->result();
+
     }
 
     function get_doses_administered_where($user_level, $station_id, $vaccine)
@@ -56,6 +69,19 @@ class Mdl_dashboard extends CI_Model
         $array = array('station_id' => $station_id);
         $this->db->where($array);
         $query = $this->db->get();
+        return $query->result();
+    }
+
+    function get_facility_coverage($facility_name,$mindate,$maxdate)
+    {
+        $this->db->select("date_format(`periodname`,'%M %Y') as months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
+        $this->db->from('v_coverage_overview');
+        $this->db->where('facility_name', $facility_name);
+        $this->db->where('periodname >=', $mindate);
+        $this->db->where('periodname <=', $maxdate);
+        $this->db->order_by(`periodname`,'asc');
+        $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -101,13 +127,11 @@ class Mdl_dashboard extends CI_Model
     function get_national_coverage()
     {
 
-        $this->db->distinct();
-        $this->db->select('months, bcg,dpt1,dpt2,dpt3,measles,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2');
-        $this->db->from('v_country_coverage');
-        $this->db->order_by('months');
-        $query = $this->db->get();
-
-        return $query;
+      $this->db->select('*');
+      $this->db->from('v_coverage_national');
+      $this->db->order_by(`periodname`,'%M %Y','asc');
+      $query = $this->db->get();
+      return $query->result();
 
     }
 
@@ -196,6 +220,62 @@ class Mdl_dashboard extends CI_Model
         $query = $this->db->get('v_facilities_utilization');;
 
         return $query;
+    }
+    function get_vaccine_volume_national()
+    {
+      $this->db->select('sum(balance*vaccine_volume)/1000 as volume');
+      $this->db->from('v_vaccine_balance');
+      $query = $this->db->get();
+      return $query->result();
+
+    }
+    function get_opv_vaccine_volume_national()
+    {
+      $this->db->select('sum(balance*vaccine_volume)/1000 as volume');
+      $this->db->from('v_vaccine_balance');
+      $this->db->where('vaccine_name', 'OPV');
+      $query = $this->db->get();
+      return $query->result();
+
+    }
+    function get_fridge_cold_chain_capacity_national()
+    {
+      $this->db->select('sum(vaccine_storage_volume) as total_volume');
+      $this->db->from('v_fridges_overview');
+      $this->db->where('refrigerator_status', 'Functional');
+      $this->db->where('freezer_capacity' , 'No');
+      $query = $this->db->get();
+      return $query->result();
+
+    }
+    function get_freezer_cold_chain_capacity_national()
+    {
+      $this->db->select('sum(vaccine_storage_volume) as total_volume');
+      $this->db->from('v_fridges_overview');
+      $this->db->where('refrigerator_status', 'Functional');
+      $this->db->where('freezer_capacity' , 'Yes');
+      $query = $this->db->get();
+      return $query->result();
+
+    }
+
+    function get_population_national()
+    {
+      $this->db->select('sum(under_one_population) as population');
+      $this->db->from('tbl_regions');
+      $query = $this->db->get();
+      return $query->result();
+    }
+
+    function get_facility_population($facility_name)
+    {
+        $this->db->select('under_one_population');
+        $this->db->from('tbl_facilities');
+        $this->db->where('facility_name', $facility_name);
+        $this->db->limit(1);
+        $query = $this->db->get();
+
+        return $query->result();
     }
 
 
