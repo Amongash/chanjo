@@ -43,22 +43,23 @@ Modules::run('secure_tings/is_logged_in');
 
           if ($user_level == '1') {
             $option = '1';
-            //$data['best'] = $this->best_dpt3cov($station_id, $option);
-            //$data['worst'] = $this->worst_dpt3cov($station_id, $option);
+            $data['best'] = $this->best_dpt3cov($station_id, $option);
+            $data['worst'] = $this->worst_dpt3cov($station_id, $option);
             //echo '<pre>',print_r($this->best_dpt3cov($station_id, $option)),'</pre>';exit;
           } elseif ($user_level == '2') {
             $option = '2';
-            //$data['best'] = $this->best_dpt3cov($station_id, $option);
-            //$data['worst'] = $this->worst_dpt3cov($station_id, $option);
+            $data['best'] = $this->best_dpt3cov($station_id, $option);
+            $data['worst'] = $this->worst_dpt3cov($station_id, $option);
           } elseif ($user_level == '3') {
             $option = '3';
             $data['best'] = $this->best_dpt3cov($station_id, $option);
             $data['worst'] = $this->worst_dpt3cov($station_id, $option);
           } else {
-            $option = '4';
-            $data['best'] = $this->best_dpt3cov($station_id, $option);
-            $data['worst'] = $this->worst_dpt3cov($station_id, $option);
+            //$option = '4';
+            //$data['best'] = $this->best_dpt3cov($station_id, $option);
+          //  $data['worst'] = $this->worst_dpt3cov($station_id, $option);
           }
+          //echo '<pre>',print_r($data),'</pre>';exit;
 
 
         $data['section'] = "NVIP-Chanjo";
@@ -145,6 +146,7 @@ Modules::run('secure_tings/is_logged_in');
     function best_dpt3cov($station_id, $option){
         $option = $option;
         $station_id = $station_id;
+
         $this->load->model('mdl_dashboard');
 
         if ($option == '1') {
@@ -154,7 +156,8 @@ Modules::run('secure_tings/is_logged_in');
         } elseif ($option == '3') {
              $query = $this->mdl_dashboard->best_subcounty_dpt3($station_id);
         } elseif ($option == '4') {
-             $query = $this->mdl_dashboard->best_facility_dpt3($station_id);
+             //$query = $this->mdl_dashboard->best_facility_dpt3($station_id);
+             //echo '<pre>',print_r(json_encode($station_id),true),'</pre>';exit;
         }
 
 
@@ -253,7 +256,7 @@ Modules::run('secure_tings/is_logged_in');
      elseif ($user_level == '4') {
        # code...
      }else {
-       return 'Error';
+       return $this->balanceFacility();
      }
 
 
@@ -275,7 +278,7 @@ Modules::run('secure_tings/is_logged_in');
      elseif ($user_level == '4') {
        # code...
      }else {
-       return 'Error';
+       return $this->balanceFacilitymos();
      }
 
 
@@ -339,7 +342,7 @@ Modules::run('secure_tings/is_logged_in');
      elseif ($user_level == '4') {
        # code...
      }else {
-       return 'Error';
+       return $this->coverageFacility();
      }
 
 
@@ -370,7 +373,12 @@ Modules::run('secure_tings/is_logged_in');
      $data['colors'] = "['#008080','#6AF9C4']";
      $data['series_data'] = json_encode($series_data);
      $data['category_data'] =  json_encode($category_data);
-     $this -> load -> view("dashboard",$data);
+     if (count($series_data)==0) {
+       echo "No data at this time";
+     }else {
+       $this -> load -> view("dashboard",$data);
+     }
+
 
    }
    function balanceRegion(){
@@ -396,7 +404,11 @@ Modules::run('secure_tings/is_logged_in');
      $data['colors'] = "['#008080','#6AF9C4']";
      $data['series_data'] = json_encode($series_data);
      $data['category_data'] =  json_encode($category_data);
-     $this -> load -> view("dashboard",$data);
+     if (count($series_data)==0) {
+       echo "No data at this time";
+     }else {
+       $this -> load -> view("dashboard",$data);
+     }
    }
    function balanceCounty(){
      $info['user_object'] = $this->get_user_object();
@@ -417,9 +429,31 @@ Modules::run('secure_tings/is_logged_in');
    function balanceFacility(){
      $info['user_object'] = $this->get_user_object();
      $user_level = $info['user_object']['user_level'];
+     $station = $info['user_object']['user_statiton'];
      $this->load->model('mdl_dashboard');
-     $query = $this->mdl_dashboard->get_stock_facility();
-     echo json_encode($query);
+     $query = $this->mdl_dashboard->get_stock_balance($station);
+     $new=json_decode(json_encode($query),true);
+     $category_data=[];
+     $series_data=[];
+     foreach ($new as $key =>$value ) {
+
+       $category_data[]=$value['vaccine_name'];
+       $series_data[]=(int)$value['balance'];
+
+     }
+     $data['graph_type'] = 'bar';
+     $data['graph_title'] = "Stock Balance (Units)";
+     $data['graph_yaxis_title'] = "Doses";
+     $data['graph_id'] = "Stock";
+     $data['legend'] = "Doses";
+     $data['colors'] = "['#008080','#6AF9C4']";
+     $data['series_data'] = json_encode($series_data);
+     $data['category_data'] =  json_encode($category_data);
+     if (count($series_data)==0) {
+       echo "No data at this time";
+     }else {
+       $this -> load -> view("dashboard",$data);
+     }
    }
 
    function balanceMosnational(){
@@ -478,6 +512,36 @@ Modules::run('secure_tings/is_logged_in');
      $data['category_data'] =  json_encode($category_data);
      $this -> load -> view("dashboard",$data);
    }
+   function balanceFacilitymos(){
+     $info['user_object'] = $this->get_user_object();
+     $user_level = $info['user_object']['user_level'];
+     $station = $info['user_object']['user_statiton'];
+     $this->load->model('mdl_dashboard');
+     $query = $this->mdl_dashboard->get_stock_balance($station);
+     //echo '<pre>',print_r(json_encode($query),true),'</pre>';exit;
+     $new=json_decode(json_encode($query),true);
+     $category_data=[];
+     $series_data=[];
+     foreach ($new as $key =>$value ) {
+
+       $category_data[]=$value['vaccine_name'];
+       $series_data[]=(int)$value['balance']/($population/12);
+
+     }
+     $data['graph_type'] = 'bar';
+     $data['graph_title'] = "Stock Balance (Units)";
+     $data['graph_yaxis_title'] = "Doses";
+     $data['graph_id'] = "Stock";
+     $data['legend'] = "Doses";
+     $data['colors'] = "['#008080','#6AF9C4']";
+     $data['series_data'] = json_encode($series_data);
+     $data['category_data'] =  json_encode($category_data);
+     if (count($series_data)==0) {
+       echo "No data at this time";
+     }else {
+       $this -> load -> view("dashboard",$data);
+     }
+   }
 
    function positivecoldchainNational(){
      $info['user_object'] = $this->get_user_object();
@@ -535,7 +599,7 @@ Modules::run('secure_tings/is_logged_in');
      //echo '<pre>',print_r($population),'</pre>';exit;
 
      $category_data=[];
-     $bcg=[]; $dpt1=[]; $dpt2=[];  $dpt3=[];  $measles=[];  $opv1=[];  $opv2=[]; $opv3=[];
+     $bcg=[]; $dpt1=[]; $dpt2=[];  $dpt3=[];  $measles1=[]; $measles2=[]; $measles3=[]; $opv1=[];  $opv2=[]; $opv3=[];
      $pvc1=[];  $pvc2=[]; $pvc3=[]; $rota1=[]; $rota2=[];
 
      foreach ($query as $key =>$value ) {
@@ -544,7 +608,9 @@ Modules::run('secure_tings/is_logged_in');
        $dpt1[]=(int)$value['dpt1']*1200/$population;
        $dpt2[]=(int)$value['dpt2']*1200/$population;
        $dpt3[]=(int)$value['dpt3']*1200/$population;
-       $measles[]=(int)$value['measles']*1200/$population;
+       $measles1[]=(int)$value['measles 1']*1200/$population;
+       $measles2[]=(int)$value['measles 2']*1200/$population;
+       $measles3[]=(int)$value['measles 3']*1200/$population;
        $opv1[]=(int)$value['opv1']*1200/$population;
        $opv2[]=(int)$value['opv2']*1200/$population;
        $opv3[]=(int)$value['opv3']*1200/$population;
@@ -565,7 +631,9 @@ Modules::run('secure_tings/is_logged_in');
      $data['dpt1'] = json_encode($dpt1);
      $data['dpt2'] = json_encode($dpt2);
      $data['dpt3'] = json_encode($dpt3);
-     $data['measles'] = json_encode($measles);
+     $data['measles1'] = json_encode($measles1);
+     $data['measles2'] = json_encode($measles2);
+     $data['measles3'] = json_encode($measles3);
      $data['opv1'] = json_encode($opv1);
      $data['opv2'] = json_encode($opv2);
      $data['opv3'] = json_encode($opv3);
@@ -582,6 +650,103 @@ Modules::run('secure_tings/is_logged_in');
      $this -> load -> view("line_template",$data);
 
      //echo '<pre>',print_r(json_encode($measles),true),'</pre>';
+
+   }
+
+   function coverageFacility(){
+     $info['user_object'] = $this->get_user_object();
+     $user_level = $info['user_object']['user_level'];
+     $facility_name = $info['user_object']['user_statiton'];
+     $this->load->model('mdl_dashboard');
+     $maxdate=date('Y-m-d');
+     $mindate=new DateTime(date('Y-m-d'));
+     $interval = new DateInterval('P12M');
+     $mindate=$mindate->sub($interval)->format('Y-m-d');
+    //echo '<pre>',print_r($maxdate),'</pre>';exit;
+     $query = $this->mdl_dashboard->get_facility_coverage($facility_name,$mindate,$maxdate);
+     $query=json_decode(json_encode($query),true);
+     //
+
+     if ($query[0]['population']==0 || $query[0]['population']=='') {
+       $population = $this->mdl_dashboard->get_facility_population($facility_name);
+       $pop=json_decode(json_encode($population),true);
+       $population=(int)$pop[0]['under_one_population'];
+     }else {
+       $population=(int)$query[0]['population'];
+     }
+
+     $target=[];
+     $noMonths=12;
+     for ($i=0; $i <$noMonths ; $i++) {
+       $target[]=ceil($population/$noMonths);
+     }
+    // $cumulative=[];
+    // $runningSum = 0;
+
+    //  foreach ($target as $number) {
+        //  $runningSum += $number;
+      //    $cumulative[] = $runningSum;
+    //  }
+
+      for ($i = 1; $i <= 12; $i++) {
+    $months[] = date("M Y", strtotime( date( 'Y-m-01' )." -$i months"));
+  }//echo '<pre>',print_r(array_reverse($months)),'</pre>';exit;
+
+
+     $bcg=[]; $dpt1=[]; $dpt2=[];  $dpt3=[];  $measles1=[]; $measles2=[]; $measles3=[]; $opv1=[];  $opv2=[]; $opv3=[];
+     $pvc1=[];  $pvc2=[]; $pvc3=[]; $rota1=[]; $rota2=[];
+
+     foreach ($query as $key =>$value ) {
+       $time_data[]=$value['months'];
+       $bcg[]=(int)$value['bcg'];
+       $dpt1[]=(int)$value['dpt1'];
+       $dpt2[]=(int)$value['dpt2'];
+       $dpt3[]=(int)$value['dpt3'];
+       $measles1[]=(int)$value['measles1'];
+       $measles2[]=(int)$value['measles2'];
+       $measles3[]=(int)$value['measles3'];
+       $opv1[]=(int)$value['opv1'];
+       $opv2[]=(int)$value['opv2'];
+       $opv3[]=(int)$value['opv3'];
+       $pvc1[]=(int)$value['pcv1'];
+       $pvc2[]=(int)$value['pcv2'];
+       $pvc3[]=(int)$value['pcv3'];
+       $rota1[]=(int)$value['rota1'];
+       $rota2[]=(int)$value['rota2'];
+
+     }
+
+     $data['graph_title'] = "Facility Coverage";
+     $data['graph_id'] = "coverage";
+     $data['legend'] = "units here";
+     $data['colors'] = "['#008080','#6AF9C4']";
+
+
+     $data['bcg'] = json_encode($bcg);
+     $data['dpt1'] = json_encode($dpt1);
+     $data['dpt2'] = json_encode($dpt2);
+     $data['dpt3'] = json_encode($dpt3);
+     $data['measles1'] = json_encode($measles1);
+     $data['measles2'] = json_encode($measles2);
+     $data['measles3'] = json_encode($measles3);
+     $data['opv1'] = json_encode($opv1);
+     $data['opv2'] = json_encode($opv2);
+     $data['opv3'] = json_encode($opv3);
+     $data['pvc1'] = json_encode($pvc1);
+     $data['pvc2'] = json_encode($pvc2);
+     $data['pvc3'] = json_encode($pvc3);
+     $data['rota1'] = json_encode($rota1);
+     $data['rota2'] = json_encode($rota2);
+     $data['cumulative'] = json_encode($target);
+
+     $data['time_data'] = json_encode(array_reverse($months));
+
+     //echo '<pre>',print_r($data),'</pre>';exit;
+
+      $this -> load -> view("facility_coverage",$data);
+
+     //
+
 
    }
 

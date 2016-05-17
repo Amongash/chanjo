@@ -7,7 +7,7 @@
 $(function () {
     $('#<?php echo $graph_id; ?>').highcharts({
         title: {
-            text: 'Coverage',
+            text: 'Facility Coverage',
             x: -20 //center
         },
         subtitle: {
@@ -19,7 +19,7 @@ $(function () {
         },
         yAxis: {
             title: {
-                text: '%'
+                text: 'Population Target'
             },
             plotLines: [{
                 value: 0,
@@ -28,7 +28,7 @@ $(function () {
             }]
         },
         tooltip: {
-            valueSuffix: '%'
+            valueSuffix: ''
         },
         legend: {
             layout: 'vertical',
@@ -37,6 +37,9 @@ $(function () {
             borderWidth: 0
         },
         series: [{
+            name: 'Target',
+            data:  <?php echo $cumulative; ?>
+        },{
             name: 'BCG',
             data:  <?php echo $bcg; ?>
         }, {
@@ -80,15 +83,15 @@ $(function () {
             data: <?php echo $opv3; ?>
         },
         {
-            name: 'PVC1',
+            name: 'PCV1',
             data: <?php echo $pvc1; ?>
         },
         {
-            name: 'PVC2',
+            name: 'PCV2',
             data: <?php echo $pvc2; ?>
         },
         {
-            name: 'PVC3',
+            name: 'PCV3',
             data: <?php echo $pvc3; ?>
         },
         {

@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php if ($user_level != '5') { ?>
 <div class="row">
     <div class="block-web">
         <div class="col-lg-12">
@@ -97,19 +98,41 @@
                                 <?php if ($user_level == '1') { ?>
                                 <td><a href="<?php echo base_url('dashboard/index?loc=1&name='.$row['name']) ?>"><?php echo $row['name'] ?></a></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                                <td><?php if ($row['totaldpt1']==0) {
+                                  echo 'Division by 0';
+                                }else {
+                                  echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2);
+                                }
+                                 ?></td>
                                 <?php }elseif($user_level == '2') { ?>
                                 <td><a href="<?php echo base_url('dashboard/index?loc=2&name='.$row['name']) ?>"><?php echo $row['name'] ?></a></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                                <td><?php if ($row['totaldpt1']==0) {
+                                  echo 'Division by 0';
+                                }else {
+                                  echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2);
+                                }
+
+                                 ?></td>
                                 <?php }elseif($user_level == '3') { ?>
                                 <td><a href="<?php echo base_url('dashboard/index?loc=3&name='.$row['name']) ?>"><?php echo $row['name'] ?></a></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                                <td><?php if ($row['totaldpt1']==0) {
+                                  echo 'Division by 0';
+                                }else {
+                                  echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2);
+                                }
+
+                                 ?></td>
                                 <?php }else{ ?>
                                 <td><?php echo $row['name'] ?></td>
                                 <td><?php echo $row['totaldpt3'] ?></td>
-                                <td><?php echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2) ?></td>
+                                <td><?php if ($row['totaldpt1']==0) {
+                                  echo 'Division by 0';
+                                }else {
+                                  echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2);
+                                }
+                                 ?></td>
                             </tr><?php }} ?>
                         </tbody>
                     </table>
@@ -122,7 +145,11 @@
 
         </div>
     </div>
-</div>
+</div><?php }else {?>
+  <div>
+
+  </div>
+<?php } ?>
 
 
 
@@ -175,12 +202,17 @@
 
                 <div id="positive" name="positive"></div>
             </div>
+            <?php if ($user_level!=5) {
+              # code...
+            ?>
             <div class="col-md-6">
 
                 <h5 class="content-header text-info">-ve Cold Chain</h5>
 
                 <div id="negative" name="negative"></div>
             </div>
+
+            <?php } ?>
 
         </div>
     </div>
@@ -216,7 +248,7 @@ var url="<?php echo base_url(); ?>";
         type: "POST",
         url: function_url,
         beforeSend: function() {
-        $(div).html("<img style='margin:40% 50% 0 50%;' src="+loading_icon+">");
+        $(div).html("<img style='margin:20% 50% 0 50%;' src="+loading_icon+">");
         },
         success: function(msg) {
         $(div).html(msg);

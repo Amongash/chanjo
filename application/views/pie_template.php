@@ -1,7 +1,7 @@
-<!--<script src="<?php echo base_url() ?>assets/js/jquery-2.1.0.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/highcharts/highcharts.js" type="text/javascript"></script>
-<script src="<?php echo base_url() ?>assets/plugins/highcharts/modules/no-data-to-display.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/highcharts/modules/exporting.js"></script>-->
+<!--<script src="<?php //echo base_url() ?>assets/js/jquery-2.1.0.js"></script>
+<script src="<?php // echo base_url() ?>assets/plugins/highcharts/highcharts.js" type="text/javascript"></script>
+<script src="<?php //echo base_url() ?>assets/plugins/highcharts/modules/no-data-to-display.js"></script>
+<script src="<?php // echo base_url() ?>assets/plugins/highcharts/modules/exporting.js"></script>-->
 <script>
 $(function () {
 $('#<?php echo $graph_id; ?>').highcharts({

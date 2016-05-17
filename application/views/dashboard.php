@@ -15,7 +15,7 @@
             text: '<?php echo $graph_title; ?>'
         },
         subtitle: {
-            text: 'Source: DHIS'
+            text: 'Source: '
         },
         xAxis: {
 

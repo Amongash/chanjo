@@ -72,6 +72,19 @@ class Mdl_dashboard extends CI_Model
         return $query->result();
     }
 
+    function get_facility_coverage($facility_name,$mindate,$maxdate)
+    {
+        $this->db->select("date_format(`periodname`,'%M %Y') as months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
+        $this->db->from('v_coverage_overview');
+        $this->db->where('facility_name', $facility_name);
+        $this->db->where('periodname >=', $mindate);
+        $this->db->where('periodname <=', $maxdate);
+        $this->db->order_by(`periodname`,'asc');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
 
 
 
@@ -116,6 +129,7 @@ class Mdl_dashboard extends CI_Model
 
       $this->db->select('*');
       $this->db->from('v_coverage_national');
+      $this->db->order_by(`periodname`,'%M %Y','asc');
       $query = $this->db->get();
       return $query->result();
 
@@ -251,6 +265,17 @@ class Mdl_dashboard extends CI_Model
       $this->db->from('tbl_regions');
       $query = $this->db->get();
       return $query->result();
+    }
+
+    function get_facility_population($facility_name)
+    {
+        $this->db->select('under_one_population');
+        $this->db->from('tbl_facilities');
+        $this->db->where('facility_name', $facility_name);
+        $this->db->limit(1);
+        $query = $this->db->get();
+
+        return $query->result();
     }
 
 
