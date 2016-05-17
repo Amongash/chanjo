@@ -31,6 +31,7 @@
                     <th style="width:9%;" >Vaccine/Diluents</th>
                     <th style="width:9%;" >Batch No.</th>
                     <th style="width:9%;" >Stock </br>Quantity</th>
+                    <th style="width:9%;" >Quantity</th>
                     <th style="width:15%;">Reason</th>
                     <th style="width:15%;">More Info</th>
                    
@@ -50,7 +51,12 @@
                             </select>
                         </td>
                         <td> <select name="batch_no" class="form-control batch_no" id="batch_no" required ></select></td>
-                        <td><?php $data=array('name' => 'quantity','id'=> 'quantity','class'=>'form-control quantity','required'=>'','type'=>'number' ); echo form_input($data);?></td>
+                        <style type="text/css">
+                                input[id="quantity"] {
+                                    background-color: #E0F2F7 !important
+                                }</style>
+                        <td><?php $data=array('name' => 'quantity','id'=> 'quantity','class'=>'form-control quantity','disabled'=>'','required'=>'','type'=>'number' ); echo form_input($data);?></td>
+                        <td><?php $data=array('name' => 'change','id'=> 'change','class'=>'form-control change','required'=>'','type'=>'number' ); echo form_input($data);?></td>
                         <td><select name="reason" class="form-control reason" id="reason" required>
                                 <option value="" selected="selected">Select Reason</option>
                                 <option value="Breakage" >Breakage</option>
@@ -62,18 +68,18 @@
                                 <option value="VVM Change" >VVM Status Change</option>
                                 <option value="Vaccine Damage" >Vaccine Damage</option>
                             </select></td>
-                        <?php $data=array('name' => 'expiry_date','id'=> 'expiry_date','class'=>'form-control expiry_date cells','disabled'=>''); echo form_hidden($data);?>
-                     
+                        
                         <td><?php  $data = array('name'=> 'comment','id'=> 'comment','rows'=> '2','cols'=> '14','class'=> 'form-control comment'); echo form_textarea($data);?></td>
-						<td hidden><?php $data=array('name' => 'row_id','id'=> 'row_id','class'=>'form-control row_id' , 'hidden'=>'' ); echo form_input($data);?></td>
-             		
+                        <td hidden><?php $data=array('name' => 'expiry_date','id'=> 'expiry_date','class'=>'form-control expiry_date cells','disabled'=>''); echo form_input($data);?></td>
+						<td hidden><?php $data=array('name' => 'vvm','id'=> 'vvm','class'=>'form-control vvm cells','disabled'=>''); echo form_input($data);?></td>
+                     
                     </tr>
 
                     </tbody>
                 </table>
             </div>
 
-            <input type="button" name="btn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
+            <input type="button" name="btn" id = "send" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
             <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -83,8 +89,8 @@
                         <div class="modal-body">
                             Are you sure you want to submit the entered details?
                         <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                                <button type="submit" name="physical_count_fm" id="physical_count_fm" class="btn btn-sm btn-danger">Submit</button>
+                                <button type="button" name="cancel" id="cancel"class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="submit" name="physical_count_fm" id="physical_count_fm" class="btn btn-sm btn-danger"><i class="fa fa-paper-plane"></i>Submit<img id="loader" src="<?php echo base_url() ?>assets/images/loader.gif" alt="loading image" hidden></button>
                             </div>
                         </div>
                     </div>
@@ -157,9 +163,11 @@ $('#date_of_count').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker(
         var batch_no = retrieveFormValues_Array('batch_no');
         var count_date = retrieveFormValues_Array('date_of_count');
         var quantity = retrieveFormValues_Array('quantity');
+        var change = retrieveFormValues_Array('change');
         var expiry_date = retrieveFormValues_Array('expiry_date');
+        var vvm = retrieveFormValues_Array('vvm');
         var reason = retrieveFormValues_Array('reason');
-        var id = retrieveFormValues_Array('row_id');
+      
 
         var comment = retrieveFormValues_Array('comment');
         var dat = new Array();
@@ -169,18 +177,22 @@ $('#date_of_count').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker(
             var get_vaccine=vaccines[i];
             var get_batch=batch_no[i];
             var get_expiry=expiry_date[i];
+            var get_vvm=vvm[i];
             var get_quantity=quantity[i];
+            var get_change=change[i];
             var get_reason=reason[i];
             var get_comment=comment[i];
-            var get_id=id[i];
+            
 
              data = {
                     "vaccine_id": get_vaccine,
                     "batch": get_batch,
                     "date": get_date,
                     "quantity": get_quantity,
+                    "change": get_change,
                     "comment": get_comment,
-                    "expiry_date": get_expiry
+                    "expiry_date": get_expiry,
+                    "vvm": get_vvm
                     };
                 dat.push(data);
             }
@@ -193,19 +205,29 @@ $('#date_of_count').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker(
                             data : {
                                 "batch":batch
                                 },
+                            beforeSend: function(){
+                                $('#send').prop("hidden", true);
+                                $('#cancel').prop("disabled", true);
+                                $('#send').prop("disabled", true);
+                                $('#loader').css('display','inline');
+                                $('.fa').removeClass("fa-paper-plane");
+                                $('#physical_count_fm').css('background','#fff');
+                                $('#physical_count_fm').css('cursor','not-allowed');
+                               
+                               },
                            
-                         success:function(data, textStatus, jqXHR) 
-                            {
-                                 window.location.replace('<?php echo base_url().'stock/list_inventory'?>');
-                                //data: return data from server
-                            },
-                         error: function(jqXHR, textStatus, errorThrown) 
-                            {
-                                //if fails      
-                            }
+                             success:function(data, textStatus, jqXHR) 
+                                {
+                                     window.location.replace('<?php echo base_url().'stock/list_inventory'?>');
+                                    //data: return data from server
+                                },
+                             error: function(jqXHR, textStatus, errorThrown) 
+                                {
+                                    //if fails      
+                                }
+                            });
+               
                         });
-           // e.unbind(); 
-                    });
 
     $(document).on( 'change','.vaccine', function () {
         var stock_row=$(this);
@@ -258,10 +280,16 @@ $('#date_of_count').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker(
 				    });
 				    request.done(function(data){
 					    	data=JSON.parse(data);
-							stock_row.closest("tr").find(".row_id").val("");
+                            stock_row.closest("tr").find(".expiry_date").val("");
+                            stock_row.closest("tr").find(".quantity").val("");
+                            stock_row.closest("tr").find(".vvm").val("");
+							
 							    	
 				    $.each(data,function(key,value){
-				    		stock_row.closest("tr").find(".row_id").val(value.receive_id);
+                            stock_row.closest("tr").find(".expiry_date").val(value.expiry_date);
+                            stock_row.closest("tr").find(".quantity").val(value.stock_balance);
+                            stock_row.closest("tr").find(".vvm").val(value.status);
+				    		
 				    });
 				                                });
 				    request.fail(function(jqXHR, textStatus) {

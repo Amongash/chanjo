@@ -645,7 +645,9 @@ class Stock extends MY_Controller
             $data_array['expiry_date'] = $item['expiry_date'];
             $data_array['vaccine_id'] = $item['vaccine_id'];
             $data_array['batch'] = $item['batch'];
-            $data_array['transaction_quantity'] = $item['quantity'];
+            $data_array['vvm'] = filter_var($item['vvm'], FILTER_SANITIZE_NUMBER_INT);
+            $data_array['current_quantity'] = $item['quantity'];
+            $data_array['transaction_quantity'] = $item['change'];
             $data_array['transaction_id'] = $request_id;
 
             $this->db->insert('tbl_transaction_items', $data_array);
@@ -693,6 +695,7 @@ class Stock extends MY_Controller
             $data_array['transaction_quantity'] = $item['physical_count'];
             $data_array['current_quantity'] = $item['available_quantity'];
             $data_array['expiry_date'] = $item['expiry_date'];
+            $data_array['vvm'] = filter_var($item['vvm'], FILTER_SANITIZE_NUMBER_INT);
             $data_array['transaction_id'] = $request_id;
 
             $this->db->insert('tbl_transaction_items', $data_array);
