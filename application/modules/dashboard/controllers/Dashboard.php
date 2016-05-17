@@ -199,39 +199,39 @@ Modules::run('secure_tings/is_logged_in');
     }
 
 
-   function months_of_stock()
-   {
-       $info['user_object'] = $this->get_user_object();
-       $user_level = $info['user_object']['user_level'];
-       $station_id = $this->_station($this->uri->segment(3)); 
-       $this->load->model('mdl_dashboard');
-       $query = $this->mdl_dashboard->vaccine();
-       $json_array = array();
-       foreach ($query as $row) {
-           $vaccine[] = $row->Vaccine_name;
-       }
-       $size = sizeof($vaccine);
-       for ($i = 0; $i < $size; $i++) {
-           $bal_query = $this->mdl_dashboard->get_stock_balance_where($station_id, $vaccine[$i]);
+   // function months_of_stock()
+   // {
+   //     $info['user_object'] = $this->get_user_object();
+   //     $user_level = $info['user_object']['user_level'];
+   //     $station_id = $this->_station($this->uri->segment(3)); 
+   //     $this->load->model('mdl_dashboard');
+   //     $query = $this->mdl_dashboard->vaccine();
+   //     $json_array = array();
+   //     foreach ($query as $row) {
+   //         $vaccine[] = $row->Vaccine_name;
+   //     }
+   //     $size = sizeof($vaccine);
+   //     for ($i = 0; $i < $size; $i++) {
+   //         $bal_query = $this->mdl_dashboard->get_stock_balance_where($station_id, $vaccine[$i]);
 
-           foreach ($bal_query as $row) {
-               $vaccines[] = $row->vaccine_name;
-               $balance[] = $row->stock_balance;
+   //         foreach ($bal_query as $row) {
+   //             $vaccines[] = $row->vaccine_name;
+   //             $balance[] = $row->stock_balance;
 
-               $doses_query = $this->mdl_dashboard->get_doses_administered_where($user_level, $station_id, $vaccines[$i]);
-               foreach ($doses_query as $r) {
-                   $data['name'] = $vaccines[$i];
-                   $data['y'] = (int)($balance[$i] / $r->{$vaccines[$i]});
-                   $json_array[] = $data;
+   //             $doses_query = $this->mdl_dashboard->get_doses_administered_where($user_level, $station_id, $vaccines[$i]);
+   //             foreach ($doses_query as $r) {
+   //                 $data['name'] = $vaccines[$i];
+   //                 $data['y'] = (int)($balance[$i] / $r->{$vaccines[$i]});
+   //                 $json_array[] = $data;
 
-               }
+   //             }
 
-           }
+   //         }
 
-       }
-       echo json_encode($json_array);
+   //     }
+   //     echo json_encode($json_array);
 
-   }
+   // }
 
    // function counties(){
    //          $this->load->model('mdl_facility');

@@ -87,10 +87,11 @@ class MY_Controller extends MX_Controller
     function get_user_object()
     {
         //user emails
-        $mb = imap_open("{chi-rs31.websitehostserver.net:993/imap/ssl/novalidate-cert}INBOX", 'victor@wkdesigns.co.ke', 'smartguy123');
+        //$mb = imap_open("{chi-rs31.websitehostserver.net:993/imap/ssl/novalidate-cert}INBOX", 'victor@wkdesigns.co.ke', 'smartguy123');
 
         //count user emails
-        $message_count = imap_num_msg($mb);
+        //$message_count = imap_num_msg($mb);
+        $message_count = 4;
 
 
         //get notices
