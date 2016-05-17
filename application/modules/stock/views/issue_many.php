@@ -262,7 +262,7 @@
             var expiry_date = retrieveFormValues_Array('expiry_date');
             var vvm_status = retrieveFormValues_Array('vvm_status');
            
-            var quantity = retrieveFormValues_Array('remaining');
+            var quantity = retrieveFormValues('remaining');
             var amt_issued = retrieveFormValues_Array('amt_issued');
 
 
@@ -315,9 +315,9 @@
                     $('#send').prop("hidden", true);
                     $('#send').prop("disabled", true);
                     $('#loader').css('display','block');
-		            $('.fa').removeClass("fa-paper-plane");
-		            $('#stock_issue_fm').css('background','#fff');
-		            $('#stock_issue_fm').css('cursor','not-allowed');
+                    $('.fa').removeClass("fa-paper-plane");
+                    $('#stock_issue_fm').css('background','#fff');
+                    $('#stock_issue_fm').css('cursor','not-allowed');
                    
                    },
                     
@@ -434,32 +434,6 @@
            
 
         });
-			function calculate_new_batch_balance(){
-				var batch = $('.batch_no').val();
-				if (batch = 'BNMA4' ) {
-
-					$(".available_quantity").each(function(){  
-		                var stock_row = $(this);
-		                var bal = stock_row.closest("tr").find(".available_quantity").val();
-		                var issued = stock_row.closest("tr").find(".amt_issued").val();
-		                
-
-		                var remainder = bal-issued;
-		                if (remainder>0 && !isNaN(remainder)) {
-		                    stock_row.closest("tr").find(".remaining").val(remainder);
-		                    console.log(remainder);
-		                } else{
-		                    stock_row.closest("tr").find(".remaining").val("");
-		                   
-		                };
-		                
-		            });       
-
-				} else{
-
-				};
-			}
-			
 
 
         // function calculate_remainder(){
@@ -514,14 +488,13 @@
                 stock_row.closest("tr").find(".batch_no ").append("<option value=''>Select batch </option> ");
                 $.each(data, function (key, value) {
                     stock_row.closest("tr").find(".batch_no").append("<option value='" + value.batch_number + "'>" + value.batch_number + "</option> ");
-					$('.amt_issued').prop("disabled", false);
-
-		 		});
+        $('.amt_issued').prop("disabled", false);
+         });
             });
             request.fail(function (jqXHR, textStatus) {
 
             });
-	 
+     
         }
 
 
@@ -549,9 +522,8 @@
                 $.each(data, function (key, value) {
                     stock_row.closest("tr").find(".expiry_date").val(value.expiry_date);
                     stock_row.closest("tr").find(".available_quantity").val(value.stock_balance);
-                    
+                    // stock_row.closest("tr").find(".vvm_status").val(value.status);
                     stock_row.closest("tr").find(".amt_issued").attr('max', value.stock_balance);
-                    calculate_new_batch_balance();
 
                 });
             });
