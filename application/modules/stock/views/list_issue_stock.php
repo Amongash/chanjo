@@ -3,7 +3,14 @@
 
     <div class="col-lg-12 col-sm-12">
 
-      <a href="<?php echo site_url('stock/issue_stock');?>" class="btn btn-primary state_change" id="issue_stock" value="">Issue stocks directly</a>
+     <div class="btn-group">
+                  <button data-toggle="dropdown" class="btn btn-primary state_change dropdown-toggle">Issue stocks directly <span class="caret"></span> </button>
+                  <ul class="dropdown-menu">
+                    <li> <a href="<?php echo site_url('stock/issue_stock');?>">One Location</a> </li>
+                    <li class="divider"></li>
+                    <li> <a href="<?php echo site_url('stock/issue_many');?>">Many Locations</a> </li>
+                  </ul>
+      </div>
     </div>
   </div>
   </br>

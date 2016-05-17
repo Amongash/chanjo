@@ -95,7 +95,7 @@
                 <?php echo form_hidden('date_recorded', date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'))));  ?>
             </div>
 
-            <input type="button" name="btn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
+            <input type="button" name="btn" id="send" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
 
             <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -105,9 +105,10 @@
                         </div>
                         <div class="modal-body">
                             Are you sure you want to submit the entered details?
-                        <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                               <button type="submit" name="stock_received" id="stock_received" class="btn btn-sm btn-danger">Submit</button>
+                            <div class="modal-footer">
+                                <button type="button" name="cancel" id="cancel"class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="submit" name="stock_received_fm" id="stock_received_fm" class="btn btn-sm btn-danger"><i class="fa fa-paper-plane"></i>Submit<img id="loader" src="<?php echo base_url() ?>assets/images/loader.gif" alt="loading image" hidden></button>
+                
                             </div>
                         </div>
                     </div>
@@ -235,6 +236,17 @@
                     "s11": get_s11,
                     "batch": batch
                 },
+                 beforeSend: function(){
+                    $('#send').prop("hidden", true);
+                    $('#cancel').prop("disabled", true);
+                    $('#send').prop("disabled", true);
+                    $('#loader').css('display','inline');
+                    $('.fa').removeClass("fa-paper-plane");
+                    $('#stock_received_fm').css('background','#fff');
+                    $('#stock_received_fm').css('cursor','not-allowed');
+                   
+                   },
+                    
                 success: function (data, textStatus, jqXHR) {
                     //data: return data from server
                     window.location.replace('<?php echo base_url() . 'stock/list_inventory'?>');

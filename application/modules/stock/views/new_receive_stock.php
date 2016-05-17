@@ -79,8 +79,8 @@
 
 </div>
 
-<input type="button" name="btn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
-
+ <input type="button" name="btn" id="send" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
+    
             <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -89,10 +89,10 @@
                         </div>
                         <div class="modal-body">
                             Are you sure you want to submit the entered details?
-                        <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                              <button type="submit" name="stock_received" id="stock_received" class="btn btn-sm btn-danger">Submit</button>
-                            </div>
+                          <div class="modal-footer">
+                              <button type="button" name="cancel" id="cancel"class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                              <button type="submit" name="stock_issue_fm" id="stock_issue_fm" class="btn btn-sm btn-danger"><i class="fa fa-paper-plane"></i>Submit<img id="loader" src="<?php echo base_url() ?>assets/images/loader.gif" alt="loading image" hidden></button>
+                          </div>
                         </div>
                     </div>
                 </div>  
@@ -108,4 +108,14 @@ echo form_close();?>
 <script type="text/javascript">
 
   $('#date_received').datepicker({dateFormat: "yy-mm-dd",  maxDate: 0}).datepicker('setDate', null);
+
+  $(document).on('click', '#stock_issue_fm', function () {
+      $('#send').prop("hidden", true);
+      $('#cancel').prop("disabled", true);
+      $('#send').prop("disabled", true);
+      $('#loader').css('display','inline');
+      $('.fa').removeClass("fa-paper-plane");
+      $('#stock_issue_fm').css('background','#fff');
+      $('#stock_issue_fm').css('cursor','not-allowed');
+    });
 </script>

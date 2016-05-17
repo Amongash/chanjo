@@ -55,8 +55,7 @@ echo form_open('',$form_attributes);?>
              		 
              		<td><?php $data=array('name' => 'available_quantity','id'=> 'available_quantity','class'=>'form-control available_quantity cells','disabled'=>'','required'=>'' ); echo form_input($data);?></td>
              		<td><?php $data=array('name' => 'physical_count','required'=>'true','type'=>'Number', 'min'=>'0','id'=>'physical_count' ,'class'=>'form-control physical_count cells','required'=>'' ); echo form_input($data);?></td>
-					<td hidden><?php $data=array('name' => 'status','id'=> 'status','class'=>'form-control status' , 'hidden'=>'' ); echo form_input($data);?></td>
-					<td hidden><?php $data=array('name' => 'row_id','id'=> 'row_id','class'=>'form-control row_id' , 'hidden'=>'' ); echo form_input($data);?></td>
+					<td hidden><?php $data=array('name' => 'vvm','id'=> 'vvm','class'=>'form-control vvm' , 'hidden'=>'' ); echo form_input($data);?></td>
              		<td class="small">
                                 <a href="#" class="add btn"><span class="label label-success"><i
                                             class="fa fa-plus-square"></i> <b>ADD</b></span></a><br>
@@ -69,8 +68,8 @@ echo form_open('',$form_attributes);?>
 </table>
 </div>
 
-<input type="button" name="btn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
-
+ <input type="button" name="btn" id = "send" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
+       
 <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -79,10 +78,10 @@ echo form_open('',$form_attributes);?>
             </div>
             <div class="modal-body">
                 Are you sure you want to submit the entered details?
-            <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                   <button type="submit" name="physical_stock_fm" id="physical_stock_fm" class="btn btn-sm btn-danger">Submit</button>
-                </div>
+	            <div class="modal-footer">
+	                   <button type="button" name="cancel" id="cancel"class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+	                   <button type="submit" name="physical_stock_fm" id="physical_stock_fm" class="btn btn-sm btn-danger"><i class="fa fa-paper-plane"></i>Submit<img id="loader" src="<?php echo base_url() ?>assets/images/loader.gif" alt="loading image" hidden></button>
+	            </div>
             </div>
         </div>
     </div>  
@@ -169,6 +168,7 @@ echo form_open('',$form_attributes);?>
 		   var count_date = retrieveFormValues_Array('date_of_count');
 		   var available_quantity = retrieveFormValues_Array('available_quantity');
 		   var physical_count = retrieveFormValues_Array('physical_count');
+		   var vvm = retrieveFormValues_Array('vvm');
 		 
 
 		    var dat = new Array();
@@ -180,6 +180,7 @@ echo form_open('',$form_attributes);?>
 		   		var get_date=count_date[i];
 		   		var get_quantity=available_quantity[i];
 				var get_count=physical_count[i];
+				var get_vvm=vvm[i];
 
 
 				 data = {
@@ -188,7 +189,8 @@ echo form_open('',$form_attributes);?>
                     "date_of_count": get_date,
                     "available_quantity": get_quantity,
                     "physical_count": get_count,
-                    "expiry_date": get_expiry
+                    "expiry_date": get_expiry,
+                    "vvm": get_vvm
  		            };
                 dat.push(data);
             }
@@ -201,10 +203,21 @@ echo form_open('',$form_attributes);?>
 					        data : {
 					        	"batch":batch
 					       		},
+					     	beforeSend: function(){
+			                 
+			                    $('#cancel').prop("disabled", true);
+			                    $('#send').prop("disabled", true);
+			                    $('#loader').css('display','inline');
+					            $('.fa').removeClass("fa-paper-plane");
+					            $('#physical_stock_fm').css('background','#fff');
+					            $('#physical_stock_fm').css('cursor','not-allowed');
+			                   
+			                   },
 					       
 					     success:function(data, textStatus, jqXHR) 
 					        {
-					        	window.location.replace('<?php echo base_url().'stock/list_inventory'?>');
+					        	console.log(batch);
+					        	//window.location.replace('<?php echo base_url().'stock/list_inventory'?>');
 					            //data: return data from server
 					        },
 					     error: function(jqXHR, textStatus, errorThrown) 
@@ -235,16 +248,16 @@ echo form_open('',$form_attributes);?>
 
 				    request.done(function(data){
 					    	data=JSON.parse(data);
-					    	console.log(data);
+					  
 					    	stock_row.closest("tr").find(".batch_no option").remove();
 					    	stock_row.closest("tr").find(".expiry_date ").val("");
 					    	stock_row.closest("tr").find(".available_quantity").val("");
 					    	stock_row.closest("tr").find(".physical_count").val("");
-					    	stock_row.closest("tr").find(".row_id").val("");
+					    	stock_row.closest("tr").find(".vvm").val("");
 					    	stock_row.closest("tr").find(".batch_no ").append("<option value=''>Select batch </option> ");
 				    $.each(data,function(key,value){
 				    		stock_row.closest("tr").find(".batch_no").append("<option value='"+value.batch_number+"'>"+value.batch_number+"</option> ");
-				    		stock_row.closest("tr").find(".status").append("<option value='"+value.status+"'>"+value.status+"</option> ");
+				    		
 			    		
 			    	});
 			    });
@@ -275,12 +288,13 @@ echo form_open('',$form_attributes);?>
 								    	stock_row.closest("tr").find(".expiry_date ").val("");
 								    	stock_row.closest("tr").find(".available_quantity").val("");
 								    	stock_row.closest("tr").find(".physical_count").val("");
-								    	stock_row.closest("tr").find(".row_id").val("");
+								    	stock_row.closest("tr").find(".vvm").val("");
 								    	
 					    $.each(data,function(key,value){
 					    		stock_row.closest("tr").find(".expiry_date").val(value.expiry_date);
 					    		stock_row.closest("tr").find(".available_quantity").val(value.stock_balance);
-								stock_row.closest("tr").find(".row_id").val(value.receive_id);
+					    		stock_row.closest("tr").find(".vvm").append("<option value='"+value.status+"'>"+value.status+"</option> ");
+							
 					    });
 					                                });
 					    request.fail(function(jqXHR, textStatus) {
