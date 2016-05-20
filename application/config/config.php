@@ -16,7 +16,7 @@
 | environments.
 |
 */
-$config['base_url'] = 'http://'.$_SERVER['SERVER_NAME'].'/ci3';
+$config['base_url'] = 'http://'.$_SERVER['SERVER_NAME'].'/';
 /*
 |--------------------------------------------------------------------------
 | Index File
