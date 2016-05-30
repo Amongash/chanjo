@@ -113,23 +113,27 @@ class Mdl_dashboard extends CI_Model
         return $query;
     }
 
-    function get_region_coverage($id)
-    {
-        $this->db->select('months, bcg,dpt1,dpt2,dpt3,measles,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,region_name');
-        $this->db->from('v_regions_coverage');
-        $this->db->where('region_name', $id);
-        $this->db->order_by('months');
-        $query = $this->db->get();
-
-        return $query;
-    }
-
-    function get_national_coverage()
+    function get_national_coverage($maxdate,$mindate)
     {
 
-      $this->db->select('*');
+      $this->db->select("date_format(`periodname`,'%M %Y') as months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
       $this->db->from('v_coverage_national');
-      $this->db->order_by(`periodname`,'%M %Y','asc');
+      $this->db->where('periodname >=', $mindate);
+      $this->db->where('periodname <=', $maxdate);
+      $this->db->order_by(`periodname`,'asc');
+      $query = $this->db->get();
+      return $query->result();
+
+    }
+    function get_region_coverage($maxdate,$mindate,$station)
+    {
+
+      $this->db->select("date_format(`periodname`,'%M %Y') as months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
+      $this->db->from('v_regions_coverage');
+      $this->db->where('months >=', $mindate);
+      $this->db->where('months <=', $maxdate);
+      $this->db->where('region_name', $station);
+      $this->db->order_by(`months`,'asc');
       $query = $this->db->get();
       return $query->result();
 
@@ -137,7 +141,7 @@ class Mdl_dashboard extends CI_Model
 
     function best_region_dpt3()
     {
-        $this->db->select('region_name as name,dpt1,dpt3');
+        $this->db->select('region_name as name,population,dpt1,dpt3');
         $this->db->order_by('dpt3', 'desc');
         $this->db->limit(3);
         $query = $this->db->get('v_regions_coverage');
@@ -147,7 +151,7 @@ class Mdl_dashboard extends CI_Model
 
     function worst_region_dpt3()
     {
-        $this->db->select('region_name as name,dpt1,dpt3');
+        $this->db->select('region_name as name,population,dpt1,dpt3');
         $this->db->order_by('dpt3', 'asc');
         $this->db->limit(3);
         $query = $this->db->get('v_regions_coverage');
@@ -157,7 +161,7 @@ class Mdl_dashboard extends CI_Model
 
     function best_county_dpt3($station_id)
     {
-        $this->db->select('county_name as name,dpt1,dpt3');
+        $this->db->select('county_name as name,population,dpt1,dpt3');
         $this->db->where('region_name', $station_id);
         $this->db->order_by('dpt3', 'desc');
         $this->db->limit(3);
@@ -168,7 +172,7 @@ class Mdl_dashboard extends CI_Model
 
     function worst_county_dpt3($station_id)
     {
-        $this->db->select('county_name as name,dpt1,dpt3');
+        $this->db->select('county_name as name,population,dpt1,dpt3');
         $this->db->where('region_name', $station_id);
         $this->db->order_by('dpt3', 'asc');
         $this->db->limit(3);
@@ -267,11 +271,37 @@ class Mdl_dashboard extends CI_Model
       return $query->result();
     }
 
-    function get_facility_population($facility_name)
+    function get_population_region($station)
+    {
+      $this->db->select('sum(under_one_population) as population');
+      $this->db->from('tbl_regions');
+      $this->db->where('region_name', $station);
+      $query = $this->db->get();
+      return $query->result();
+    }
+    function get_population_county($station)
+    {
+      $this->db->select('sum(under_one_population) as population');
+      $this->db->from('tbl_counties');
+      $this->db->where('county_name', $station);
+      $query = $this->db->get();
+      return $query->result();
+    }
+    function get_population_subcounty($station)
+    {
+      $this->db->select('sum(under_one_population) as population');
+      $this->db->from('tbl_subcounties');
+      $this->db->where('subcounty_name', $station);
+      $query = $this->db->get();
+      return $query->result();
+    }
+
+
+    function get_facility_population($station)
     {
         $this->db->select('under_one_population');
         $this->db->from('tbl_facilities');
-        $this->db->where('facility_name', $facility_name);
+        $this->db->where('facility_name', $station);
         $this->db->limit(1);
         $query = $this->db->get();
 
