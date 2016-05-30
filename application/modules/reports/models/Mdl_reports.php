@@ -1,12 +1,17 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 class Mdl_Reports extends CI_Model {
 	
 var $order = array('order' => 'desc');
 var $column = array('transaction_date','station','type','to_from','vaccine_name','batch','expiry','quantity','balance');
-
+private $db = null;
+     
 	function __construct() {
 		parent::__construct();
 	}
+
+
+    
 
 
 	function get_location($condition){

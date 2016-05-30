@@ -20,25 +20,10 @@
 <div class="col-lg-12" style="margin-top: 10px;">
  
         <div class="table-responsive">
-            <table id="table" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
-                <thead>
-
+        <table id="table" class="display" cellspacing="0" width="100%">
+            <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Station</th>
-                    <th>Quantity</th>
-                    <th>Batch</th>
-                    <th>Expiry</th>
-                    <th>Stock Balance</th>
-                  
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-
-                <tfoot>
-                <tr>
+                    <th></th>
                     <th>Date</th>
                     <th>Type</th>
                     <th>Station</th>
@@ -47,48 +32,80 @@
                     <th>Expiry</th>
                     <th>Stock Balance</th>
                 </tr>
-                </tfoot>
-            </table>
+            </thead>
+        </table>
+            
         </div>
 
         <script type="text/javascript">
 
-            var save_method; //for save method string
-            var table;
             var url = "<?php echo base_url('stock/stock_data/'.$id) ?>";
-
-            $(document).ready(function () {
-                table = $('#table').DataTable({
-                    "processing": true, //Feature control the processing indicator.
-                    "serverSide": true, //Feature control DataTables' server-side processing mode.
-
-                    // Load data for the table's content from an Ajax source
-                    "ajax": {
-                        "url": url,
-                        "type": "POST"
-                    },
-
-                    "responsive": {
-                        "details": {
-                            "type": 'column'
+            var editor; // use a global for the submit and return data rendering in the examples
+             
+            $(document).ready(function() {
+                editor = new $.fn.dataTable.Editor( {
+                    ajax: url,
+                    table: "#table",
+                    fields: [ {
+                            label: "Date:",
+                            name: "transaction_date"
+                        }, {
+                            label: "Type:",
+                            name: "type"
+                        }, {
+                            label: "Station:",
+                            name: "to_from"
+                        }, {
+                            label: "Quantity:",
+                            name: "quantity"
+                        }, {
+                            label: "Batch:",
+                            name: "batch"
+                        }, {
+                            label: "Expiry:",
+                            name: "expiry",
+                            type: "datetime"
+                        }, {
+                            label: "Stock Balance:",
+                            name: "balance"
                         }
-                    },
-                    //Set column definition initialisation properties.
-                    "columnDefs": [
+                    ]
+                } );
+             
+                // Activate the bubble editor on click of a table cell
+                $('#table').on( 'click', 'tbody td:not(:first-child)', function (e) {
+                    editor.bubble( this );
+                } );
+             
+                $('#table').DataTable( {
+                    dom: "Bfrtip",
+                    scrollY: 300,
+                    paging: false,
+                    ajax: url,
+                    columns: [
                         {
-                            "targets": [-1], //last column
-                            "orderable": false, //set not orderable
+                            data: null,
+                            defaultContent: '',
+                            className: 'select-checkbox',
+                            orderable: false
                         },
+                        { data: "transaction_date" },
+                        { data: "type" },
+                        { data: "to_from" },
+                        { data: "quantity" },
+                        { data: "batch" },
+                        { data: "expiry" },
+                        { data: "balance", render: $.fn.dataTable.render.number( ',', '.', 0 ) }
                     ],
-
-                });
-            });
-
-
-            
-
-            function reload_table() {
-                table.ajax.reload(null, false); //reload datatable ajax
-            }
+                    order: [ 1, 'asc' ],
+                    select: {
+                        style:    'os',
+                        selector: 'td:first-child'
+                    },
+                    buttons: [
+                        { extend: "edit", editor: editor }
+                    ]
+                } );
+            } );
 
     </script>

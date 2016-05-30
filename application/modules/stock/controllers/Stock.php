@@ -409,38 +409,66 @@ class Stock extends MY_Controller
 
     }
 
-    function stock_data($id){
-      	$this->load->model('reports/mdl_reports');
-      	$info['user_object'] = $this->get_user_object();
+    public function process($post, $id)
+    {   
+        // DataTables PHP library
+        require $_SERVER['DOCUMENT_ROOT'].'/assets/plugins/datatables/Editor/php/DataTables.php';
+        
+        //Load the model which will give us our data
+        $this->load->model('mdl_stock');
+        $info['user_object'] = $this->get_user_object();
         $station = $info['user_object']['user_statiton'];
-		$transaction = $this->mdl_reports->get_transactions($station,$id);
-		$data = array();
-		$no = $_POST['start'];
-		foreach ($transaction as $val) {
-		      $no++;
-		      $row = array();    
-		      $row[] = $val->transaction_date;
-              $row[] = $val->type;
-		      $row[] = $val->to_from;
-              $row[] = $val->quantity;
+        
+        //Pass the database object to the model
+        $this->mdl_stock->init($db);
+        
+        //Let the model produce the data
+        $this->mdl_stock->getData($post, $station, $id);
+    }
+
+    public function stock_data($id)
+    {   
+        if($id != false)
+        {
+            $this->process($_POST, $id);
+        }
+          return false;
+        
+
+    }
+
+  //   function stock_data($id){
+  //     	$this->load->model('reports/mdl_reports');
+  //     	$info['user_object'] = $this->get_user_object();
+  //       $station = $info['user_object']['user_statiton'];
+		// $transaction = $this->mdl_reports->get_transactions($station,$id);
+		// $data = array();
+		// $no = $_POST['start'];
+		// foreach ($transaction as $val) {
+		//       $no++;
+		//       $row = array();    
+		//       $row[] = $val->transaction_date;
+  //             $row[] = $val->type;
+		//       $row[] = $val->to_from;
+  //             $row[] = $val->quantity;
 		     
-		      $row[] = $val->batch;
-              $row[] = $val->expiry;
+		//       $row[] = $val->batch;
+  //             $row[] = $val->expiry;
 		      
-		      $row[] = $val->balance;
+		//       $row[] = $val->balance;
 
-		      $data[] = $row;
-		}
+		//       $data[] = $row;
+		// }
 
-		$output = array(
-		  "draw" => $_POST['draw'],
-		  "recordsTotal" => $this->mdl_reports->count_transactions_filtered($station,$id),
-          "recordsFiltered" => $this->mdl_reports->count_transactions_filtered($station,$id),
-		  "data" => $data,
-		);
+		// $output = array(
+		//   "draw" => $_POST['draw'],
+		//   "recordsTotal" => $this->mdl_reports->count_transactions_filtered($station,$id),
+  //         "recordsFiltered" => $this->mdl_reports->count_transactions_filtered($station,$id),
+		//   "data" => $data,
+		// );
 
-		echo json_encode($output);
-      }
+		// echo json_encode($output);
+  //     }
 
     function get_stock_balance($selected_vaccine)
     {

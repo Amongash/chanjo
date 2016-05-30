@@ -37,7 +37,7 @@
             var table;
             $(document).ready(function() {
                 table = $('#table').DataTable({
-                    "sDom": '<l<t>ip>',
+                    "sDom": '<lf<t>ip>',
                     "processing": true, //Feature control the processing indicator.
                     "serverSide": true, //Feature control DataTables' server-side processing mode.
 

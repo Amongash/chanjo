@@ -216,8 +216,8 @@ echo form_open('',$form_attributes);?>
 					       
 					     success:function(data, textStatus, jqXHR) 
 					        {
-					        	console.log(batch);
-					        	//window.location.replace('<?php echo base_url().'stock/list_inventory'?>');
+					        	//console.log(batch);
+					        	window.location.replace('<?php echo base_url().'stock/list_inventory'?>');
 					            //data: return data from server
 					        },
 					     error: function(jqXHR, textStatus, errorThrown) 

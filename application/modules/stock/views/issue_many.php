@@ -224,6 +224,11 @@
             var amt_issued = cloned_object.find(".amt_issued");
             amt_issued.attr('id', amt_issued_id);
 
+            var quantity_id = "available_quantity" + next_issue_row;
+            var quantity = cloned_object.find(".available_quantity");
+            quantity.attr('id', quantity_id);
+            console.log(quantity.val());
+
             var vvm_id = "vvm" + next_issue_row;
             var vvm_status = cloned_object.find(".vvm_s");
             vvm_status.attr('id', vvm_id);

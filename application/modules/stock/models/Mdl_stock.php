@@ -1,34 +1,59 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+use
+    DataTables\Editor,
+    DataTables\Editor\Field,
+    DataTables\Editor\Format,
+    DataTables\Editor\Join,
+    DataTables\Editor\Upload,
+    DataTables\Editor\Validate;
+     
 
 class Mdl_Stock extends CI_Model
 {
-	var $order = array('expiry_date' => 'desc');
-	var $receive_order_value = array('date_received' => 'desc');
-	var $issue_order_value = array('date_issued' => 'desc');
-	var $column = array(
-		0 =>'date_received',
-		1 =>'vaccine_name',
-		2 =>'batch_no',
-		3 =>'expiry_date',
-		4 =>'amount_ordered',
-		5 =>'amount_received',
-		6 =>'receive_id',
-		);
-	var $column2 = array(
-		0 =>'date_issued',
-		1 =>'vaccine_name',
-		2 =>'batch_no',
-		3 =>'expiry_date',
-		4 =>'issued_to',
-		5 =>'amount_ordered',
-		6 =>'amount_issued',
 	
-		);
-	
+	private $editorDb = null;
+
 	function __construct()
 	{
 	parent::__construct();	
 	}
+
+
+     
+    public function init($editorDb)
+    {
+        $this->editorDb = $editorDb;
+    }
+     
+    public function getData($post, $station, $vaccine_id)
+    {
+        // Build our Editor instance and process the data coming from _POST
+        // Use the Editor database class
+        Editor::inst($this->editorDb, 'v_transactions_all' )
+        ->fields(
+            Field::inst( 'type' ),
+            Field::inst( 'to_from' )->validator( 'Validate::notEmpty' ),
+            Field::inst( 'batch' ),
+            Field::inst( 'expiry' ),
+            Field::inst( 'quantity' )
+            ->validator( 'Validate::numeric' )
+            ->setFormatter( 'Format::ifEmpty', null ),
+            Field::inst( 'balance' )
+            ->validator( 'Validate::numeric' )
+            ->setFormatter( 'Format::ifEmpty', null ),
+            Field::inst( 'transaction_date' )
+            ->validator( 'Validate::dateFormat', array(
+                "format"  => Format::DATE_ISO_8601,
+                "message" => "Please enter a date in the format yyyy-mm-dd"
+            ) )
+            ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
+            ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 )
+        )
+        ->where( 'station', $station )
+        ->where( 'vaccine_id', $vaccine_id )
+        ->process( $post )
+        ->json();    
+    }
 
 	function get_all_physical_counts($selected_vaccine, $station){
 		if (isset($selected_vaccine) && !is_null($selected_vaccine)) {

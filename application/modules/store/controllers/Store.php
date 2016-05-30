@@ -113,7 +113,7 @@ class Store extends MY_Controller {
     function get_data_from_post() {
         $info['user_object'] = $this->get_user_object();
         $station_id = $info['user_object']['user_statiton'];
-        $data['location'] = $this->input->post('store_location', TRUE);
+        $data['store_location'] = $this->input->post('store_location', TRUE);
         $data['officer']=$this->input->post('officer', TRUE);
         $data['officer_phone']=$this->input->post('officer_phone', TRUE);
         $data['officer_email']=$this->input->post('officer_email', TRUE);

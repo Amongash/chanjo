@@ -8,19 +8,27 @@
     <title><?php echo $main_title; ?></title>
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
-    <link href="<?php echo base_url() ?>assets/css/font-awesome.css" rel="stylesheet" type="text/css"/>
-    <link href="<?php echo base_url() ?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?php echo base_url() ?>assets/css/animate.css" rel="stylesheet" type="text/css"/>
-    <link href="<?php echo base_url() ?>assets/css/admin.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo base_url() ?>assets/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo base_url() ?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo base_url() ?>assets/css/animate.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo base_url() ?>assets/css/admin.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url() ?>assets/plugins/select2/css/select2.min.css" rel="stylesheet">
-    <link href="<?php echo base_url() ?>assets/plugins/jquery-daterangepicker/daterangepicker.css" rel="stylesheet">
-    <link href="<?php echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.css" rel="stylesheet">
-    <link href="<?php echo base_url() ?>assets/plugins/advanced-datatable/css/demo_page.css" rel="stylesheet">
-    <link href="<?php echo base_url() ?>assets/plugins/advanced-datatable/css/demo_table.css" rel="stylesheet">
-    <link href="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/css/formValidation.min.css" rel="stylesheet">
-
-    <link href="<?php echo base_url() ?>assets/css/jquery-ui.css" rel="stylesheet">
-
+    <link href="<?php echo base_url() ?>assets/plugins/jquery-daterangepicker/daterangepicker.css" rel="stylesheet"/>
+   <!--  <link href="<?php //echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.css" rel="stylesheet"/>
+    <link href="<?php //echo base_url() ?>assets/plugins/advanced-datatable/css/demo_page.css" rel="stylesheet"/>
+    <link href="<?php //echo base_url() ?>assets/plugins/advanced-datatable/css/demo_table.css" rel="stylesheet"/>-->
+    <link href="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/css/formValidation.min.css" rel="stylesheet"/>
+    
+    <link href="<?php echo base_url() ?>assets/css/jquery-ui.css" rel="stylesheet"/>
+    <link href="<?php echo base_url() ?>assets/datatables/plugins/Editor/css/editor.bootstrap.css" rel="stylesheet"/>
+  
+    <link href="<?php echo base_url() ?>assets/plugins/datatables/DataTables-1.10.10/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link href="<?php echo base_url() ?>assets/plugins/datatables/Buttons-1.1.0/css/buttons.dataTables.min.css" rel="stylesheet"/>
+    <link href="<?php echo base_url() ?>assets/plugins/datatables/Select-1.1.0/css/select.dataTables.min.css" rel="stylesheet"/>
+    <link href="<?php echo base_url() ?>assets/plugins/datatables/Editor/css/editor.dataTables.min.css" rel="stylesheet"/>
+ 
+    
+   
 
     <script src="<?php echo base_url() ?>assets/js/jquery-2.1.0.js"></script>
     <script src="<?php echo base_url() ?>assets/js/bootstrap.min.js"></script>
@@ -347,34 +355,34 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="javascript:void(0);"><img src="<?php echo base_url() ?>assets/images/coat_of_arms.png"
-                                                           width="30" height="30"/><span class="theme_color">&nbsp;&nbsp;<b>NVIP
-                                    Chanjo</b></span> <span class="plus"><i class="fa fa-plus"></i></span> </a>
+                        <a href="javascript:void(0);"> <i class="fa fa-user"></i>PROFILE<span class="plus"><i
+                                    class="fa fa-plus"></i></span> </a>
                         <ul>
-		<li>
-		                <a href="javascript:void(0);"> <i class="fa fa-user"></i>PROFILE<span class="plus"><i
-		                            class="fa fa-plus"></i></span> </a>
-		                <ul>
-		                    <li>
-		                        <a href="<?php echo site_url('users/profile'); ?>"> <span>&nbsp;</span> <i class="fa fa-user"></i> <b>Profile</b> </a>
-		                    </li>
-		                    <li>
-		                        <a href="<?php echo site_url('users/logout'); ?>"> <span>&nbsp;</span> <i class="fa fa-power-off"></i> <b>Logout</b> </a>
-		                    </li>
+                            <li>
+                                <a href="<?php echo site_url('users/profile'); ?>"> <span>&nbsp;</span> <i class="fa fa-user"></i> <b>My Profile</b> </a>
+                            </li>
+                            <li>
+                                <a href="<?php echo site_url('users/logout'); ?>"> <span>&nbsp;</span> <i class="fa fa-power-off"></i> <b>Logout</b> </a>
+                            </li>
                         </ul>
                     </li>
+                    <li>
+                        <a href="javascript:void(0);"><img src="<?php echo base_url() ?>assets/images/coat_of_arms.png" width="30" height="30" /><span class="theme_color">&nbsp;&nbsp;<b>NVIP
+                                Chanjo</b></span> <span class="plus"><i class="fa fa-plus"></i></span> </a>
+                        <ul>
                             <li>
                                 <a href="#"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>ABOUT</b> </a>
                             </li>
                         </ul>
                     </li>
+                </ul>
+            </div>
+                    
+                            
 
 
                     
 
-
-                </ul>
-            </div>
 
         </div>
         <!--\\\\\\\left_nav end \\\\\\-->
@@ -460,35 +468,38 @@
 </script>
 
 <script src="<?php echo base_url() ?>assets/js/common-script.js"></script>
-<script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
-<script src="<?php echo base_url() ?>assets/js/jquery.sparkline.js"></script>
-<script src="<?php echo base_url() ?>assets/js/sparkline-chart.js"></script>
-<script src="<?php echo base_url() ?>assets/js/jquery.bootstrap.wizard.js"></script>
-
-<script src="<?php echo base_url() ?>assets/js/graph.js"></script>
-<script src="<?php echo base_url() ?>assets/js/edit-graph.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/kalendar/kalendar.js" type="text/javascript"></script>
-<script src="<?php echo base_url() ?>assets/plugins/kalendar/edit-kalendar.js" type="text/javascript"></script>
-
-<script src="<?php echo base_url() ?>assets/plugins/data-tables/jquery.dataTables.min.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/sparkline/jquery.sparkline.js" type="text/javascript"></script>
-<script src="<?php echo base_url() ?>assets/plugins/sparkline/jquery.customSelect.min.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/validation/parsley.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/graph.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/edit-graph.js"></script>
+   
+    <script src="<?php echo base_url() ?>assets/plugins/kalendar/kalendar.js" type="text/javascript"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/kalendar/edit-kalendar.js" type="text/javascript"></script>
 
 
-<script src="<?php echo base_url() ?>assets/plugins/knob/jquery.knob.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/datatables/DataTables-1.10.10/js/jquery.dataTables.js"></script>
+    
+    <script src="<?php echo base_url() ?>assets/plugins/datatables/Buttons-1.1.0/js/dataTables.buttons.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/datatables/KeyTable-2.1.0/js/dataTables.keyTable.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/datatables/Select-1.1.0/js/dataTables.select.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/datatables/Editor/js/dataTables.editor.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/datatables/Editor/js/editor.bootstrap.js"></script>
+    <!--<script src="<?php //echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.js"></script>-->
+    <script src="<?php echo base_url() ?>assets/plugins/validation/parsley.min.js"></script>
 
 
-<script src="<?php echo base_url() ?>assets/js/jPushMenu.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/select2/js/select2.min.js"></script>
-<script src="<?php echo base_url() ?>assets/js/side-chats.js"></script>
-<script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/scroll/jquery.nanoscroller.js"></script>
+
+    <script src="<?php echo base_url() ?>assets/plugins/knob/jquery.knob.min.js"></script>
 
 
-<script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/formValidation.min.js"></script>
-<script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/framework/bootstrap.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/jPushMenu.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/selecticize.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/select2/js/select2.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/side-chats.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/scroll/jquery.nanoscroller.js"></script>
+
+    <script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/formValidation.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/framework/bootstrap.min.js"></script>
 <script>
     $(document).ready(function(){
         $('.youClass').click(function(){
