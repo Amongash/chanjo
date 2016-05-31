@@ -49,22 +49,10 @@
                     fields: [ {
                             label: "Date:",
                             name: "transaction_date"
-                        }, {
-                            label: "Type:",
-                            name: "type"
-                        }, {
-                            label: "Station:",
-                            name: "to_from"
+                            //type: "datetime"
                         }, {
                             label: "Quantity:",
                             name: "quantity"
-                        }, {
-                            label: "Batch:",
-                            name: "batch"
-                        }, {
-                            label: "Expiry:",
-                            name: "expiry",
-                            type: "datetime"
                         }, {
                             label: "Stock Balance:",
                             name: "balance"
@@ -104,6 +92,7 @@
                     },
                     buttons: [
                         { extend: "edit", editor: editor }
+                        
                     ]
                 } );
             } );
