@@ -467,11 +467,12 @@
     // setInterval(tasks, 2000);
 </script>
 
-<script src="<?php echo base_url() ?>assets/js/common-script.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/common-script.js"></script>
     <script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/graph.js"></script>
     <script src="<?php echo base_url() ?>assets/js/edit-graph.js"></script>
-   
+    <script src="<?php echo base_url() ?>assets/js/jquery.bootstrap.wizard.js"></script>
+
     <script src="<?php echo base_url() ?>assets/plugins/kalendar/kalendar.js" type="text/javascript"></script>
     <script src="<?php echo base_url() ?>assets/plugins/kalendar/edit-kalendar.js" type="text/javascript"></script>
 
@@ -500,16 +501,7 @@
 
     <script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/formValidation.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/js/framework/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $('.youClass').click(function(){
-            var menuItem = '<a class=" " href=" ">Log Out</a>';
 
-            $('.anotherClass').append('<li class=".youClass">'+ menuItem +'</li>');
-
-        });
-    });
-</script>
 </body>
 
 
