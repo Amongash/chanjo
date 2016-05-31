@@ -167,7 +167,7 @@ class Users extends MY_Controller
         $data['subtitle'] = "Users";
         $data['page_title'] = "Add New Users";
         $data['module'] = "users";
-        $data['view_file'] = "register1_form";
+        $data['view_file'] = "create_form";
         $data['user_object'] = $this->get_user_object();
         $data['main_title'] = $this->get_title();
         //breadcrumbs
@@ -515,5 +515,32 @@ class Users extends MY_Controller
 
 
     }
+
+     public function action_list() {
+        $this->load->model('mdl_users');
+
+        $list = $this->mdl_users->get_users();
+        $data = array();
+        $no = $_POST['start'];
+        foreach($list as $user) {
+            $no++;
+            $row = array();
+            $row[] = $user->f_name."  ".$user->l_name ;
+            $row[] = $user->phone;
+            $row[] = $user->email;
+            $row[] = $user->user_group;
+            $row[] = $user->user_level;
+
+            //add html for action
+            $row[] = '  <a class="btn btn-sm btn-primary" href="'.base_url('users/create_user/'.$user->id).'" title="Edit"><i class="fa fa-edit"></i> Edit</a>';
+            $row[] = '  <a class="btn btn-sm btn-info"  href="'.base_url('users/delete/'.$user->id).'" title="Delete"><i class="fa fa-trash-o"></i> Delete</a>';
+            $data[] = $row;
+        }
+
+        $output = array("draw" => $_POST['draw'], "recordsTotal" => $this->mdl_users->count_filtered(), "recordsFiltered" => $this->mdl_users->count_filtered(), "data" => $data, );
+
+        echo json_encode($output);
+    }
+
 
 }
