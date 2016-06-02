@@ -173,16 +173,21 @@ $label = array('class' => 'col-xs-3 control-label');
                                 </div>
                                 <div class="form-group" id="base3">
                                     <label class="col-xs-3 control-label">Enter County Base</label>
-                                    <select name="countyuser" class="form-control" id="countyuser"></select>
+                                     <div class="col-xs-5">
+                                        <select name="countyuser" class="form-control" id="countyuser"></select>
+                                    </div>
                                 </div>
                                 <div class="form-group" id="base4">
                                     <label class="col-xs-3 control-label">Enter Sub County Base</label>
-                                    <select name="subcountyuser" class="form-control" id="subcountyuser"></select>
+                                    <div class="col-xs-5">
+                                        <select name="subcountyuser" class="form-control" id="subcountyuser"></select>
+                                    </div>
                                 </div>
                                 <div class="form-group" id="base5">
                                     <label class="col-xs-3 control-label">Enter Facility Base</label>
-                                    <select name="facilityuser" class="form-control" id="facilityuser"></select>
-
+                                    <div class="col-xs-5">
+                                        <select name="facilityuser" class="form-control" id="facilityuser"></select>
+                                    </div>
                                 </div>
                                 
                             </div>
