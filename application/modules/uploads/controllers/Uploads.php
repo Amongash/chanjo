@@ -249,7 +249,7 @@
 
             $this->pagination->initialize($config);
                   // $data['query'] = $this->mdl_county->get('id', $config['per_page'], $this->uri->segment(3));
-            $data['files'] = $this->db->get('m_uploads', $config['per_page'], $this->uri->segment(3));
+            $data['files'] = $this->db->get('tbl_uploads', $config['per_page'], $this->uri->segment(3));
                    //$this->load->view('display', $data);
             $data['section'] = "NVIP Chanjo";
             $data['subtitle'] = "Library";
