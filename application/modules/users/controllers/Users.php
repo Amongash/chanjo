@@ -27,31 +27,7 @@ class Users extends MY_Controller
     {
 
         Modules::run('secure_tings/ni_admin');
-        $this->load->model('mdl_users');
-        $this->load->library('pagination');
-        $this->load->library('table');
-        $config['base_url'] = base_url() . '/users/list_users';
-        $config['total_rows'] = $this->mdl_users->get('id')->num_rows;
-        $config['per_page'] = 10;
-        $config['num_links'] = 4;
-        $config['full_tag_open'] = '<div><ul class="pagination pagination-small pagination-centered">';
-        $config['full_tag_close'] = '</ul></div>';
-        $config['num_tag_open'] = '<li>';
-        $config['num_tag_close'] = '</li>';
-        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
-        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
-        $config['next_tag_open'] = "<li>";
-        $config['next_tagl_close'] = "</li>";
-        $config['prev_tag_open'] = "<li>";
-        $config['prev_tagl_close'] = "</li>";
-        $config['first_tag_open'] = "<li>";
-        $config['first_tagl_close'] = "</li>";
-        $config['last_tag_open'] = "<li>";
-        $config['last_tagl_close'] = "</li>";
-
-        $this->pagination->initialize($config);
-        // $data['query'] = $this->mdl_region->get('id', $config['per_page'], $this->uri->segment(3));
-        $data['records'] = $this->db->get('v_user_details', $config['per_page'], $this->uri->segment(3));
+        
         //$this->load->view('display', $data);
         $data['module'] = "users";
         $data['view_file'] = "list_user_view";
@@ -207,6 +183,7 @@ class Users extends MY_Controller
             $data['phone'] = $row->phone;
             $data['email'] = $row->email;
             $data['username'] = $row->username;
+         
 
 
         }
@@ -256,7 +233,8 @@ class Users extends MY_Controller
             redirect('users/create_user');
 
         } else {
-            $data = $this->get_register_data_from_post();
+
+        	$data = $this->get_register_data_from_post();
 
             $password = $this->input->post('password', TRUE);
             $data_base['national'] = $this->input->post('national', TRUE);
@@ -266,14 +244,32 @@ class Users extends MY_Controller
             $data_base['facility'] = $this->input->post('facilityuser', TRUE);
             $data['password'] = Modules::run('secure_tings/hash_it', $password);
 
-            $result = $this->mdl_users->_insert($data, $data_base);
-            if ($result == TRUE) {
-                $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">User Added Successfuly</div>');
-                redirect('users/list_users');
-            } else {
-                $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-danger text-center">Username already in use. Try a different one!</div>');
-                redirect('users/create_user');
+	        if (!isset($update_id)) {
+	            $update_id = $this->input->post('update_id');
+	       
+		        if (is_numeric($update_id)) {
+		        	$result = $this->mdl_users->_update($update_id, $data, $data_base);  
+		        	if ($result == TRUE) {
+		                $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">User Updated Successfuly</div>');
+		                redirect('users/list_users');
+		            } else {
+		                $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-danger text-center">An error has occured! Please contact the system administrator</div>');
+		                redirect('users/create_user');
+		            } 
+		        }
+            }else{
+
+            	$result = $this->mdl_users->_insert($data, $data_base);
+	            if ($result == TRUE) {
+	                $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">User Added Successfuly</div>');
+	                redirect('users/list_users');
+	            } else {
+	                $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-danger text-center">Username already in use. Try a different one!</div>');
+	                redirect('users/create_user');
+	            }
             }
+
+            
 
         }
     }
@@ -445,7 +441,7 @@ class Users extends MY_Controller
     {
         $this->_delete($id);
         $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">User deleted successfully!</div>');
-        redirect('list_users_view');
+        redirect('users/list_users');
     }
 
     function get_where($id)
@@ -498,22 +494,6 @@ class Users extends MY_Controller
         $this->load->model('mdl_users');
         $query = $this->mdl_users->_custom_query($mysql_query);
         return $query;
-    }
-
-    public function listall()
-    {
-      	$dir = '\\var\\www\\dvikenya\\application\\modules\\';
-        //$dir = __DIR__.'/../..';
-        $this->load->library('directoryinfo');
-        if (class_exists('directoryinfo')) {
-        	$sortedarray  = $this->directoryinfo->readDirectory($dir,true);
-        	//echo $dir;
-       		echo json_encode($sortedarray);
-        }else{
-        	echo json_encode('FALSE');
-        }
-
-
     }
 
      public function action_list() {
