@@ -47,7 +47,7 @@ class Mdl_Stock extends CI_Model
             ) )
             ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
             ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 )
-        )->selectDistinct('v_transactions_all', '*')
+        )
         ->where( 'station', $station )
         ->where( 'vaccine_id', $vaccine_id )
         ->process( $post )
