@@ -46,37 +46,25 @@
 var table;
 $(document).ready(function() {
   table = $('#table').DataTable({ 
-    //"sDom": '<l<t>ip>',
-    "processing": true, //Feature control the processing indicator.
-    "serverSide": true, //Feature control DataTables' server-side processing mode.
     
+    "serverSide": true, //Feature control DataTables' server-side processing mode.
+
     // Load data for the table's content from an Ajax source
     "ajax": {
         "url": "<?php echo site_url('users/action_list')?>",
         "type": "POST"
     },
-    'dom': 'Bfrtip',
-        'buttons': [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
-    // "dom": 'Bfrtip',
-    // "buttons": [
-    //   'copy', 'excel', 'pdf'
-    // ],
-
     "responsive": {
-      "details": {
-        "type": 'column'
-      }
-    },
+          "details": {
+              "type": 'column'
+          }
+      },
 
-    //Set column definition initialisation properties.
-    "columnDefs": [
-    { 
-      "targets": [ -1 ], //last column
-      "orderable": true, //set not orderable
-    },
-    ],
+      //Set column definition initialisation properties.
+      "columnDefs": [{
+          "targets": [-1], //last column
+          "orderable": true, //set not orderable
+      }, ],
 
   });
 });
