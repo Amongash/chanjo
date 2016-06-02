@@ -3,6 +3,9 @@
 
 class Mdl_users extends CI_Model {
 
+    var $order = array('user_group' => 'desc');
+    var $column = array('id', 'f_name', 'l_name', 'phone', 'email', 'user_group', 'user_level');
+
             function __construct() {
                 parent::__construct();
             }
@@ -285,10 +288,25 @@ class Mdl_users extends CI_Model {
             }
         }
 
-        function _update($id, $data){
+        function _update($id, $data, $data_base){
             $table = $this->get_table();
+            // Query to check whether username already exist or not
+            $condition = "username =" . "'" . $data['username'] . "'";
+            $this->db->select('*');
+            $this->db->from($table);
+            $this->db->where($condition);
+            $this->db->limit(1);
+            $query = $this->db->get();
+            if ($query->num_rows() == 1) {
             $this->db->where('id', $id);
             $this->db->update($table, $data);
+            $this->db->update('tbl_user_base', $data_base);
+                if ($this->db->affected_rows() > 0) {
+                    return true;
+                }
+            } else {
+                return false;
+            }
         }
 
         function _delete($id){
