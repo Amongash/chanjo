@@ -90,27 +90,31 @@ class Mdl_dashboard extends CI_Model
 
 
 
-    function get_subcounty_coverage($id)
+    function get_subcounty_coverage($maxdate,$mindate,$station)
     {
 
-        $this->db->select('months, bcg,dpt1,dpt2,dpt3,measles,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,subcounty_name');
+        $this->db->select("date_format(`months`,'%M %Y') as months, bcg,dpt1,dpt2,dpt3,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,subcounty_name");
         $this->db->from('v_subcounties_coverage');
-        $this->db->where('subcounty_name', $id);
-        $this->db->order_by('months');
+        $this->db->where('subcounty_name', $station);
+        $this->db->where('months >=', $mindate);
+        $this->db->where('months <=', $maxdate);
+        $this->db->order_by(`months`,'asc');
         $query = $this->db->get();
 
-        return $query;
+        return $query->result();
     }
 
-    function get_county_coverage($id)
+    function get_county_coverage($maxdate,$mindate,$station)
     {
-        $this->db->select('months, bcg,dpt1,dpt2,dpt3,measles,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,county_name');
+        $this->db->select("date_format(`months`,'%M %Y') as months, bcg,dpt1,dpt2,dpt3,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,county_name");
         $this->db->from('v_counties_coverage');
-        $this->db->where('county_name', $id);
-        $this->db->order_by('months');
+        $this->db->where('county_name', $station);
+        $this->db->where('months >=', $mindate);
+        $this->db->where('months <=', $maxdate);
+        $this->db->order_by(`months`,'asc');
         $query = $this->db->get();
 
-        return $query;
+          return $query->result();
     }
 
     function get_national_coverage($maxdate,$mindate)
@@ -128,7 +132,7 @@ class Mdl_dashboard extends CI_Model
     function get_region_coverage($maxdate,$mindate,$station)
     {
 
-      $this->db->select("date_format(`periodname`,'%M %Y') as months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
+      $this->db->select("date_format(`months`,'%M %Y') as months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
       $this->db->from('v_regions_coverage');
       $this->db->where('months >=', $mindate);
       $this->db->where('months <=', $maxdate);
@@ -183,7 +187,7 @@ class Mdl_dashboard extends CI_Model
 
     function best_subcounty_dpt3($station_id)
     {
-        $this->db->select('subcounty_name as name,dpt1,dpt3');
+        $this->db->select('subcounty_name as name,population,dpt1,dpt3');
         $this->db->where('county_name', $station_id);
         $this->db->order_by('dpt3', 'desc');
         $this->db->limit(3);
@@ -194,7 +198,7 @@ class Mdl_dashboard extends CI_Model
 
     function worst_subcounty_dpt3($station_id)
     {
-        $this->db->select('subcounty_name as name,dpt1,dpt3');
+        $this->db->select('subcounty_name as name,population,dpt1,dpt3');
         $this->db->where('county_name', $station_id);
         $this->db->order_by('dpt3', 'asc');
         $this->db->limit(3);
@@ -225,29 +229,32 @@ class Mdl_dashboard extends CI_Model
 
         return $query;
     }
-    function get_vaccine_volume_national()
+    function get_vaccine_volume_national($station)
     {
       $this->db->select('sum(balance*vaccine_volume)/1000 as volume');
       $this->db->from('v_vaccine_balance');
+      $this->db->where('station', $station);
       $query = $this->db->get();
       return $query->result();
 
     }
-    function get_opv_vaccine_volume_national()
+    function get_opv_vaccine_volume_national($station)
     {
       $this->db->select('sum(balance*vaccine_volume)/1000 as volume');
       $this->db->from('v_vaccine_balance');
       $this->db->where('vaccine_name', 'OPV');
+      $this->db->where('station', $station);
       $query = $this->db->get();
       return $query->result();
 
     }
-    function get_fridge_cold_chain_capacity_national()
+    function get_fridge_cold_chain_capacity_national($station)
     {
       $this->db->select('sum(vaccine_storage_volume) as total_volume');
       $this->db->from('v_fridges_overview');
       $this->db->where('refrigerator_status', 'Functional');
       $this->db->where('freezer_capacity' , 'No');
+      $this->db->where('location', $station);
       $query = $this->db->get();
       return $query->result();
 
