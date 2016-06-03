@@ -23,7 +23,8 @@
         <table id="table" class="display" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th></th>
+                    <th class="no-sort"></th>
+                    <th>No.</th>
                     <th>Date</th>
                     <th>Type</th>
                     <th>Station</th>
@@ -70,6 +71,12 @@
                     scrollY: 300,
                     paging: false,
                     ajax: url,
+                    columnDefs: [ {
+                        targets: [ 1 ],
+                        orderData: [ 1, 0 ],
+                        visible: false
+                    },
+                    { targets: 'no-sort', orderable: false }],
                     columns: [
                         {
                             data: null,
@@ -77,6 +84,7 @@
                             className: 'select-checkbox',
                             orderable: false
                         },
+                        { data: "DT_RowId" },
                         { data: "transaction_date" },
                         { data: "type" },
                         { data: "to_from" },
@@ -85,7 +93,7 @@
                         { data: "expiry" },
                         { data: "balance", render: $.fn.dataTable.render.number( ',', '.', 0 ) }
                     ],
-                    order: [ 1, 'asc' ],
+                    order: [],
                     select: {
                         style:    'os',
                         selector: 'td:first-child'

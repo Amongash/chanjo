@@ -30,6 +30,7 @@ class Mdl_Stock extends CI_Model
         // Use the Editor database class
         Editor::inst($this->editorDb, 'v_transactions_all' )
         ->fields(
+            Field::inst( 'order' ),
             Field::inst( 'type' ),
             Field::inst( 'to_from' )->validator( 'Validate::notEmpty' ),
             Field::inst( 'batch' ),
