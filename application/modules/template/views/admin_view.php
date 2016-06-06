@@ -18,17 +18,17 @@
     <link href="<?php //echo base_url() ?>assets/plugins/advanced-datatable/css/demo_page.css" rel="stylesheet"/>
     <link href="<?php //echo base_url() ?>assets/plugins/advanced-datatable/css/demo_table.css" rel="stylesheet"/>-->
     <link href="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/css/formValidation.min.css" rel="stylesheet"/>
-    
+
     <link href="<?php echo base_url() ?>assets/css/jquery-ui.css" rel="stylesheet"/>
     <link href="<?php echo base_url() ?>assets/datatables/plugins/Editor/css/editor.bootstrap.css" rel="stylesheet"/>
-  
+
     <link href="<?php echo base_url() ?>assets/plugins/datatables/DataTables-1.10.10/css/jquery.dataTables.min.css" rel="stylesheet"/>
     <link href="<?php echo base_url() ?>assets/plugins/datatables/Buttons-1.1.0/css/buttons.dataTables.min.css" rel="stylesheet"/>
     <link href="<?php echo base_url() ?>assets/plugins/datatables/Select-1.1.0/css/select.dataTables.min.css" rel="stylesheet"/>
     <link href="<?php echo base_url() ?>assets/plugins/datatables/Editor/css/editor.dataTables.min.css" rel="stylesheet"/>
- 
-    
-   
+
+
+
 
     <script src="<?php echo base_url() ?>assets/js/jquery-2.1.0.js"></script>
     <script src="<?php echo base_url() ?>assets/js/bootstrap.min.js"></script>
@@ -274,8 +274,11 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="<?php echo site_url("reports/stock_transactions") ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Stock 
+                                <a href="<?php echo site_url("reports/stock_transactions") ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Stock
                                 Transactions</b> </a>
+                            </li>
+                            <li>
+                                <a href="<?php echo site_url("reports/system_usage") ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>System Usage</b> </a>
                             </li>
                         </ul>
                     </li>
@@ -377,11 +380,11 @@
                     </li>
                 </ul>
             </div>
-                    
-                            
 
 
-                    
+
+
+
 
 
         </div>
@@ -447,9 +450,9 @@
     //         url: url,
     //         cache: false,
     //         success: function (data) {
-                
+
     //             $(data).insertBefore("#all");
-                
+
     //         }
     //     });
     // }
@@ -457,8 +460,8 @@
 
     // $(document).ready(function () {
 
-    //     notifications(); 
-    //     tasks(); 
+    //     notifications();
+    //     tasks();
 
     // });
 
@@ -478,7 +481,7 @@
 
 
     <script src="<?php echo base_url() ?>assets/plugins/datatables/DataTables-1.10.10/js/jquery.dataTables.js"></script>
-    
+
     <script src="<?php echo base_url() ?>assets/plugins/datatables/Buttons-1.1.0/js/dataTables.buttons.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/datatables/KeyTable-2.1.0/js/dataTables.keyTable.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/datatables/Select-1.1.0/js/dataTables.select.min.js"></script>

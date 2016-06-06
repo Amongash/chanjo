@@ -253,7 +253,7 @@ class Mdl_dashboard extends CI_Model
       $this->db->select('sum(vaccine_storage_volume) as total_volume');
       $this->db->from('v_fridges_overview');
       $this->db->where('refrigerator_status', 'Functional');
-      $this->db->where('freezer_capacity' , 'No');
+    //  $this->db->where('freezer_capacity' , 'No');
       $this->db->where('location', $station);
       $query = $this->db->get();
       return $query->result();

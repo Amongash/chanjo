@@ -23,7 +23,7 @@ class Reports extends MY_Controller
 		$this->make_bread->add('Immunization Performance', '', 0);
 		$this->make_bread->add('Counties', '', 0);
 		$data['breadcrumb'] = $this->make_bread->output();
-		echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data); 
+		echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data);
       }
 
 	function county_list(){
@@ -33,7 +33,7 @@ class Reports extends MY_Controller
 		$no = $_POST['start'];
 		foreach ($list as $county) {
 		      $no++;
-		      $row = array();    
+		      $row = array();
 		      $row[] = '  <a onclick="county('.$county->id.')">'.$county->county_name.'</a>';
 
 		      $data[] = $row;
@@ -67,14 +67,14 @@ class Reports extends MY_Controller
 		       	$condition =  array("location"=> $getVar);
 		        $result = $this->mdl_reports->get_location($condition);
 		    	//var_dump($result);
-		    
+
 		    /* limit with page_limit get */
 
 		    //$limit = intval($_GET['page_limit']);
-		    
-			
 
-			    foreach ($result as $row) 
+
+
+			    foreach ($result as $row)
 		        {
 		            $row_array['location'] = utf8_encode($row->location);
 		            $return_arr[] = $row_array;
@@ -85,13 +85,13 @@ class Reports extends MY_Controller
 		else
 		{
 			$result = $this->mdl_reports->get_location($condition);
-	        foreach ($result as $row) 
+	        foreach ($result as $row)
 	        {
 
 	            $row_array['location'] = utf8_encode($row->location);
 	            $return_arr[] = $row_array;
 	        }
-	        
+
 		}
 
 		$ret = array();
@@ -109,7 +109,7 @@ class Reports extends MY_Controller
 		}
 		echo json_encode($ret);
 
-		// $this->output->enable_profiler(TRUE);		
+		// $this->output->enable_profiler(TRUE);
     }
 
     function get_transactions(){
@@ -137,20 +137,20 @@ class Reports extends MY_Controller
 		$this->make_bread->add('Immunization Performance', '', 0);
 		$this->make_bread->add('Counties', '', 0);
 		$data['breadcrumb'] = $this->make_bread->output();
-		echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data); 
+		echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data);
       }
 
-      
+
       function stock_transactions()
     {
         Modules::run('secure_tings/is_logged_in');
         $this->load->model('vaccines/mdl_vaccines');
         $data['vaccines'] = $this->mdl_vaccines->get_vaccine_details();
         $data['module'] = "reports";
-        $data['view_file'] = "inventory";
+        $data['view_file'] = "stocks";
         $data['section'] = "Reports";
         $data['subtitle'] = "Stock Transactions";
-        
+
         $data['page_title'] = "Stock Transactions";
         $data['user_object'] = $this->get_user_object();
         $data['main_title'] = $this->get_title();
@@ -173,11 +173,11 @@ class Reports extends MY_Controller
     {
 
     	Modules::run('secure_tings/is_logged_in');
-    	if (isset($_GET['name']) ) { 
+    	if (isset($_GET['name']) ) {
           if (!empty($_GET['name'])) {
             $station = $this->_station($_GET['name']);
             $data['station'] = $station;
-            
+
           }
         }else{
         	$info['user_object'] = $this->get_user_object();
@@ -185,14 +185,14 @@ class Reports extends MY_Controller
         	$data['station'] = $station;
         }
 
-        if (isset($_GET['vac']) ) { 
+        if (isset($_GET['vac']) ) {
           if (!empty($_GET['vac'])) {
            		$selected_vaccine = $_GET['vac'];
            		$data['id'] = $selected_vaccine;
             }
         }
-       
-      
+
+
         $this->load->model('vaccines/mdl_vaccines');
         $data['vaccine'] = $this->mdl_vaccines->get_where($selected_vaccine)->result_array();
         $data['module'] = "reports";
@@ -208,7 +208,7 @@ class Reports extends MY_Controller
         $this->make_bread->add('Stock Transactions', 'reports/stock_transactions', 1);
 
         $data['breadcrumb'] = $this->make_bread->output();
-       
+
         // $this->output->enable_profiler(TRUE);
 
         echo Modules::run('template/' . $this->redirect($this->session->userdata['logged_in']['user_group']), $data);
@@ -228,15 +228,15 @@ class Reports extends MY_Controller
 		$no = $_POST['start'];
 		foreach ($transaction as $val) {
 		      $no++;
-		      $row = array();    
+		      $row = array();
 		      $row[] = $val->transaction_date;
               $row[] = $val->type;
 		      $row[] = $val->to_from;
               $row[] = $val->quantity;
-		     
+
 		      $row[] = $val->batch;
               $row[] = $val->expiry;
-		      
+
 		      $row[] = $val->balance;
 
 
@@ -251,6 +251,18 @@ class Reports extends MY_Controller
 		);
 
 		echo json_encode($output);
+      }
+
+      function stock_levels(){
+          echo "Display Report here";
+      }
+
+      function coverage(){
+          echo "You are here";
+      }
+
+      function system_usage(){
+          echo "You are here";
       }
 
 

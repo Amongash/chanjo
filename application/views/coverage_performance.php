@@ -27,7 +27,7 @@
             <td ><a class="filter"  data-escalate="<?php echo $user_level ?>" data-population="<?php echo (int)$row['population'] ?>" id="<?php echo $row['name'] ?>" href="#"><?php echo $row['name'] ?></a></td>
             <td><?php echo $row['totaldpt3'] ?></td>
             <td><?php if ($row['totaldpt1']==0) {
-              echo 'Inconclusive Data.';
+              echo 'N/A.';
             }else {
               echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2);
             } ?></td>
@@ -35,7 +35,7 @@
             <td><a class="filter" data-escalate="<?php echo $user_level ?>" data-population="<?php echo (int)$row['population'] ?>" id="<?php echo $row['name'] ?>" href="#"><?php echo $row['name'] ?></a></td>
             <td><?php echo $row['totaldpt3'] ?></td>
             <td><?php if ($row['totaldpt1']==0) {
-              echo 'Inconclusive Data.';
+              echo 'N/A.';
             }else {
               echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2);
             } ?></td>
@@ -43,7 +43,7 @@
             <td><a class="filter" data-escalate="<?php echo $user_level ?>" data-population="<?php echo (int)$row['population'] ?>" id="<?php echo $row['name'] ?>" href="#"><?php echo $row['name'] ?></a></td>
             <td><?php echo $row['totaldpt3'] ?></td>
             <td><?php if ($row['totaldpt1']==0) {
-              echo 'Inconclusive Data.';
+              echo 'N/A.';
             }else {
               echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2);
             } ?></td>
