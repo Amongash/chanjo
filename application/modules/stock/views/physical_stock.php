@@ -1,8 +1,14 @@
 <div class="row">
     <div class="col-lg-12">
 <?php
+$vvm = array(
+            '1'  => 'Stage 1',
+            '2'  => 'Stage 2',
+            );
+
 $form_attributes = array('id' => 'physical_stock_fm','class'=>'form-inline','role'=>'form');
-echo form_open('',$form_attributes);?>
+echo form_open('',$form_attributes);
+?>
 
 <div id="physical_stock">
 <div class="table-responsive">
@@ -26,13 +32,14 @@ echo form_open('',$form_attributes);?>
 
 </style>
 	<thead>
-		<th >Date of count</th>
+		<th>Date of count</th>
 		<th align="center">Vaccine Name</th>
-		<th >Batch Number</th>
-		<th >Expiry Date</th>
+		<th>Batch Number</th>
+		<th>Expiry Date</th>
 		
-		<th >Available Quantity</th>
-		<th > Physical Count</th>
+		<th>Available Quantity</th>
+		<th>Physical Count</th>
+		<th>VVM Stage</th>
 		<th>Action</th>
 							
 							
@@ -55,12 +62,19 @@ echo form_open('',$form_attributes);?>
              		 
              		<td><?php $data=array('name' => 'available_quantity','id'=> 'available_quantity','class'=>'form-control available_quantity cells','disabled'=>'','required'=>'' ); echo form_input($data);?></td>
              		<td><?php $data=array('name' => 'physical_count','required'=>'true','type'=>'Number', 'min'=>'0','id'=>'physical_count' ,'class'=>'form-control physical_count cells','required'=>'' ); echo form_input($data);?></td>
-					<td hidden><?php $data=array('name' => 'vvm','id'=> 'vvm','class'=>'form-control vvm' , 'hidden'=>'' ); echo form_input($data);?></td>
-             		<td class="small">
-                                <a href="#" class="add btn"><span class="label label-success"><i
-                                            class="fa fa-plus-square"></i> <b>ADD</b></span></a><br>
-                                <a href="#" class="remove btn"><span class="label label-danger"><i
-                                            class="fa  fa-minus-square"></i> <b>REMOVE</b></span></a>
+					<td>
+                                <select name="vvm_status" class="form-control vvm_status" id="vvm_status" required="true">
+                                    <option value="">Select Status</option>
+                                    <?php foreach ($vvm as $key=>$value) {
+                                        echo "<option value='" . $key . "'>" . $value . "</option>";
+                                    } ?>
+                                </select>
+                            </td>
+                    <td class="small">
+                        <a href="#" class="add btn"><span class="label label-success"><i
+                                    class="fa fa-plus-square"></i> <b>ADD</b></span></a><br>
+                        <a href="#" class="remove btn"><span class="label label-danger"><i
+                                    class="fa  fa-minus-square"></i> <b>REMOVE</b></span></a>
                      </td>
              	</tr>
              	
@@ -137,8 +151,8 @@ echo form_open('',$form_attributes);?>
 			    var physical_count = cloned_object.find(".physical_count");
 				physical_count.attr('id',physical_count_id);
 
-				var status_id = "status" + next_physical_row;
-			    var status = cloned_object.find(".status");
+				var status_id = "vvm_status" + next_physical_row;
+			    var status = cloned_object.find(".vvm_status");
 				status.attr('id',status_id);
 
 
@@ -147,17 +161,26 @@ echo form_open('',$form_attributes);?>
                 cloned_object .insertAfter( thisRow ).find( 'input' ).val( '' );
              
                 });
-// Remove a row from the form
+			// Remove a row from the form
            $('#physical_stock').delegate('.remove', 'click', function(){
-             $(this).closest('tr').remove();});
+             if ( $('#physical_stock tbody tr').length == 1) return;
+	            $(this).parents("tr").fadeOut('slow', function () {
+	                $(this).remove();
+	            });
+             });
 
 
-           $("#physical_stock_fm").submit(function(e){
-			         	e.preventDefault();//STOP default action
-			         	var vaccine_count=0;
-			         	$.each($(".vaccine"), function(i, v) {
-			                   vaccine_count++;
-			         	});
+		$("#physical_stock_fm").submit(function(e){
+			$('.fa').removeClass("fa-paper-plane");
+			$(this).find("button[type='submit']").prop('disabled',true);
+			$(this).find("button[type='submit']").css('background','#fff');
+			$(this).find("button[type='submit']").css('cursor','not-allowed');
+
+         	e.preventDefault();//STOP default action
+         	var vaccine_count=0;
+         	$.each($(".vaccine"), function(i, v) {
+                   vaccine_count++;
+         	});
 
 		   
 		   var formURL="<?php echo base_url();?>stock/save_physical_count";
@@ -168,7 +191,7 @@ echo form_open('',$form_attributes);?>
 		   var count_date = retrieveFormValues_Array('date_of_count');
 		   var available_quantity = retrieveFormValues_Array('available_quantity');
 		   var physical_count = retrieveFormValues_Array('physical_count');
-		   var vvm = retrieveFormValues_Array('vvm');
+		   var vvm = retrieveFormValues_Array('vvm_status');
 		 
 
 		    var dat = new Array();
@@ -204,19 +227,16 @@ echo form_open('',$form_attributes);?>
 					        	"batch":batch
 					       		},
 					     	beforeSend: function(){
-			                 
-			                    $('#cancel').prop("disabled", true);
-			                    $('#send').prop("disabled", true);
-			                    $('#loader').css('display','inline');
-					            $('.fa').removeClass("fa-paper-plane");
-					            $('#physical_stock_fm').css('background','#fff');
-					            $('#physical_stock_fm').css('cursor','not-allowed');
+								$('#send').prop("hidden", true);
+								$('#cancel').prop("disabled", true);
+								$('#send').prop("disabled", true);
+								$('#loader').css('display','inline');
 			                   
 			                   },
 					       
 					     success:function(data, textStatus, jqXHR) 
 					        {
-					        	//console.log(batch);
+					        	//console.log(data);
 					        	window.location.replace('<?php echo base_url().'stock/list_inventory'?>');
 					            //data: return data from server
 					        },

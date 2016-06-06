@@ -95,7 +95,7 @@ Modules::run('secure_tings/is_logged_in');
             $data['name'] = $row->name;
             $data['totaldpt3'] = (int)$row->dpt3;
             $data['totaldpt1'] = (int)$row->dpt1;
-            $data['population'] = (int)$row->population;
+            //$data['population'] = (int)$row->population;
 
             array_push($json_array, $data);
 

@@ -15,10 +15,11 @@
       <tr class="button"></tr>
         <tr>
           <th>Facility Name</th>
+          <th>Subcounty Name</th>
           <th>Officer Incharge</th>
           <th>No. of Vaccine Carriers</th>
           <th>No. of Cold Boxes</th>
-          <th style="width:250px;">Action</th>
+          <th >Action</th>
         </tr>
       </thead>
       <tbody>
@@ -27,6 +28,7 @@
       <tfoot>
         <tr>
           <th>Facility Name</th>
+          <th>Subcounty Name</th>
           <th>Officer Incharge</th>
           <th>No. of Vaccine Carriers</th>
           <th>No. of Cold Boxes</th>
@@ -42,8 +44,8 @@
     var table;
     $(document).ready(function() {
       table = $('#table').DataTable({ 
-        "sDom": '<l<t>ip>',
-        "processing": true, //Feature control the processing indicator.
+        
+        
         "serverSide": true, //Feature control DataTables' server-side processing mode.
         
         // Load data for the table's content from an Ajax source
@@ -51,12 +53,8 @@
             "url": "<?php echo site_url('facility/action_list')?>",
             "type": "POST"
         },
-        "dom": 'Bfrtip',
-        "buttons": [
-          'excelHtml5',
-          'csvHtml5',
-          'pdfHtml5',
-        ],
+       
+        
         "responsive": {
           "details": {
             "type": 'column'
@@ -66,8 +64,23 @@
         //Set column definition initialisation properties.
         "columnDefs": [
         { 
-          "targets": [ -1 ], //last column
-          "orderable": true, //set not orderable
+          "targets": [ 0 ], //first column
+          "orderable": true, //set orderable
+        },{ 
+          "targets": [ 1 ], 
+          "orderable": true,
+        },{ 
+          "targets": [ 2 ], 
+          "orderable": true,
+        },{ 
+          "targets": [ 3 ], 
+          "orderable": true,
+        },{ 
+          "targets": [ 4], 
+          "orderable": true,
+        },{ 
+          "targets": [ 5 ], //last column
+          "orderable": false, //set not orderable
         },
         ],
 

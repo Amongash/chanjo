@@ -127,7 +127,7 @@
                             Are you sure you want to submit the entered details?
                         <div class="modal-footer">
                                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                               <button type="submit" name="stock_received" id="stock_received" class="btn btn-sm btn-danger">Submit</button>
+                               <button type="submit" name="stock_received" id="stock_received" class="btn btn-sm btn-danger"><i class="fa fa-paper-plane"></i>Submit<img id="loader" src="<?php echo base_url() ?>assets/images/loader.gif" alt="loading image" hidden></button>
                             </div>
                         </div>
                     </div>
@@ -206,6 +206,13 @@
 
 
     $("#request_form").submit(function (e) {
+
+
+        $('.fa').removeClass("fa-paper-plane");
+        $(this).find("button[type='submit']").prop('disabled',true);
+        $(this).find("button[type='submit']").css('background','#fff');
+        $(this).find("button[type='submit']").css('cursor','not-allowed');
+
         e.preventDefault();//STOP default action
         var vaccine_count = 0;
         $.each($(".vaccine"), function (i, v) {
@@ -258,6 +265,13 @@
                     "transaction_date": get_transaction_date,
                     "to_from": get_to_from,
                     "batch": batch
+                },
+                beforeSend: function(){
+                    $('#send').prop("hidden", true);
+                    $('#cancel').prop("disabled", true);
+                    $('#send').prop("disabled", true);
+                    $('#loader').css('display','inline');
+                   
                 },
                 success: function (data, textStatus, jqXHR) {
                     //data: return data from server

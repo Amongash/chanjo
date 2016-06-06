@@ -1,12 +1,29 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');?>
 <?php echo form_open('facility/submit',array('class'=>'form-horizontal', 'id' =>'facility'));
 
+$regions = array();
+$regions[] = "--Select Region--";
+foreach ($region as $row) {
+    $regions[$row->id] = $row->region_name;
+
+$county = array('--Select County--');    
+$subcounty = array('--Select Sub County--');    
+}
  //echo validation_errors('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><b>',' </b></div>');
       ?>
  <div class="row">
       <div class="col-lg-4 col-lg-offset-4">
-        <!--Start of First Block--> 
-      <div class="first block1 show">       
+
+             
+        <style type="text/css">
+        .hidden>div {
+            display:none;
+        }
+
+        .visible>div {
+            display:block;
+        }
+        </style>
         <div class="form-group">
           <?php
           echo form_label('Facility Name','facility_name');
@@ -14,8 +31,37 @@
           echo form_input(['name' => 'facility_name', 'id' => 'facility_name',  'value' =>  $facility['facility_name'],'class' => 'form-control', 'readonly'=>'true']);
           ?>
         </div>
-    
 
+        <div class="form-group">
+        <button class="btn btn-primary btn-lg btn-block bs" type="button" id="location">Update Location</button>
+        </div>
+      <div class="text_container hidden">
+
+        <div class="form-group">
+          <?php
+          echo form_label('Region','region_name');
+          echo form_error('region_name');
+          echo form_dropdown('region_name', $regions, set_value($facility['region_name']), 'id="region_name" class="form-control"');
+          ?>
+        </div>
+        
+        <div class="form-group">
+          <?php
+          echo form_label('County','county_name');
+          echo form_error('county_name');
+          echo form_dropdown('county_name', $county, set_value($facility['county_name']), 'id="county_name" class="form-control"');
+          ?>
+        </div>
+        
+        <div class="form-group">
+          <?php
+          echo form_label('Sub-county','subcounty_name');
+          echo form_error('subcounty_name');
+          echo form_dropdown('subcounty_name', $subcounty, set_value($facility['subcounty_name']), 'id="subcounty_name" class="form-control"');
+          ?>
+        </div>
+      </div>
+        
         <div class="form-group">
           <?php
           echo form_label('Name of Officer In-charge','incharge');
@@ -128,3 +174,68 @@
 </div>
 </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+      $('.text_container').addClass("hidden");
+
+      $('#location').click(function() {
+        var container = $('.text_container');
+        if (container.hasClass("hidden")) {
+         container.removeClass("hidden").addClass("visible");
+        } else {
+          container.removeClass("visible").addClass("hidden");
+        }
+      });
+    });
+  </script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+        $("#region_name").change(function () {
+            var regional = $(this).val();
+            console.log(regional);
+            var request = $.ajax({
+                url: "<?php echo base_url(); ?>users/getCountyByRegion/" + regional,
+                data: regional,
+                type: "POST",
+            });
+            request.done(function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                $("#county_name option").remove();
+                $('#county_name').append("<option value=''>--Select County--</option> ");
+                $.each(data, function (key, value) {
+                    $('#county_name').append("<option value='" + value.county_id + "'>" + value.county_name + "</option>");
+                });
+            });
+            request.fail(function (jqXHR, textStatus) {
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $("#county_name").change(function () {
+            var county = $(this).val();
+            console.log(county);
+            var request = $.ajax({
+                url: "<?php echo base_url(); ?>users/getSubcountyByCounty/" + county,
+                data: county,
+                type: "POST",
+            });
+            request.done(function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                $("#subcounty_name option").remove();
+                $('#subcounty_name').append("<option value=''>--Select Sub County--</option> ");
+                $.each(data, function (key, value) {
+                    $('#subcounty_name').append("<option value='" + value.subcounty_id + "'>" + value.subcounty_name + "</option>");
+                });
+            });
+            request.fail(function (jqXHR, textStatus) {
+            });
+        });
+    });
+
+
+</script>
+

@@ -168,11 +168,19 @@
     });
 
     $('#stock_receive_tbl').delegate('.remove', 'click', function () {
-        $(this).closest('tr').remove();
+       if ( $('#stock_receive_tbl tbody tr').length == 1) return;
+            $(this).parents("tr").fadeOut('slow', function () {
+                $(this).remove();
+            });
     });
 
 
     $("#stock_received_fm").submit(function (e) {
+        $('.fa').removeClass("fa-paper-plane");
+        $(this).find("button[type='submit']").prop('disabled',true);
+        $(this).find("button[type='submit']").css('background','#fff');
+        $(this).find("button[type='submit']").css('cursor','not-allowed');
+                   
         e.preventDefault();//STOP default action
         var vaccine_count = 0;
         $.each($(".vaccine"), function (i, v) {
@@ -225,7 +233,7 @@
         batch = JSON.stringify(dat);
         $.ajax(
             {
-                //
+                
                 url: formURL,
                 type: "POST",
                 data: {
@@ -241,10 +249,7 @@
                     $('#cancel').prop("disabled", true);
                     $('#send').prop("disabled", true);
                     $('#loader').css('display','inline');
-                    $('.fa').removeClass("fa-paper-plane");
-                    $('#stock_received_fm').css('background','#fff');
-                    $('#stock_received_fm').css('cursor','not-allowed');
-                   
+                    
                    },
                     
                 success: function (data, textStatus, jqXHR) {

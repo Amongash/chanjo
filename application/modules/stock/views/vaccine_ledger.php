@@ -84,7 +84,7 @@
                             className: 'select-checkbox',
                             orderable: false
                         },
-                        { data: "DT_RowId" },
+                        { data: "order" },
                         { data: "transaction_date" },
                         { data: "type" },
                         { data: "to_from" },

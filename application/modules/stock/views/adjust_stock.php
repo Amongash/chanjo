@@ -55,7 +55,7 @@
                                 input[id="quantity"] {
                                     background-color: #E0F2F7 !important
                                 }</style>
-                        <td><?php $data=array('name' => 'quantity','id'=> 'quantity','class'=>'form-control quantity','disabled'=>'','required'=>'','type'=>'number' ); echo form_input($data);?></td>
+                        <td><?php $data=array('name' => 'quantity','id'=> 'quantity','class'=>'form-control quantity','disabled'=>'','required'=>'' ); echo form_input($data);?></td>
                         <td><?php $data=array('name' => 'change','id'=> 'change','class'=>'form-control change','required'=>'','type'=>'number' ); echo form_input($data);?></td>
                         <td><select name="reason" class="form-control reason" id="reason" required>
                                 <option value="" selected="selected">Select Reason</option>
@@ -149,6 +149,11 @@ $('#date_of_count').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker(
 
     $("#physical_stock_fm").submit(function(e)
     {
+        $('.fa').removeClass("fa-paper-plane");
+        $(this).find("button[type='submit']").prop('disabled',true);
+        $(this).find("button[type='submit']").css('background','#fff');
+        $(this).find("button[type='submit']").css('cursor','not-allowed');
+               
         e.preventDefault();//STOP default action
         var vaccine_count=0;
         $.each($(".vaccine"), function(i, v) {
@@ -210,9 +215,6 @@ $('#date_of_count').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker(
                                 $('#cancel').prop("disabled", true);
                                 $('#send').prop("disabled", true);
                                 $('#loader').css('display','inline');
-                                $('.fa').removeClass("fa-paper-plane");
-                                $('#physical_count_fm').css('background','#fff');
-                                $('#physical_count_fm').css('cursor','not-allowed');
                                
                                },
                            

@@ -14,9 +14,9 @@
     <link href="<?php echo base_url() ?>assets/css/admin.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url() ?>assets/plugins/select2/css/select2.min.css" rel="stylesheet">
     <link href="<?php echo base_url() ?>assets/plugins/jquery-daterangepicker/daterangepicker.css" rel="stylesheet"/>
-   <!--  <link href="<?php //echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.css" rel="stylesheet"/>
-    <link href="<?php //echo base_url() ?>assets/plugins/advanced-datatable/css/demo_page.css" rel="stylesheet"/>
-    <link href="<?php //echo base_url() ?>assets/plugins/advanced-datatable/css/demo_table.css" rel="stylesheet"/>-->
+    <link href="<?php echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.css" rel="stylesheet"/>
+    <link href="<?php echo base_url() ?>assets/plugins/advanced-datatable/css/demo_page.css" rel="stylesheet"/>
+    <link href="<?php echo base_url() ?>assets/plugins/advanced-datatable/css/demo_table.css" rel="stylesheet"/>
     <link href="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/css/formValidation.min.css" rel="stylesheet"/>
     
     <link href="<?php echo base_url() ?>assets/css/jquery-ui.css" rel="stylesheet"/>

@@ -3,6 +3,10 @@
     <div class="col-lg-12">
 <?php
 $form_attributes = array('id' => 'issuestock_fm','method' =>'post','class'=>'','role'=>'form');
+$vvm = array(
+            '1'  => 'Stage 1',
+            '2'  => 'Stage 2',
+            );
 echo form_open('stock/new_save_issued_stock',$form_attributes);?>
 <div class="well well-sm"><b>Transaction Details</b></div>
 	
@@ -82,8 +86,14 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
 					<td><?php $data=array('name' => 'amt_ordered[]','id'=> 'amt_ordered'.$vaccine['vaccine_id'],'class'=>'form-control amt_ordered','value'=>$vaccine['transaction_quantity'],'readonly'=>''); echo form_input($data);?></td>
 					<td><?php $data=array('name' => 'available_quantity[]','id'=> 'available_quantity'.$vaccine['vaccine_id'],'class'=>'form-control available_quantity','value'=>'','readonly'=>''); echo form_input($data);?></td>
 					<td><?php $data=array('name' => 'amt_issued[]','id'=> 'amt_issued'.$vaccine['vaccine_id'],'class'=>'form-control amt_issued','type' =>'number',' min' => '0','value'=>$vaccine['transaction_quantity']); echo form_input($data);?></td>
-					<td><?php $data=array('name' => 'vvm_status[]','id'=> 'vvm_status'.$vaccine['vaccine_id'],'class'=>'form-control  vvm_s','value'=>''); echo form_input($data);?></td>
-					<td><textarea name="comment[]" id="comment" class="form-control"></textarea></td>
+					<td>
+                                <select name="vvm_status[]" class="form-control vvm_status" id="vvm_status<?php echo $vaccine['vaccine_id']?>" required="true">
+                                    <option value="">Select Status</option>
+                                    <?php foreach ($vvm as $key=>$value) {
+                                        echo "<option value='" . $key . "'>" . $value . "</option>";
+                                    } ?>
+                                </select>
+                            </td><td><textarea name="comment[]" id="comment" class="form-control"></textarea></td>
 	
 
 						</tr>
@@ -110,7 +120,7 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
                 Are you sure you want to submit the entered details?
             <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" name="stock_issue_fm" id="stock_issue_fm" class="btn btn-sm btn-danger">Submit</button>
+                    <button type="submit" name="stock_issue_fm" id="stock_issue_fm" class="btn btn-sm btn-danger"><i class="fa fa-paper-plane"></i>Submit<img id="loader" src="<?php echo base_url() ?>assets/images/loader.gif" alt="loading image" hidden></button>
                 </div>
             </div>
         </div>
@@ -126,6 +136,18 @@ echo form_open('stock/new_save_issued_stock',$form_attributes);?>
 <script type="text/javascript">
 
  	$('#datepicker').datepicker({dateFormat: "yy-mm-dd",  maxDate: 0}).datepicker('setDate', null);
+
+ 	 $(document).on( 'submit','.stock_issue_fm', function () {
+        $('.fa').removeClass("fa-paper-plane");
+        $(this).find("button[type='submit']").prop('disabled',true);
+        $(this).find("button[type='submit']").css('background','#fff');
+        $(this).find("button[type='submit']").css('cursor','not-allowed');
+        $('#send').prop("hidden", true);
+        $('#cancel').prop("disabled", true);
+        $('#send').prop("disabled", true);
+        $('#loader').css('display','inline');
+
+    });
 
  	$(document).on('ready',function () {
     var TableData = new Array();

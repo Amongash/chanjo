@@ -705,6 +705,7 @@ class Stock extends MY_Controller
 
         $array = array();
         $data_array = array();
+       
         foreach ($batch as $item) {
 
             $array['transaction_date'] = $item['date_of_count'];
