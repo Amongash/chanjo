@@ -300,7 +300,7 @@ class Mdl_users extends CI_Model {
             if ($query->num_rows() == 1) {
             $this->db->where('id', $id);
             $this->db->update($table, $data);
-            $this->db->update('tbl_user_base', $data_base);
+            $this->db->update('tbl_user_base', $data_base,'user_id='.$id.'');
                 if ($this->db->affected_rows() > 0) {
                     return true;
                 }
