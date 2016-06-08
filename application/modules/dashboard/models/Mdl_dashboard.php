@@ -146,7 +146,7 @@ class Mdl_dashboard extends CI_Model
     function best_region_dpt3()
     {
         $this->db->select('region_name as name,population,dpt1,dpt3');
-        $this->db->order_by('dpt3', 'desc');
+        $this->db->order_by('months', 'desc');
         $this->db->limit(3);
         $query = $this->db->get('v_regions_coverage');
 

@@ -88,6 +88,7 @@ Modules::run('secure_tings/is_logged_in');
              $query = $this->mdl_dashboard->best_facility_dpt3($station_id);
              //echo '<pre>',print_r(json_encode($station_id),true),'</pre>';exit;
         }
+        //echo '<pre>',print_r($query->result()),'</pre>';exit;
 
 
         $json_array = array();
