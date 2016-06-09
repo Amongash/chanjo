@@ -94,6 +94,19 @@ class Mdl_Stock extends CI_Model
         
 	}
 
+
+	function get_expiry($selected_vaccine, $batch){
+		if (isset($selected_vaccine) && is_numeric($selected_vaccine)) {
+			$call_procedure="call get_expiry_date($selected_vaccine,'$batch')";
+	        $query=$this->db->query($call_procedure);
+	        $query->next_result();
+	        return $query->result_array();
+		}else{
+			return false;
+		}
+        
+	}
+
 	function get_batch_details($selected_batch, $station){
 		if (isset($selected_batch) && !is_null($selected_batch)) {
 			$call_procedure="call get_vaccine_batch_details('$station','$selected_batch')";

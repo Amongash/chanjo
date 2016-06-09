@@ -290,6 +290,7 @@ $('#date_of_count').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker(
 				    $.each(data,function(key,value){
                             stock_row.closest("tr").find(".expiry_date").val(value.expiry_date);
                             stock_row.closest("tr").find(".quantity").val(value.stock_balance);
+                            stock_row.closest("tr").find(".change").attr('max', value.stock_balance);
                             stock_row.closest("tr").find(".vvm").val(value.status);
 				    		
 				    });

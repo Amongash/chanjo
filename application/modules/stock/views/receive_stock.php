@@ -266,6 +266,40 @@
         // e.unbind(); //unbind. to stop multiple form submit.
     });
 
+        $(document).on('change', '.batch_no', function () {
+                var stock_row = $(this);
+                var selected_vaccine =  $('.vaccine').val();
+                var batch =  $(this).val();
+
+                load_expiry(selected_vaccine, batch, stock_row);
+            });
+
+        function load_expiry(selected_vaccine, batch, stock_row) {
+
+            var _url = "<?php echo base_url();?>stock/get_expiry";
+
+            var request = $.ajax({
+                url: _url,
+                type: 'post',
+                data: {"selected_vaccine": selected_vaccine,"batch": batch},
+
+            });
+            request.done(function (data) {
+                data = JSON.parse(data);
+                stock_row.closest("tr").find(".expiry_date ").val("");
+                
+                $.each(data, function (key, value) {
+                     stock_row.closest("tr").find(".expiry_date ").css('background-color: #E0F2F7 !important ')
+                     stock_row.closest("tr").find(".expiry_date ").val(value.expiry_date);
+
+                });
+            });
+            request.fail(function (jqXHR, textStatus) {
+
+            });
+        }
+
+
     function retrieveFormValues_Array(name) {
         var dump = new Array();
         var counter = 0;
