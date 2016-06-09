@@ -3,6 +3,7 @@
  *
  * jquery functions used for chatting
  */
+var base_url = window.location.protocol + "//" + window.location.host + "/";
 
 $(function(){
     $('#chatmessage').slimScroll({
@@ -21,7 +22,7 @@ function startrefresh()
     {
         //hack for pesky IE session handling ;)
         var timestamp = new Date().getTime();
-        $('#chatmessage').load('chat/index/'+ timestamp);
+        $('#chatmessage').load(base_url +'chat/index/'+ timestamp);
     }, 2000);
 }
 /*
@@ -40,14 +41,14 @@ var newChat = setInterval(function()
 {
     //hack for pesky IE session handling ;)
     var timestamp = new Date().getTime();
-    $('#newmessage').load('chat/get_new_messages/'+ timestamp);
+    $('#newmessage').load(base_url +'chat/get_new_messages/'+ timestamp);
 }, 2000);
 
 var newBuddies = setInterval(function()
 {
     //hack for pesky IE session handling ;)
     var timestamp = new Date().getTime();
-    $('#onlinebuddies').load('contacts/index/'+ timestamp);
+    $('#onlinebuddies').load(base_url +'contacts/index/'+ timestamp);
 }, 10000);
 
 jQuery(function( $ ){
@@ -68,7 +69,7 @@ function(){
     stoprefresh();
 
     var timestamp=new Date().getTime();
-    $('#onlinebuddies').load('contacts/index/'+ timestamp);
+    $('#onlinebuddies').load(base_url +'contacts/index/'+ timestamp);
     // Blur the link to remove focus.
     menuRoot.blur();
 
@@ -92,13 +93,13 @@ $( document ).click(
 $(document).ready(function() {
     //event trigger for sending a message
     $("form#chatform").submit(function(){
-        $.post("chat/sendmessage",{
+        $.post(base_url +"chat/sendmessage",{
         message: $("#message").val()
         });
         $("#message").val("");
         return false;
     });
 	$("#menu-root").click(function(){
-		$.post("chat/close_buddy");
+		$.post(base_url +"chat/close_buddy");
 	});
 });
