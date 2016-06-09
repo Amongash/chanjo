@@ -94,31 +94,7 @@ class Mdl_users extends CI_Model {
                   return FALSE;
               }
               return $num_rows;
-            }
-
-            function store_session($username, $session_id) {
-                $data = array(
-                    'session_id' => $session_id
-                );
-                $this->db->where('username', $username);
-                $this->db->update('tbl_users', $data);
-            }
-
-            function update_last_activity($username, $last_activity) {
-                $data = array(
-                    'last_activity' => $last_activity
-                );
-                $this->db->where('username', $username);
-                $this->db->update('tbl_users', $data);
-            }
-
-            function check_session($session_id, $username) {
-                $query = $this->db->get_where(
-                                'tbl_users', array(
-                            'session_id' => $session_id,
-                            'username' => $username));
-                return $query->result();
-            }
+          }
 
           function getRegion(){
         	//$condition = "username =" . "'" . $username . "'";
