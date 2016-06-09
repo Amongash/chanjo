@@ -111,6 +111,7 @@ class MY_Controller extends MX_Controller
             $user_group = ($this->session->userdata['logged_in']['user_group']);
             $user_level = ($this->session->userdata['logged_in']['user_level']);
             $user_id = ($this->session->userdata['logged_in']['user_id']);
+            $last_activity = ($this->session->userdata['logged_in']['last_activity']);
 
             if ($user_level == '1') {
                 $nation = "KENYA";
@@ -169,7 +170,8 @@ class MY_Controller extends MX_Controller
                 'statiton_above' => $statiton_above,
                 'path' => $path,
                 'message_count'=>$message_count,
-                'notice_count'=>$notice_count
+                'notice_count'=>$notice_count,
+                'last_activity'=>$last_activity
             );
             return $data;
 

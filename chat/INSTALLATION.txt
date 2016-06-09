@@ -1,0 +1,30 @@
+FACEBOOK-LIKE CHAT
+
+Installation instructions:
+1. extract to your http folder
+2. edit system/application/config/database.php
+3. change database parameters as pecified in these config variables:
+
+	$db['default']['hostname'] = "";
+	$db['default']['username'] = "";
+	$db['default']['password'] = "";
+	$db['default']['database'] = "";
+	
+4. edit system/application/config/config.php
+5. change values in the following variables/constants:
+
+	$config['base_url']	= "http://yourwebsite/";
+	define('MAINSITE_URL', 'http://yourwebsite/');
+	//you may use .htaccess to remove index.php
+	define('MAINSITE_INDEX', 'http://yourwebsite/index.php/');
+
+6. create the database by uploading the sql dump file under the sql folder
+7. to create a new user, run the following query
+	
+	//password is password with username as its salt, encryption uses Secure Hash Algorithm
+	INSERT INTO `facebookchat`.`users` (`username`, `password`, `session_id`, `created_date`, `modified_date`) VALUES ('test', SHA1('testtest'), '', CURRENT_TIMESTAMP, '0000-00-00 00:00:00');
+	
+8. have fun !
+
+- rai
+	

@@ -1,0 +1,73 @@
+.headerchat{
+    background-color: #336699;
+    width: 100%;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-weight: bold;
+    color: #fff;
+}
+.buddies {
+    background-color: #fff ;
+    border: 1px solid #999 ;
+    bottom: 30px ;
+    display: none ;
+    left: 11px ;
+    position: absolute ;
+    width: 200px ;
+    min-height: 150px;
+}
+.messages {
+    background-color: #fff ;
+    border: 1px solid #999 ;
+    bottom: 30px ;
+    display: none ;
+    left: 11px ;
+    position: absolute ;
+    width: 200px ;
+    min-height: 150px;
+    max-height: 500px;
+}
+.gray{
+    color:#aaa;
+}
+.chatbar{
+    word-wrap:break-word;
+    width: 200px;
+    overflow:auto;
+}
+.username{
+    text-decoration: none;
+    color: #336699;
+}
+.username:hover{
+    text-decoration: none;
+    color: #6699aa;
+}
+.conversation{
+    width:80%;
+    padding: 3px;
+    border-bottom: 1px dotted #999;
+    float: right;
+}
+.conversationpicture{
+    float:left;
+}
+.closecontainer{
+    float: right;
+}
+.close, .close:hover{
+    text-decoration: none;
+    font-weight: bolder;
+    color: #fff;
+}
+.buddycontainer
+{
+    float:left;
+}
+.formchattext
+{
+    font-family:verdana;
+    font-size:10px;
+    border:1px solid #ccc;
+    width:190px;
+}

@@ -1,0 +1,28 @@
+Version Releases
+
+January 18 2011 - 0.1.0-beta
+
+Updates
+ - New look for chat
+ - Added time on last message sent
+ - Adjusted timers for buddy list, new message and chat
+ - Added loading image in chat window
+ - Removed send button
+ - relocated chat css to chatlayout.css
+
+Fixes
+ - handler for starting/stopping chat div refresh
+ - buddies not showing on updated
+ - sentry, user was being logged out unexpectedly
+
+January 17 2011 - 0.0.2-beta
+
+Fixes
+ - Session fix
+
+January 14 2011 - 0.0.1-beta
+
+Updates
+ - Initial release
+ - Session Login
+ - Chat Functionality
