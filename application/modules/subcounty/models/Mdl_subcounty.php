@@ -14,6 +14,12 @@ class Mdl_subcounty extends CI_Model {
 	    $table = "tbl_subcounties";
 	    return $table;
 	}
+  
+  function get_all(){
+  $table = $this->get_table();
+  $query=$this->db->get($table);
+  return $query->result();
+  }
 
     function get_counties(){
         $this->db->select('id, county_name');

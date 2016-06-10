@@ -16,32 +16,53 @@
 
 
       <div class="form-inline row">
-        <div class="form-group col-md-2">
+        <div  class="form-group col-md-2">
 
-          <select class="form-control">
-            <option>Select Level</option>
-            <option>National</option>
-            <option>Regional</option>
+					<select id="levels" class="form-control col-md-2 ">
+						<option value="NULL">- Select Level -</option>
+						<?php
+            foreach ($user_levels as $key => $value) {
+              $name=$value['name'];
+              $id=$value['id'];
+              echo "<option value='$name' data-id='$id'>$name</option>";
+            }
+
+						?>
+					</select>
+
+        </div>
+
+        <div id="" class="form-group col-md-2">
+
+        <select id="regions" class="form-control col-md-2 ">
+          <option value="NULL">- All Regions -</option>
+          <?php
+          foreach ($regions as $key => $value) {
+            $name=$value['region_name'];
+            $id=$value['id'];
+            echo "<option value='$id'>$name</option>";
+          }
+
+          ?>
+        </select>
+        </div>
+
+        <div id="" class="form-group col-md-2">
+
+        <select id="counties" class="form-control col-md-2 ">
+          <option value="NULL">- All Counties -</option>
 
         </select>
         </div>
-        <div class="form-group col-md-2">
 
-          <select class="form-control">
-            <option>Select Vaccine</option>
-            <option>Measles</option>
-            <option>BCG</option>
-          </select>
+        <div id="" class="form-group col-md-2">
+
+        <select id="subcounties" class="form-control col-md-2 ">
+          <option value="NULL">- All Sub-Counties -</option>
+
+        </select>
         </div>
 
-        <div class="form-group col-md-2">
-
-          <select class="form-control">
-            <option>Select Stock Units</option>
-            <option>MOS</option>
-            <option>Totals</option>
-          </select>
-        </div>
 
         <button type="submit" id="submit_stock_levels" class="btn btn-success col-md-1">Submit</button>
       </div>
@@ -133,6 +154,7 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
+      $('#regions,#counties,#subcounties').hide();
 
       $('#myTabs a').click(function (e) {
         e.preventDefault()
@@ -194,12 +216,95 @@ function ajax_fill_data(function_url,div){
 
     $( "#submit_stock_levels" ).click(function() {
 
-      ajax_fill_data('reports/stock_levels',"#report_display");
+      var level=$('option:selected', '#levels').attr('data-id');
+      var region=$('#regions').val();
+      var county=$('#counties').val();
+      var subcounty=$('#subcounties').val();
+      console.log(level);
+
+
+      ajax_fill_data('reports/stock_levels/'+level+'/'+region+'/'+county,"#report_display");
 
 
     });
 
+    $('#levels').on('change', function(){
+
+      if ($(this).val()==='Region') {
+
+        $('#regions').show();
+        $('#counties,#subcounties').hide();
+      }else if ($(this).val()==='County') {
+
+        $('#counties').show();
+        $('#regions,#subcounties').hide();
+        var drop_down='';
+        var county_select = "<?php echo base_url(); ?>reports/getallCountiesjson/";
+    $.getJSON( county_select ,function( json ) {
+     $("#counties").html('<option value="NULL" selected="selected">All Counties</option>');
+      $.each(json, function( key, val ) {
+        drop_down +="<option value='"+json[key]["id"]+"'>"+json[key]["county_name"]+"</option>";
+      });
+      $("#counties").append(drop_down);
+    });
+
+
+      }else if ($(this).val()==='Sub County') {
+
+        $('#subcounties').show();
+        $('#regions,#counties').hide();
+
+        var drop_down='';
+        var subcounty_select = "<?php echo base_url(); ?>reports/getallSubcountiesjson/";
+    $.getJSON( subcounty_select ,function( json ) {
+     $("#subcounties").html('<option value="NULL" selected="selected">All Sub-Counties</option>');
+      $.each(json, function( key, val ) {
+        drop_down +="<option value='"+json[key]["id"]+"'>"+json[key]["subcounty_name"]+"</option>";
+      });
+      $("#subcounties").append(drop_down);
+    });
+
+      }else if ($(this).val()==='National') {
+
+        $('#regions,#counties,#subcounties').hide();
+
+      }
+
+        });
+
+    $('#regions').on('change', function(){
+     		var region_val=$(this).val();
+        $('#counties').show();
+        var drop_down='';
+	      var county_select = "<?php echo base_url(); ?>reports/getCountiesjson/"+region_val;
+  	$.getJSON( county_select ,function( json ) {
+     $("#counties").html('<option value="NULL" selected="selected">All Counties</option>');
+      $.each(json, function( key, val ) {
+        drop_down +="<option value='"+json[key]["id"]+"'>"+json[key]["county_name"]+"</option>";
+      });
+      $("#counties").append(drop_down);
+    });
+
 
     });
+
+    $('#counties').on('change', function(){
+     		var county_val=$(this).val();
+        $('#subcounties').show();
+        //console.log(county_val);
+        var drop_down='';
+	      var subcounty_select = "<?php echo base_url(); ?>reports/getSubcountiesjson/"+county_val;
+  	$.getJSON( subcounty_select ,function( json ) {
+     $("#subcounties").html('<option value="NULL" selected="selected">All Sub-counties</option>');
+      $.each(json, function( key, val ) {
+        drop_down +="<option value='"+json[key]["id"]+"'>"+json[key]["subcounty_name"]+"</option>";
+      });
+      $("#subcounties").append(drop_down);
+    });
+
+
+    });
+
+      });
 
 </script>

@@ -145,6 +145,15 @@ class Reports extends MY_Controller
     {
         Modules::run('secure_tings/is_logged_in');
         $this->load->model('vaccines/mdl_vaccines');
+        $this->load->model('users/mdl_user_levels');
+        $this->load->model('region/mdl_region');
+
+
+        //echo '<pre>',print_r($this->mdl_group->get_all()),'</pre>';exit;
+        $data['user_levels'] = json_decode(json_encode($this->mdl_user_levels->get_all()),true);
+        $data['regions'] = json_decode(json_encode($this->mdl_region->get_all()),true);
+
+
         $data['vaccines'] = $this->mdl_vaccines->get_vaccine_details();
         $data['module'] = "reports";
         $data['view_file'] = "stocks";
@@ -253,8 +262,140 @@ class Reports extends MY_Controller
 		echo json_encode($output);
       }
 
-      function stock_levels(){
-          echo "Display Report here";
+      function getCountiesjson($id){
+        $col='region_id';
+        $this->load->model('county/mdl_county');
+        echo json_encode($this->mdl_county->get_where_custom($col,$id)->result(),true);
+      }
+      function getallCountiesjson(){
+
+        $this->load->model('county/mdl_county');
+        echo json_encode($this->mdl_county->get_all(),true);
+      }
+
+      function getSubcountiesjson($id){
+        $col='county_id';
+        $this->load->model('subcounty/mdl_subcounty');
+        echo json_encode($this->mdl_subcounty->get_where_custom($col,$id)->result(),true);
+      }
+
+      function getallSubcountiesjson(){
+
+        $this->load->model('subcounty/mdl_subcounty');
+        echo json_encode($this->mdl_subcounty->get_all(),true);
+      }
+
+      function stock_levels($level='NULL',$region_id='NULL',$county_id='NULL'){
+
+        $user_object = $this->get_user_object();
+        $user_level = $user_object['user_level'];
+        //echo '<pre>',print_r($level),'</pre>';exit;
+        $this->load->model('dashboard/mdl_dashboard');
+
+        $population=1500000;
+          $query_population=[];
+
+
+
+        if ($level==1) {
+        $this->load->model('region/mdl_region');
+        $population=1500000;
+        $station='KENYA';
+        $query_regions = $this->mdl_region->get_all();
+        echo '<pre>',print_r($query_regions),'</pre>';exit;
+
+        $query[] = $this->mdl_dashboard->get_stock_balance($station);
+      }elseif ($level==2) {
+        $this->load->model('region/mdl_region');
+        $this->load->model('county/mdl_county');
+        $col='region_name';
+        //$value=$station;
+        //get population of station
+      //  $query_population = $this->mdl_region->get_where_custom($col, $value)->result();
+
+        //get counties in region
+        $county_column='region_id';
+        $query_counties = $this->mdl_county->get_where_custom($county_column, $region_id)->result();
+        $query=[];
+        foreach ($query_counties as $key => $value) {
+          $counties[]=$value->county_name;
+          //$station=str_replace('%20',' ',$value->county_name);
+          $query[$value->county_name] = $this->mdl_dashboard->get_stock_balance($value->county_name);
+        }
+
+        foreach ($query as $key => $value) {
+
+          if (sizeof($value)!=0) {
+            $query_population[] = $this->mdl_county->get_where_custom($county_column, $key)->result();
+          }else {
+            unset($query[$key]);
+          }
+
+        }
+//echo '<pre>',print_r($counties),'</pre>';exit;
+        $population=[];
+        foreach ($query_population as $key => $value) {
+
+          $population[$value[0]->county_name]=$value[0]->under_one_population;
+
+        }
+
+        //get counties in region
+
+
+      }elseif ($level==3) {
+        $this->load->model('county/mdl_county');
+        $this->load->model('subcounty/mdl_subcounty');
+        $col='subcounty_name';
+        $subcounty_column='county_id';
+        //$value=$station;
+
+        //get sub counties in region
+        $query_subcounties = $this->mdl_subcounty->get_where_custom($subcounty_column, $county_id)->result();
+      //  $query=[];
+        foreach ($query_subcounties as $key => $value) {
+          $subcounties[]=$value->subcounty_name;
+
+          $query[$value->subcounty_name] = $this->mdl_dashboard->get_stock_balance($value->subcounty_name);
+
+        }
+
+        foreach ($query as $key => $value) {
+
+          if (sizeof($value)!=0) {
+            $query_population[] = $this->mdl_subcounty->get_where_custom($col, $key)->result();
+          }else {
+            unset($query[$key]);
+          }
+
+        }
+
+        $population=[];
+        foreach ($query_population as $key => $value) {
+
+          $population[$value[0]->subcounty_name]=$value[0]->under_one_population;
+
+        }
+      //  echo '<pre>',print_r($query_population),'</pre>';exit;
+
+
+      }elseif ($level==4) {
+        $this->load->model('subcounty/mdl_subcounty');
+        $col='subcounty_name';
+        $value=$station;
+        $query_population = $this->mdl_county->get_where_custom($col, $value)->result();
+
+      }
+
+    //  echo '<pre>',print_r($population),'</pre>';exit;
+
+
+      $data['query'] =$query;
+      $data['population'] = $population;
+
+      $this -> load -> view("reports/stock_levels",$data);
+
+        //echo '<pre>',print_r($subcounties,true),'</pre>';exit;
       }
 
       function coverage(){
