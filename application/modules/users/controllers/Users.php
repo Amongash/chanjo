@@ -241,8 +241,9 @@ class Users extends MY_Controller
             $data_base['facility'] = $this->input->post('facilityuser', TRUE);
             $data['password'] = Modules::run('secure_tings/hash_it', $password);
 
-	        if (!isset($update_id)) {
-	            $update_id = $this->input->post('update_id');
+            $update_id = $this->input->post('update_id');
+	        if (isset($update_id)) {
+	            
 	       
 		        if (is_numeric($update_id)) {
 		        	$result = $this->mdl_users->_update($update_id, $data, $data_base);  

@@ -287,17 +287,17 @@ $this->load->view($module.'/'.$view_file);
             
                 <div id="buddies" class="buddies" valign="bottom">
                     <div class="headerchat">&nbsp;Online</div>
-                    <div id="onlinebuddies" class="chat">
+                    <div id="onlinebuddies" class="">
                     </div>
                 </div>
 
                 <div id="chatroom" class="messages" valign="bottom">
-                    <div id="chatmessage" class="chat">
+                    <div id="chatmessage">
                     </div>
                     <br />
                     <div align="center">
                         <form id="chatform" name="chatform">
-                            <input type="text" maxlength="75" class="formchattext" name="message" id="message" />
+                            <input type="text" maxlength="300" class="formchattext" name="message" id="message" />
                         </form>
                     </div>
                 </div>
@@ -313,6 +313,7 @@ $this->load->view($module.'/'.$view_file);
                     </div>
                 </div>
             </div>
+
             <!--\\\\\\\ content panel end \\\\\\-->
         </div>
         <!--\\\\\\\ inner end\\\\\\-->

@@ -98,7 +98,7 @@
                                     } ?>
                                 </select>
                             </td>
-                            <td>
+                            <td hidden>
                                  <?php $data = array('name' => 'remaining', 'id' => 'remaining', 'class' => 'form-control remaining', 'value' => '');
                                 echo form_input($data); ?>
                             </td>

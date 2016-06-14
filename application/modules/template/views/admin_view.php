@@ -19,9 +19,8 @@
     <link href="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/css/formValidation.min.css" rel="stylesheet" />
 
     <link href="<?php echo base_url() ?>assets/css/jquery-ui.css" rel="stylesheet" />
-    <link href="<?php echo base_url() ?>assets/datatables/plugins/Editor/css/editor.bootstrap.css" rel="stylesheet" />
+    <link href="<?php echo base_url() ?>assets/plugins/datatables/Editor/css/editor.bootstrap.css" rel="stylesheet" />
 
-    <link href="<?php echo base_url() ?>assets/plugins/datatables/DataTables-1.10.10/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/plugins/datatables/Buttons-1.1.0/css/buttons.dataTables.min.css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/plugins/datatables/Select-1.1.0/css/select.dataTables.min.css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/plugins/datatables/Editor/css/editor.dataTables.min.css" rel="stylesheet" />
@@ -35,6 +34,7 @@
     <script src="<?php echo base_url(); ?>assets/js/jquery-ui.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/bootbox.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/chat.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/tasks.js"></script>
 
     <script src="<?php echo base_url() ?>assets/js/moment.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/jquery-daterangepicker/jquery.daterangepicker.js"></script>
@@ -68,7 +68,12 @@
                 <div class="top_right_bar">
                     <div class="top_right">
                         <div class="top_right_menu">
-
+                            <ul>
+                              <li class="dropdown"> <a href="#" id="task-root" data-toggle="dropdown"> Tasks <span class="badge badge" id="task-count"></span> </a>
+                                <ul class="drop_down_task dropdown-menu" id="tasks">
+                                </ul>
+                              </li>
+                            </ul> 
 
                         </div>
                     </div>
@@ -300,17 +305,17 @@
 
                 <div id="buddies" class="buddies" valign="bottom">
                     <div class="headerchat">&nbsp;Online</div>
-                    <div id="onlinebuddies" class="chat">
+                    <div id="onlinebuddies" class="">
                     </div>
                 </div>
 
                 <div id="chatroom" class="messages" valign="bottom">
-                    <div id="chatmessage" class="chat">
+                    <div id="chatmessage">
                     </div>
                     <br />
                     <div align="center">
                         <form id="chatform" name="chatform">
-                            <input type="text" maxlength="75" class="formchattext" name="message" id="message" />
+                            <input type="text" maxlength="300" class="formchattext" name="message" id="message" />
                         </form>
                     </div>
                 </div>
@@ -352,8 +357,8 @@
     <script src="<?php echo base_url() ?>assets/plugins/datatables/KeyTable-2.1.0/js/dataTables.keyTable.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/datatables/Select-1.1.0/js/dataTables.select.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/datatables/Editor/js/dataTables.editor.js"></script>
-    <script src="<?php echo base_url() ?>assets/plugins/datatables/Editor/js/editor.bootstrap.js"></script>
-
+    
+    <script src="<?php echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/validation/parsley.min.js"></script>
 
 
@@ -362,7 +367,7 @@
 
 
     <script src="<?php echo base_url() ?>assets/js/jPushMenu.js"></script>
-    <script src="<?php echo base_url() ?>assets/js/selecticize.js"></script>
+   
     <script src="<?php echo base_url() ?>assets/plugins/select2/js/select2.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/side-chats.js"></script>
     <script src="<?php echo base_url() ?>assets/js/animated.js" type="text/javascript"></script>

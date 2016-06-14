@@ -412,7 +412,7 @@ class Stock extends MY_Controller
     public function process($post, $id)
     {   
         // DataTables PHP library
-        require $_SERVER['DOCUMENT_ROOT'].'/test/assets/plugins/datatables/Editor/php/DataTables.php';
+        require $_SERVER['DOCUMENT_ROOT'].'/assets/plugins/datatables/Editor/php/DataTables.php';
         
         //Load the model which will give us our data
         $this->load->model('mdl_stock');
