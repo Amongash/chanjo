@@ -87,7 +87,7 @@ class Mdl_chat extends CI_Model {
      */
 
     function check_if_online($username) {
-        $this->db->like('user_data', '"' . $username . '"');
+        $this->db->like('data', '"' . $username . '"');
         $query = $this->db->get('ci_sessions');
         return $query->result();
     }

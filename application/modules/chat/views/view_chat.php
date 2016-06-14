@@ -9,7 +9,7 @@
     });
 </script>
 <div class="headerchat"><div class="buddycontainer">&nbsp;<?php echo $buddy; ?></div>
-    <div class="closecontainer"><a href="#" id="closechat" class="close">x</a>&nbsp;</div>
+    <div class="closecontainer"><a class="close-down" href="#" id="closechat"><i class="fa fa-times"></i></a>&nbsp;</div>
     <br class="breaker" />
 </div>
 <div align="right"><span class="gray"><?php echo date("F d, Y");?></span></div>
