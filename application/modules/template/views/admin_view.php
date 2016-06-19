@@ -69,7 +69,7 @@
                     <div class="top_right">
                         <div class="top_right_menu">
                             <ul>
-                              <li class="dropdown"> <a href="#" id="task-root" data-toggle="dropdown"> Tasks <span class="badge badge" id="task-count"></span> </a>
+                              <li class="dropdown"> <a href="#" id="task-root" data-toggle="dropdown"> Tasks <span class="badge badge" id="task-count">0</span> </a>
                                 <ul class="drop_down_task dropdown-menu" id="tasks">
                                 </ul>
                               </li>

@@ -125,9 +125,14 @@
 
     $('#date_received').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker('setDate', null);
     $('#expiry_date').datepicker({dateFormat: "yy-mm-dd", minDate: 0}).datepicker('setDate', null);
+    
+
     $('#stock_receive_tbl').delegate('.add', 'click', function () {
 
         var thisRow = $('#stock_receive_tbl tr:last');
+        var vaccine_value = thisRow.closest('tr').find('.vaccine').val();
+
+        if (vaccine_value == 2){
         var cloned_object = $(thisRow).clone();
 
         var receive_row = cloned_object.attr("receive_row");
@@ -137,7 +142,7 @@
         var vaccine_id = "vaccine" + next_receive_row;
         var vaccine = cloned_object.find(".vaccine");
         vaccine.attr('id', vaccine_id);
-
+        vaccine.val('6');
         var batch_id = "batch_no" + next_receive_row;
         var batch = cloned_object.find(".batchno_");
         batch.attr('id', batch_id);
@@ -164,7 +169,9 @@
         comment.attr('id', comment_id);
 
         cloned_object.insertAfter(thisRow).find('input').val('');
-        //cloned_object .insertAfter( thisRow ).find('#expiry_date').datepicker();
+        }
+
+        
     });
 
     $('#stock_receive_tbl').delegate('.remove', 'click', function () {
@@ -270,6 +277,8 @@
                 var stock_row = $(this);
                 var selected_vaccine =  $('.vaccine').val();
                 var batch =  $(this).val();
+                batch = batch.toUpperCase();
+				$(this).val(batch);                
 
                 load_expiry(selected_vaccine, batch, stock_row);
             });

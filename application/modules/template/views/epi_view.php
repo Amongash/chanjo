@@ -19,9 +19,8 @@
     <link href="<?php echo base_url() ?>assets/plugins/formvalidation.io/dist/css/formValidation.min.css" rel="stylesheet" />
 
     <link href="<?php echo base_url() ?>assets/css/jquery-ui.css" rel="stylesheet" />
-    <link href="<?php echo base_url() ?>assets/datatables/plugins/Editor/css/editor.bootstrap.css" rel="stylesheet" />
+    <link href="<?php echo base_url() ?>assets/plugins/datatables/Editor/css/editor.bootstrap.css" rel="stylesheet" />
 
-    <link href="<?php echo base_url() ?>assets/plugins/datatables/DataTables-1.10.10/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/plugins/datatables/Buttons-1.1.0/css/buttons.dataTables.min.css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/plugins/datatables/Select-1.1.0/css/select.dataTables.min.css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/plugins/datatables/Editor/css/editor.dataTables.min.css" rel="stylesheet" />
@@ -35,6 +34,7 @@
     <script src="<?php echo base_url(); ?>assets/js/jquery-ui.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/bootbox.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/chat.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/tasks.js"></script>
 
     <script src="<?php echo base_url() ?>assets/js/moment.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/jquery-daterangepicker/jquery.daterangepicker.js"></script>
@@ -42,7 +42,6 @@
     <script src="<?php echo base_url() ?>assets/plugins/highcharts/highcharts.js" type="text/javascript"></script>
     <script src="<?php echo base_url() ?>assets/plugins/highcharts/modules/no-data-to-display.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/highcharts/modules/exporting.js"></script>
-
 
 
 </head>
@@ -68,10 +67,16 @@
                 <div class="top_right_bar">
                     <div class="top_right">
                         <div class="top_right_menu">
-
+                            <ul>
+                              <li class="dropdown"> <a href="#" id="task-root" data-toggle="dropdown"> Tasks <span class="badge badge" id="task-count">0</span> </a>
+                                <ul class="drop_down_task dropdown-menu" id="tasks">
+                                </ul>
+                              </li>
+                            </ul> 
 
                         </div>
                     </div>
+                    
                     <div class="user_admin dropdown"> <a href="javascript:void(0);" data-toggle="dropdown"><img
                             src="<?php echo base_url() ?>assets/images/user.jpg"/><span
                             class="user_adminname"><?php echo '<b> Hello ' . $user_object['user_fname'] . ' </b>'; ?></span>
@@ -325,19 +330,20 @@ $this->load->view($module.'/'.$view_file);
     <script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/graph.js"></script>
     <script src="<?php echo base_url() ?>assets/js/edit-graph.js"></script>
-   
+    <script src="<?php echo base_url() ?>assets/js/jquery.bootstrap.wizard.js"></script>
+
     <script src="<?php echo base_url() ?>assets/plugins/kalendar/kalendar.js" type="text/javascript"></script>
     <script src="<?php echo base_url() ?>assets/plugins/kalendar/edit-kalendar.js" type="text/javascript"></script>
 
 
     <script src="<?php echo base_url() ?>assets/plugins/datatables/DataTables-1.10.10/js/jquery.dataTables.js"></script>
-    
+
     <script src="<?php echo base_url() ?>assets/plugins/datatables/Buttons-1.1.0/js/dataTables.buttons.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/datatables/KeyTable-2.1.0/js/dataTables.keyTable.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/datatables/Select-1.1.0/js/dataTables.select.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/datatables/Editor/js/dataTables.editor.js"></script>
-    <script src="<?php echo base_url() ?>assets/plugins/datatables/Editor/js/editor.bootstrap.js"></script>
-    <!--<script src="<?php //echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.js"></script>-->
+    
+    <script src="<?php echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/validation/parsley.min.js"></script>
 
 
@@ -346,9 +352,10 @@ $this->load->view($module.'/'.$view_file);
 
 
     <script src="<?php echo base_url() ?>assets/js/jPushMenu.js"></script>
-    <script src="<?php echo base_url() ?>assets/js/selecticize.js"></script>
+   
     <script src="<?php echo base_url() ?>assets/plugins/select2/js/select2.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/side-chats.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/animated.js" type="text/javascript"></script>
     <script src="<?php echo base_url() ?>assets/js/jquery.slimscroll.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/scroll/jquery.nanoscroller.js"></script>
 
