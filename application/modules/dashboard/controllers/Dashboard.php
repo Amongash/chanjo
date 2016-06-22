@@ -82,24 +82,26 @@ Modules::run('secure_tings/is_logged_in');
            //echo '<pre>',print_r($query),'</pre>';exit;
         } elseif ($option == '2') {
             $query = $this->mdl_dashboard->best_county_dpt3($station_id);
+
         } elseif ($option == '3') {
              $query = $this->mdl_dashboard->best_subcounty_dpt3($station_id);
         } elseif ($option == '4') {
              $query = $this->mdl_dashboard->best_facility_dpt3($station_id);
              //echo '<pre>',print_r(json_encode($station_id),true),'</pre>';exit;
         }
+        //echo '<pre>',print_r($query->result()),'</pre>';exit;
 
 
         $json_array = array();
         foreach ($query->result() as $row) {
             $data['name'] = $row->name;
-            $data['totaldpt3'] = (int)$row->dpt3;
-            $data['totaldpt1'] = (int)$row->dpt1;
-            //$data['population'] = (int)$row->population;
+            $data['totaldpt3'] = (float)($row->dpt3)*1200;
+            $data['totaldpt1'] = (float)($row->dpt1)*1200;
+            $data['population'] = (int)$row->population;
 
             array_push($json_array, $data);
 
-        }
+        } // echo '<pre>',print_r($json_array),'</pre>';exit;
         //echo json_encode($json_array);
         return $json_array;
     }
@@ -124,10 +126,10 @@ Modules::run('secure_tings/is_logged_in');
 
       $json_array = array();
         foreach ($query->result() as $row) {
-            $data['name'] = $row->name;
-            $data['totaldpt3'] = (int)$row->dpt3;
-            $data['totaldpt1'] = (int)$row->dpt1;
-            $data['population'] = (int)$row->population;
+          $data['name'] = $row->name;
+          $data['totaldpt3'] = (float)($row->dpt3)*1200;
+          $data['totaldpt1'] = (float)($row->dpt1)*1200;
+          $data['population'] = (int)$row->population;
             array_push($json_array, $data);
 
         }
@@ -302,7 +304,9 @@ Modules::run('secure_tings/is_logged_in');
     }else {
       return coverageFacility($station);
     }
-    //echo '<pre>',print_r($query_total),'</pre>';exit;
+  //  echo '<pre>',print_r($query_total),'</pre>';
+  //  echo '<pre>',print_r($query_opv),'</pre>';
+  //  echo '<pre>',print_r($total_capacity),'</pre>';exit;
 
 
      $query_total=json_decode(json_encode($query_total),true);
@@ -387,14 +391,19 @@ Modules::run('secure_tings/is_logged_in');
      }elseif ($escalate == '2') {
 
        $query = $this->mdl_dashboard->get_region_coverage($maxdate,$mindate,$station);
+
      }elseif ($escalate == '3') {
 
        $query = $this->mdl_dashboard->get_county_coverage($maxdate,$mindate,$station);
+
      }elseif ($escalate == '4') {
 
       $query = $this->mdl_dashboard->get_subcounty_coverage($maxdate,$mindate,$station);
+
     }else {
+
       return coverageFacility($station);
+
     }
 
 
@@ -410,24 +419,25 @@ Modules::run('secure_tings/is_logged_in');
      $pvc1=[];  $pvc2=[]; $pvc3=[]; $rota1=[]; $rota2=[];
 
      foreach ($query as $key =>$value ) {
-       $time_data[]=$value['months'];
-       $bcg[]=(float)$value['bcg']*12;
-       $dpt1[]=(float)$value['dpt1']*12;
-       $dpt2[]=(float)$value['dpt2']*12;
-       $dpt3[]=(float)$value['dpt3']*12;
-       $measles1[]=(float)$value['measles1']*12;
-       $measles2[]=(float)$value['measles2']*12;
-       $measles3[]=(float)$value['measles3']*12;
-       $opv1[]=(float)$value['opv1']*12;
-       $opv2[]=(float)$value['opv2']*12;
-       $opv3[]=(float)$value['opv3']*12;
-       $pvc1[]=(float)$value['pcv1']*12;
-       $pvc2[]=(float)$value['pcv2']*12;
-       $pvc3[]=(float)$value['pcv3']*12;
-       $rota1[]=(float)$value['rota1']*12;
-       $rota2[]=(float)$value['rota2']*12;
+       $time_data[]=date('M-Y',strtotime($value['months']));
+       $bcg[]=(float)$value['bcg']*1200;
+       $dpt1[]=(float)$value['dpt1']*1200;
+       $dpt2[]=(float)$value['dpt2']*1200;
+       $dpt3[]=(float)$value['dpt3']*1200;
+       $measles1[]=(float)$value['measles1']*1200;
+       $measles2[]=(float)$value['measles2']*1200;
+       $measles3[]=(float)$value['measles3']*1200;
+       $opv1[]=(float)$value['opv1']*1200;
+       $opv2[]=(float)$value['opv2']*1200;
+       $opv3[]=(float)$value['opv3']*1200;
+       $pvc1[]=(float)$value['pcv1']*1200;
+       $pvc2[]=(float)$value['pcv2']*1200;
+       $pvc3[]=(float)$value['pcv3']*1200;
+       $rota1[]=(float)$value['rota1']*1200;
+       $rota2[]=(float)$value['rota2']*1200;
 
      }
+     //echo '<pre>',print_r($time_data),'</pre>';exit;
      $data['graph_title'] = "Coverage";
      $data['graph_id'] = "coverage";
      $data['legend'] = "units here";

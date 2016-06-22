@@ -1,18 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Mdl_Reports extends CI_Model {
-	
+
 var $order = array('order' => 'desc');
 var $column = array('transaction_date','station','type','to_from','vaccine_name','batch','expiry','quantity','balance');
 private $db = null;
-     
+
 	function __construct() {
 		parent::__construct();
 	}
-
-
-    
-
 
 	function get_location($condition){
         if(!is_null($condition)){
@@ -21,15 +17,15 @@ private $db = null;
         }else{
             $this->db->select('location');
         }
-        
+
         $query = $this->db->get('v_location');
         return $query->result();
-       
+
     }
 
 	 private function _get_datatables_query($station,$id)
     {
-        
+
         $this->db->from('v_transactions_all');
         $this->db->where('station',$station);
         $this->db->where('vaccine_id',$id);
@@ -42,7 +38,7 @@ private $db = null;
             $column[$i] = $item;
             $i++;
         }
- 
+
         if(isset($_POST['order']))
         {
             $this->db->order_by($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
@@ -53,7 +49,7 @@ private $db = null;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
- 
+
     function get_transactions($station,$id)
     {
         $this->_get_datatables_query($station,$id);
@@ -67,6 +63,13 @@ private $db = null;
 		$this->_get_datatables_query($station,$id);
 		$query = $this->db->get();
 		return $query->num_rows();
+	}
+
+	function get_population($level) {
+		$this->db->select('level,population');
+		$query = $this->db->get('tbl_population');
+		$this->db->where('level',$level);
+		return $query->result();
 	}
 
 
