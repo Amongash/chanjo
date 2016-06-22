@@ -98,7 +98,7 @@
                                     } ?>
                                 </select>
                             </td>
-                            <td>
+                            <td hidden>
                                  <?php $data = array('name' => 'remaining', 'id' => 'remaining', 'class' => 'form-control remaining', 'value' => '');
                                 echo form_input($data); ?>
                             </td>
@@ -134,7 +134,7 @@
                 Are you sure you want to submit the entered details?
             <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" name="stock_issue_fm" id="stock_issue_fm" class="btn btn-sm btn-danger"><i class="fa fa-paper-plane"></i>Submit<img id="loader" src="<?php echo base_url() ?>assets/images/498.gif" alt="loading image" hidden></button>
+                    <button type="submit" name="stock_issue_fm" id="stock_issue_fm" class="btn btn-sm btn-danger"><i class="fa fa-paper-plane"></i>Submit<img id="loader" src="<?php echo base_url() ?>assets/images/loader.gif" alt="loading image" hidden></button>
                 </div>
             </div>
         </div>
@@ -247,6 +247,12 @@
 
 
         $("#issuestock_fm").submit(function (e) {
+
+            $('.fa').removeClass("fa-paper-plane");
+            $(this).find("button[type='submit']").prop('disabled',true);
+            $('#submit').css('background','#fff');
+            $(this).find("button[type='submit']").css('cursor','not-allowed');
+
             e.preventDefault();//STOP default action
             //$("#confirm-submit").modal('hide');
             var location = 0;
@@ -317,18 +323,16 @@
                     },
 
                    beforeSend: function(){
-                    $('#send').prop("hidden", true);
-                    $('#send').prop("disabled", true);
-                    $('#loader').css('display','block');
-                    $('.fa').removeClass("fa-paper-plane");
-                    $('#stock_issue_fm').css('background','#fff');
-                    $('#stock_issue_fm').css('cursor','not-allowed');
-                   
-                   },
+                        $('#send').prop("hidden", true);
+                        $('#cancel').prop("disabled", true);
+                        $('#send').prop("disabled", true);
+                        $('#loader').css('display','inline');
+                        
+                    },
                     
                     success: function (data, textStatus, jqXHR) {
                         //console.log(data);
-                        //window.location.replace('<?php echo base_url() . 'stock/list_issue_stock'?>');
+                        window.location.replace('<?php echo base_url() . 'stock/list_issue_stock'?>');
                         //data: return data from server
                     },
                     error: function (jqXHR, textStatus, errorThrown) {

@@ -125,9 +125,14 @@
 
     $('#date_received').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker('setDate', null);
     $('#expiry_date').datepicker({dateFormat: "yy-mm-dd", minDate: 0}).datepicker('setDate', null);
+    
+
     $('#stock_receive_tbl').delegate('.add', 'click', function () {
 
         var thisRow = $('#stock_receive_tbl tr:last');
+        var vaccine_value = thisRow.closest('tr').find('.vaccine').val();
+
+        if (vaccine_value == 2){
         var cloned_object = $(thisRow).clone();
 
         var receive_row = cloned_object.attr("receive_row");
@@ -137,7 +142,7 @@
         var vaccine_id = "vaccine" + next_receive_row;
         var vaccine = cloned_object.find(".vaccine");
         vaccine.attr('id', vaccine_id);
-
+        vaccine.val('6');
         var batch_id = "batch_no" + next_receive_row;
         var batch = cloned_object.find(".batchno_");
         batch.attr('id', batch_id);
@@ -164,15 +169,25 @@
         comment.attr('id', comment_id);
 
         cloned_object.insertAfter(thisRow).find('input').val('');
-        //cloned_object .insertAfter( thisRow ).find('#expiry_date').datepicker();
+        }
+
+        
     });
 
     $('#stock_receive_tbl').delegate('.remove', 'click', function () {
-        $(this).closest('tr').remove();
+       if ( $('#stock_receive_tbl tbody tr').length == 1) return;
+            $(this).parents("tr").fadeOut('slow', function () {
+                $(this).remove();
+            });
     });
 
 
     $("#stock_received_fm").submit(function (e) {
+        $('.fa').removeClass("fa-paper-plane");
+        $(this).find("button[type='submit']").prop('disabled',true);
+        $(this).find("button[type='submit']").css('background','#fff');
+        $(this).find("button[type='submit']").css('cursor','not-allowed');
+                   
         e.preventDefault();//STOP default action
         var vaccine_count = 0;
         $.each($(".vaccine"), function (i, v) {
@@ -225,7 +240,7 @@
         batch = JSON.stringify(dat);
         $.ajax(
             {
-                //
+                
                 url: formURL,
                 type: "POST",
                 data: {
@@ -241,10 +256,7 @@
                     $('#cancel').prop("disabled", true);
                     $('#send').prop("disabled", true);
                     $('#loader').css('display','inline');
-                    $('.fa').removeClass("fa-paper-plane");
-                    $('#stock_received_fm').css('background','#fff');
-                    $('#stock_received_fm').css('cursor','not-allowed');
-                   
+                    
                    },
                     
                 success: function (data, textStatus, jqXHR) {
@@ -260,6 +272,42 @@
 
         // e.unbind(); //unbind. to stop multiple form submit.
     });
+
+        $(document).on('change', '.batch_no', function () {
+                var stock_row = $(this);
+                var selected_vaccine =  $('.vaccine').val();
+                var batch =  $(this).val();
+                batch = batch.toUpperCase();
+				$(this).val(batch);                
+
+                load_expiry(selected_vaccine, batch, stock_row);
+            });
+
+        function load_expiry(selected_vaccine, batch, stock_row) {
+
+            var _url = "<?php echo base_url();?>stock/get_expiry";
+
+            var request = $.ajax({
+                url: _url,
+                type: 'post',
+                data: {"selected_vaccine": selected_vaccine,"batch": batch},
+
+            });
+            request.done(function (data) {
+                data = JSON.parse(data);
+                stock_row.closest("tr").find(".expiry_date ").val("");
+                
+                $.each(data, function (key, value) {
+                     stock_row.closest("tr").find(".expiry_date ").css('background-color: #E0F2F7 !important ')
+                     stock_row.closest("tr").find(".expiry_date ").val(value.expiry_date);
+
+                });
+            });
+            request.fail(function (jqXHR, textStatus) {
+
+            });
+        }
+
 
     function retrieveFormValues_Array(name) {
         var dump = new Array();

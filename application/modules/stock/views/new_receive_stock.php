@@ -109,7 +109,7 @@ echo form_close();?>
 
   $('#date_received').datepicker({dateFormat: "yy-mm-dd",  maxDate: 0}).datepicker('setDate', null);
 
-  $(document).on('click', '#stock_issue_fm', function () {
+  $(document).on('submit', '#stock_issue_fm', function () {
       $('#send').prop("hidden", true);
       $('#cancel').prop("disabled", true);
       $('#send').prop("disabled", true);

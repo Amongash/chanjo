@@ -518,6 +518,21 @@ class Stock extends MY_Controller
 
     }
 
+
+    function get_expiry()
+    {
+        Modules::run('secure_tings/is_logged_in');
+        $data['user_object'] = $this->get_user_object();
+        $station_id = $data['user_object']['user_statiton'];
+        $selected_vaccine = $this->input->post('selected_vaccine');
+        $batch = $this->input->post('batch');
+        $this->load->model('stock/mdl_stock');
+        $data = $this->mdl_stock->get_expiry($selected_vaccine, $batch);
+        
+        echo json_encode($data);
+
+    }
+
     function get_batch_details()
     {
         // Gets moore details of the batch selected
@@ -705,6 +720,7 @@ class Stock extends MY_Controller
 
         $array = array();
         $data_array = array();
+       
         foreach ($batch as $item) {
 
             $array['transaction_date'] = $item['date_of_count'];
@@ -943,40 +959,40 @@ class Stock extends MY_Controller
         echo json_encode($batch);
 
         
-        // $issue_array = array();
-        // $issue_counter = 0;
+        $issue_array = array();
+        $issue_counter = 0;
 
-        // $save_id= array();
+        $save_id= array();
 
 
-        // foreach ($batch as $item) {
+        foreach ($batch as $item) {
 
             
-        //     $issue_array['to_from'] = $item['issued_to'];
-        //     $issue_array['transaction_date'] = $item['date_issued'];
-        //     $issue_array['transaction_voucher'] = $item['s11'];
-        //     $issue_array['type'] = $type;
-        //     $issue_array['timestamp'] = $date_recorded;
-        //     $issue_array['user_id'] = $user_id;
-        //     $issue_array['level'] = $level;
-        //     $issue_array['station'] = $station;
+            $issue_array['to_from'] = $item['issued_to'];
+            $issue_array['transaction_date'] = $item['date_issued'];
+            $issue_array['transaction_voucher'] = $item['s11'];
+            $issue_array['type'] = $type;
+            $issue_array['timestamp'] = $date_recorded;
+            $issue_array['user_id'] = $user_id;
+            $issue_array['level'] = $level;
+            $issue_array['station'] = $station;
 
-        //     $this->db->insert('tbl_transaction', $issue_array);
-        //     $transaction_id = $this->db->insert_id();
+            $this->db->insert('tbl_transaction', $issue_array);
+            $transaction_id = $this->db->insert_id();
 
-        //     $item_array['vaccine_id'] = $item['vaccine'];
-        //     $item_array['batch'] = $item['batch_no'];
-        //     $item_array['expiry_date'] = $item['expiry_date'];
-        //     $item_array['vvm'] = $item['vvm_status'];
-        //     $item_array['current_quantity'] = $item['quantity'];
-        //     $item_array['transaction_quantity'] = $item['amount_issued'];
-        //     $item_array['transaction_id'] =  $transaction_id;
+            $item_array['vaccine_id'] = $item['vaccine'];
+            $item_array['batch'] = $item['batch_no'];
+            $item_array['expiry_date'] = $item['expiry_date'];
+            $item_array['vvm'] = $item['vvm_status'];
+            $item_array['current_quantity'] = $item['quantity'];
+            $item_array['transaction_quantity'] = $item['amount_issued'];
+            $item_array['transaction_id'] =  $transaction_id;
 
-        //     $this->db->insert('tbl_transaction_items', $item_array);
-        // }
+            $this->db->insert('tbl_transaction_items', $item_array);
+        }
            
-        // $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Stocks have been issued successfully</div>');
-        // redirect('stock/list_issue_stock' , 'refresh');
+        $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Stocks have been issued successfully</div>');
+        redirect('stock/list_issue_stock' , 'refresh');
 
     }
 
@@ -1121,7 +1137,7 @@ class Stock extends MY_Controller
 
         foreach ($batch as $item) {
             $receive_array[$receive_counter]['vaccine_id'] = $item['vaccine_id'];
-            $receive_array[$receive_counter]['batch'] = $item['batch_no'];
+            $receive_array[$receive_counter]['batch'] = strtoupper($item['batch_no']);
             $receive_array[$receive_counter]['expiry_date'] = $item['expiry_date'];
             $receive_array[$receive_counter]['vvm'] = $item['vvm_status'];
             $receive_array[$receive_counter]['comment'] = $item['comment'];

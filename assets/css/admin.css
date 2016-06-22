@@ -308,7 +308,7 @@ box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.2);}
 .magento_bg{background-color:#9c6bad; color:#fff!important; border:none;}
 .blue_bg{background-color:#56a5db; color:#fff !important;border:none;}
 .green_bg{background-color:#34b077; color:#fff!important;border:none;}
-.red_bg{background-color:#e35154; color:#fff!important;border:none;}
+.red_bg{background-color:#f76a6a; color:#fff!important;border:none;}
 .pink_bg{background-color:#9b59b6; color:#fff;}
 .black_bg{background-color:#000000; color:#fff;}
 .yellow_bg{background-color:#fad231; color:#fff;}
@@ -1629,7 +1629,7 @@ input {
 .group_sortable1{padding:0px; margin:0px;background-color: #FFFFFF;}
 .group_sortable1 li{position:relative;list-style-type:none;overflow:hidden; border-bottom:1px solid #E7E7E7; border-top:none; display:block;}
 .group_sortable1 li span{ padding:18px; border-right:1px solid #FF9090; display:block; position:absolute; height:100%;}
-.group_sortable1 li p{ border-left: 1px solid #FF9090; color: #333333;font-size: 14px; font-weight: 500; height: 100%;margin-bottom: 0;margin-left:59px; min-height:50px;padding: 8px 0 6px 7px; display:inline-block;}
+.group_sortable1 li p{ border-left: 1px solid #FF9090; color: #333333;font-size: 14px; font-weight: 500; margin-bottom: 0;margin-left:5px; min-height:50px;padding: 8px 0 6px 7px; display:inline-block;}
 
 .group_sortable1 > li > p > b {display: block;font-size:10px;font-weight:100;line-height: 12px; color:#8E8E8E;}
 /*to-do end*/

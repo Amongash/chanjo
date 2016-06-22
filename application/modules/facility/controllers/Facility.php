@@ -3,6 +3,7 @@ class Facility extends MY_Controller {
 
     function __construct() {
         parent::__construct();
+        Modules::run('secure_tings/is_logged_in');
     }
 
     public function index() {
@@ -24,7 +25,7 @@ class Facility extends MY_Controller {
 
 
     public function create() {
-
+    	$this->load->model('mdl_facility');
         $update_id = $this->uri->segment(3);
 
         if (!isset($update_id)) {
@@ -37,7 +38,7 @@ class Facility extends MY_Controller {
         } else {
             $data = $this->get_data_from_post();
         }
-
+        $data['region'] = $this->mdl_facility->getRegion();
         $data['module'] = "facility";
         $data['view_file'] = "create_facility_form";
         $data['section'] = "Configuration";
@@ -87,6 +88,9 @@ class Facility extends MY_Controller {
 
         foreach($query->result() as $row) {
             $data['facility']['facility_name'] = $row->facility_name;
+            $data['facility']['region_name'] = $row->region_name;
+            $data['facility']['county_name'] = $row->county_name;
+            $data['facility']['subcounty_name'] = $row->subcounty_name;
             $data['details']['staff'] = $row->staff;
 
             $data['details']['officer_incharge'] = $row->officer_incharge;
@@ -107,6 +111,9 @@ class Facility extends MY_Controller {
 
     function get_data_from_post() {
         $data['facility']['facility_name'] = $this->input->post('facility_name', TRUE);
+        $data['facility']['region_id'] = $this->input->post('region_name', TRUE);
+        $data['facility']['county_id'] = $this->input->post('county_name', TRUE);
+        $data['facility']['subcounty_id'] = $this->input->post('subcounty_name', TRUE);
         $data['details']['staff'] = $this->input->post('staff', TRUE);
         $data['details']['officer_incharge'] = $this->input->post('officer_incharge', TRUE);
         $data['details']['email'] = $this->input->post('email', TRUE);
@@ -124,6 +131,8 @@ class Facility extends MY_Controller {
 
     public function action_list() {
         $this->load->model('mdl_facility');
+        $data['user_object'] = $this->get_user_object();
+        $station_id = $data['user_object']['user_statiton'];
 
         $list = $this->getFacility();
         $data = array();
@@ -132,6 +141,7 @@ class Facility extends MY_Controller {
             $no++;
             $row = array();
             $row[] = $facility->facility_name;
+            $row[] = $facility->subcounty_name;
             $row[] = $facility->officer_incharge;
             $row[] = $facility->vaccine_carrier;
             $row[] = $facility->cold_box;
@@ -139,8 +149,8 @@ class Facility extends MY_Controller {
             //add html for action
             $edit_url = base_url('facility/create/'.$facility->id);
             $list_url = base_url('facility/list_fridge/'.$facility->id);
-            $row[] = '  <a class="btn btn-sm btn-primary" href="'.$edit_url.'" title="Edit"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
-                              <a class="btn btn-sm btn-info"  href="'.$list_url.'" title="Add"><i class="glyphicon glyphicon-plus"></i> Fridge</a>';
+            $row[] = '  <a class="btn " href="'.$edit_url.'" title="Edit"><span class="btn-xs btn-danger"><i class="fa fa-pencil-square-o"></i> <b>EDIT</b></span></a><br>
+                              <a class="btn "  href="'.$list_url.'" title="fridge"><span class="btn-xs btn-info"><i class="fa fa-plus"></i> <b>FRIDGE</b></span></a>';
 
             $data[] = $row;
         }
@@ -148,6 +158,66 @@ class Facility extends MY_Controller {
         $output = array("draw" => $_POST['draw'], "recordsTotal" => $this->count_filtered(), "recordsFiltered" => $this->count_filtered(), "data" => $data, );
 
         echo json_encode($output);
+    }
+
+    function getCountyByRegion()
+    {
+        $id = $this->uri->segment(3);
+        if (!isset($id)) {
+            $data['error'] = "Region ID not received";
+            echo json_encode($data);
+        } else {
+            $this->load->model('mdl_facility');
+            $query = $this->mdl_facility->getCountyByRegion($id);
+            foreach ($query as $row) {
+                $array = array(
+                    'county_id' => $row->id,
+                    'county_name' => $row->county_name,
+                );
+                $data[] = $array;
+            }
+            echo json_encode($data);
+        }
+    }
+
+    function getSubcountyByCounty()
+    {
+        $id = $this->uri->segment(3);
+        if (!isset($id)) {
+            $data['error'] = "County ID not received";
+            echo json_encode($data);
+        } else {
+            $this->load->model('mdl_facility');
+            $query = $this->mdl_facility->getSubcountyByCounty($id);
+            foreach ($query as $row) {
+                $array = array(
+                    'subcounty_id' => $row->id,
+                    'subcounty_name' => $row->subcounty_name,
+                );
+                $data[] = $array;
+            }
+            echo json_encode($data);
+        }
+    }
+
+    function getFacilityBySubcounty()
+    {
+        $id = $this->uri->segment(3);
+        if (!isset($id)) {
+            $data['error'] = "Subcounty ID not received";
+            echo json_encode($data);
+        } else {
+            $this->load->model('mdl_facility');
+            $query = $this->mdl_facility->getFacilityBySubcounty($id);
+            foreach ($query as $row) {
+                $array = array(
+                    'facility_id' => $row->id,
+                    'facility_name' => $row->facility_name,
+                );
+                $data[] = $array;
+            }
+            echo json_encode($data);
+        }
     }
 
 

@@ -6,7 +6,7 @@
             '1'  => 'Stage 1',
             '2'  => 'Stage 2',
             );
-        $form_attributes = array('id' => 'issuestock_fm', 'method' => 'post', 'class' => '', 'role' => 'form');
+        $form_attributes = array('id' => 'issuestock_fm', 'class' => '', 'role' => 'form');
         echo form_open('', $form_attributes); ?>
 
         <div class="well well-sm"><b>Transaction Details</b></div>
@@ -111,11 +111,8 @@
         </div>
     </div>
 
-    <input type="button" name="btn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
-
-    <!--
-    <button type="submit" name="stock_issue_fm" id="stock_issue_fm" class="btn btn-sm btn-danger">Submit</button> -->
-
+    <input type="button" name="btn" id = "send" data-toggle="modal" data-target="#confirm-submit" class="btn btn-danger" value="Submit"/>
+            
 
   <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -126,8 +123,8 @@
             <div class="modal-body">
                 Are you sure you want to submit the entered details?
             <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" name="stock_issue_fm" id="stock_issue_fm" class="btn btn-sm btn-danger">Submit</button>
+                    <button type="button" name="cancel" id="cancel"class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" name="submit" id="submit" class="btn btn-sm btn-danger"><i class="fa fa-paper-plane"></i>Submit<img id="loader" src="<?php echo base_url() ?>assets/images/loader.gif" alt="loading image" hidden></button>
                 </div>
             </div>
         </div>
@@ -183,11 +180,20 @@
         });
         // Remove a row from the form
         $('#stock_issue').delegate('.remove', 'click', function () {
-            $(this).closest('tr').remove();
+            if ( $('#stock_issue tbody tr').length == 1) return;
+            $(this).parents("tr").fadeOut('slow', function () {
+                $(this).remove();
+            });
         });
 
 
         $("#issuestock_fm").submit(function (e) {
+            
+            $('.fa').removeClass("fa-paper-plane");
+            $(this).find("button[type='submit']").prop('disabled',true);
+            $('#submit').css('background','#fff');
+            $(this).find("button[type='submit']").css('cursor','not-allowed');
+                   
             e.preventDefault();//STOP default action
             var vaccine_count = 0;
             $.each($(".vaccine"), function (i, v) {
@@ -253,18 +259,21 @@
                         "date_issued": get_date_issued,
                         "batch": batch
                     },
-                    /* dataType : json,*/
-                    success: function (data, textStatus, jqXHR) {
-                        //console.log(data);
-                         window.location.replace('<?php echo base_url() . 'stock/list_issue_stock'?>');
-                        //data: return data from server
+                    beforeSend: function(){
+                        $('#send').prop("hidden", true);
+                        $('#cancel').prop("disabled", true);
+                        $('#send').prop("disabled", true);
+                        $('#loader').css('display','inline');
+                        
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        //if fails
-                    }
+                    success: function (data, textStatus, jqXHR) {
+                        
+                         window.location.replace('<?php echo base_url() . 'stock/list_issue_stock'?>');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {}
                 });
 
-            // e.unbind(); //unbind. to stop multiple form submit.
+            
         });
 
         $(document).on('change', '.vaccine', function () {

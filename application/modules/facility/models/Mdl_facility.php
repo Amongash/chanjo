@@ -25,7 +25,7 @@ class Mdl_Facility extends CI_Model {
     }
 
     function search_order($station_id) {
-        if ($station_id != NULL) {
+        if ($station_id != 'KENYA') {
             $this->db->select($this->column);
             $this->db->from('tbl_facilities mf');
             $this->db->join('tbl_subcounties', 'tbl_subcounties.id = mf.subcounty_id');
@@ -36,7 +36,7 @@ class Mdl_Facility extends CI_Model {
             $this->db->or_where('subcounty_name', $station_id);
             $this->db->or_where('region_name', $station_id);
 
-        } else {
+        } elseif($station_id == 'KENYA') {
             $this->db->select($this->column);
             $this->db->from('tbl_facilities mf');
             $this->db->join('tbl_subcounties', 'tbl_subcounties.id = mf.subcounty_id');
@@ -131,6 +131,40 @@ class Mdl_Facility extends CI_Model {
         return $query->num_rows();
     }
 
+    function getRegion(){
+
+        $this->db->select('id,region_name');
+        $query = $this->db->get("tbl_regions");
+        return $query->result();
+    }
+
+    function loadcountyfromregion($region_id) {
+
+            $query = $this->db->query("SELECT county_name FROM `tbl_counties` WHERE region_id = '{$region_id}'"); 
+            if ($query->num_rows > 0) {
+                return $query->result();
+            }
+        }
+
+    function loadsubcountyfromcounty($county_id) {
+
+        $query = $this->db->query("SELECT subcounty_name FROM `tbl_subcounties` WHERE county_id = '{$county_id}'"); 
+        if ($query->num_rows > 0) {
+            return $query->result();
+        }
+    }
+
+
+    function loadfacilityfromsubcouty($subcounty_id) {
+
+        $query = $this->db->query("SELECT facility_name FROM `tbl_facilities` WHERE `subcounty_id` = '{$subcounty_id}'"); 
+        if ($query->num_rows > 0) {
+            return $query->result();
+        }
+    }
+
+
+
     function get($order_by) {
         $table = $this->get_table();
         $this->db->order_by($order_by);
@@ -182,9 +216,21 @@ class Mdl_Facility extends CI_Model {
         if ($this->db->affected_rows() > 0) {
             return true;
         } else {
-            $facility_id = $id;
-            $data['facility_id'] = $facility_id;
-            $this->db->insert($table, $data);
+            $query = $this->db->get($table);
+            $this->db->select('*');
+            $this->db->from($table);
+            $this->db->where('facility_id', $id);
+            $this->db->limit(1);
+            $query = $this->db->get();
+
+            if ($query->num_rows() == 1) {
+                return true;
+            } else {
+                $facility_id = $id;
+                $data['facility_id'] = $facility_id;
+                $this->db->insert($table, $data);
+            }
+            
         }
 
     }

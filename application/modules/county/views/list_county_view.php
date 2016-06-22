@@ -38,7 +38,7 @@
             $(document).ready(function() {
                 table = $('#table').DataTable({
                     "sDom": '<lf<t>ip>',
-                    "processing": true, //Feature control the processing indicator.
+                    
                     "serverSide": true, //Feature control DataTables' server-side processing mode.
 
                     // Load data for the table's content from an Ajax source
@@ -47,11 +47,7 @@
                         "type": "POST"
                     },
                     "dom": 'Bfrtip',
-                    "buttons": [
-                        'excelHtml5',
-                        'csvHtml5',
-                        'pdfHtml5',
-                    ],
+                    
                     "responsive": {
                         "details": {
                             "type": 'column'

@@ -165,23 +165,6 @@
         });
       }
 
-       // ajax adding data to database
-        //   $.ajax({
-        //     url : url,
-        //     type: "POST",
-        //     data: $('#form').serialize(),
-        //     dataType: "JSON",
-        //     success: function(data)
-        //     {
-        //        //if success close modal and reload ajax table
-        //        $('#modal_form').modal('hide');
-        //        reload_table();
-        //     },
-        //     error: function (jqXHR, textStatus, errorThrown)
-        //     {
-        //         alert('Error adding / update data');
-        //     }
-        // });
     }
 
     function delete_fridge(id)

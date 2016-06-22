@@ -87,10 +87,7 @@ class Users extends MY_Controller
 
             $this->_update($user_id, $new_data);
 
-            // modify session
-//            $session_data = array('user_fname' => $this->input->post('first_name'), 'user_lname' => $this->input->post('last_name'));
-//            $this->session->set_userdata('logged_in',$session_data);
-
+            
             $this->session->set_flashdata('msg', '<div id="alert-message" class="alert alert-success text-center">Profile Updated Successfully. Changes will be appear on start of new session</div>');
             redirect('users/profile', 'refresh');
         }
@@ -244,8 +241,9 @@ class Users extends MY_Controller
             $data_base['facility'] = $this->input->post('facilityuser', TRUE);
             $data['password'] = Modules::run('secure_tings/hash_it', $password);
 
-	        if (!isset($update_id)) {
-	            $update_id = $this->input->post('update_id');
+            $update_id = $this->input->post('update_id');
+	        if (isset($update_id)) {
+	            
 	       
 		        if (is_numeric($update_id)) {
 		        	$result = $this->mdl_users->_update($update_id, $data, $data_base);  
@@ -288,6 +286,7 @@ class Users extends MY_Controller
                 redirect('users');
             }
         } else {
+            $session_id = $this->session->session_id;
             $data['username'] = $this->input->post('username', TRUE);
             $password = $this->input->post('password', TRUE);
             $data['password'] = Modules::run('secure_tings/hash_it', $password);
@@ -303,8 +302,14 @@ class Users extends MY_Controller
 
 
                 if ($result != false) {
+                $now = strtotime(date('Y-m-d H:i:s'));    
+                 //store session to users table
+                $this->mdl_users->update_last_activity($username,$now);   
 
-
+                //store session to users table
+                $this->mdl_users->store_session($username,$session_id);
+                //create custom session data
+                $this->session->set_userdata(array('username' => $username));
 
                     $userdata = array(
                         'user_id' => $result[0]->id,
@@ -313,6 +318,7 @@ class Users extends MY_Controller
                         'user_email' => $result[0]->email,
                         'user_group' => $result[0]->user_group,
                         'user_level' => $result[0]->user_level,
+                        'last_activity' => $now,
                         'logged_in' => TRUE
                     );
 
@@ -322,7 +328,7 @@ class Users extends MY_Controller
 
 
                      if(!empty($this->session->has_userdata('logged_in'))){
-                      //show_error($this->session->userdata['logged_in']['user_fname']);
+                     
                         redirect('dashboard');
 
                      }else{

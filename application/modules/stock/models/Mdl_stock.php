@@ -30,6 +30,7 @@ class Mdl_Stock extends CI_Model
         // Use the Editor database class
         Editor::inst($this->editorDb, 'v_transactions_all' )
         ->fields(
+            Field::inst( 'order' ),
             Field::inst( 'type' ),
             Field::inst( 'to_from' )->validator( 'Validate::notEmpty' ),
             Field::inst( 'batch' ),
@@ -84,6 +85,19 @@ class Mdl_Stock extends CI_Model
 	function get_batches($selected_vaccine, $station){
 		if (isset($selected_vaccine) && is_numeric($selected_vaccine)) {
 			$call_procedure="call get_vaccine_batch('$station',$selected_vaccine)";
+	        $query=$this->db->query($call_procedure);
+	        $query->next_result();
+	        return $query->result_array();
+		}else{
+			return false;
+		}
+        
+	}
+
+
+	function get_expiry($selected_vaccine, $batch){
+		if (isset($selected_vaccine) && is_numeric($selected_vaccine)) {
+			$call_procedure="call get_expiry_date($selected_vaccine,'$batch')";
 	        $query=$this->db->query($call_procedure);
 	        $query->next_result();
 	        return $query->result_array();

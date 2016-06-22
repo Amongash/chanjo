@@ -10,7 +10,7 @@
 <?php echo $this->session->flashdata('msg');  ?>
     <div class="col-lg-12" style="margin-top: 10px;">
       <div class="table-responsive">
-        <table id="table" class="table table-bordered table-hover table-striped">
+        <table id="table" class="display">
             <thead>
                 <tr>
                     <th>Names</th>
