@@ -152,6 +152,7 @@ class Reports extends MY_Controller
         //echo '<pre>',print_r($this->mdl_group->get_all()),'</pre>';exit;
         $data['user_levels'] = json_decode(json_encode($this->mdl_user_levels->get_all()),true);
         $data['regions'] = json_decode(json_encode($this->mdl_region->get_all()),true);
+        //$data['vaccines'] = json_decode(json_encode($this->mdl_vaccines->get_all()),true);
 
 
         $data['vaccines'] = $this->mdl_vaccines->get_vaccine_details();
@@ -285,43 +286,82 @@ class Reports extends MY_Controller
         echo json_encode($this->mdl_subcounty->get_all(),true);
       }
 
-      function stock_levels($level='NULL',$region_id='NULL',$county_id='NULL'){
+      function stock_levels($level='NULL',$region_name='NULL',$region_id='NULL',$county_id='NULL'){
 
         $user_object = $this->get_user_object();
         $user_level = $user_object['user_level'];
         //echo '<pre>',print_r($level),'</pre>';exit;
         $this->load->model('dashboard/mdl_dashboard');
+        $region_name=str_replace('%20',' ',$region_name);
 
-        $population=1500000;
-          $query_population=[];
+        $query_population=[];
 
+        if ($level==1 && $region_id=='NULL' && $county_id=='NULL') {
 
+          $query_population = $this->mdl_dashboard->get_population_national();
+          $query['KENYA']= $this->mdl_dashboard->get_stock_balance('KENYA');
+          $population=[];
+          foreach ($query_population as $key => $value) {
 
-        if ($level==1) {
+            $population['KENYA']=$value->population;
+
+          }
+
+        }
+
+        elseif ($level==2 && $region_id=='NULL' && $county_id=='NULL') {
+
         $this->load->model('region/mdl_region');
-        $population=1500000;
-        $station='KENYA';
-        $query_regions = $this->mdl_region->get_all();
-        echo '<pre>',print_r($query_regions),'</pre>';exit;
+        $level='National';
+        $region_column='region_name';
 
-        $query[] = $this->mdl_dashboard->get_stock_balance($station);
-      }elseif ($level==2) {
+        $query_regions = $this->mdl_region->get_all();
+
+        $query=[];
+        foreach ($query_regions as $key => $value) {
+          $regions[]=$value->region_name;
+          $query[$value->region_name] = $this->mdl_dashboard->get_stock_balance($value->region_name);
+        }
+
+        foreach ($query as $key => $value) {
+
+          if (sizeof($value)!=0) {
+            $query_population[] = $this->mdl_region->get_where_custom($region_column, $key)->result();
+          }else {
+            unset($query[$key]);
+          }
+
+        }
+
+        $population=[];
+        foreach ($query_population as $key => $value) {
+
+          $population[$value[0]->region_name]=$value[0]->under_one_population;
+
+        }
+
+       //echo '<pre>',print_r($population),'</pre>';exit;
+
+
+    }elseif ($level==2 && $region_id!='NULL' && $county_id=='NULL') {
+
         $this->load->model('region/mdl_region');
         $this->load->model('county/mdl_county');
         $col='region_name';
         //$value=$station;
         //get population of station
-      //  $query_population = $this->mdl_region->get_where_custom($col, $value)->result();
+        //  $query_population = $this->mdl_region->get_where_custom($col, $value)->result();
 
         //get counties in region
         $county_column='region_id';
         $query_counties = $this->mdl_county->get_where_custom($county_column, $region_id)->result();
+
         $query=[];
         foreach ($query_counties as $key => $value) {
           $counties[]=$value->county_name;
           //$station=str_replace('%20',' ',$value->county_name);
           $query[$value->county_name] = $this->mdl_dashboard->get_stock_balance($value->county_name);
-        }
+        }//echo '<pre>',print_r($query),'</pre>';exit;
 
         foreach ($query as $key => $value) {
 
@@ -332,7 +372,7 @@ class Reports extends MY_Controller
           }
 
         }
-//echo '<pre>',print_r($counties),'</pre>';exit;
+        //echo '<pre>',print_r($counties),'</pre>';exit;
         $population=[];
         foreach ($query_population as $key => $value) {
 
@@ -343,7 +383,7 @@ class Reports extends MY_Controller
         //get counties in region
 
 
-      }elseif ($level==3) {
+      }elseif ($county_id!='NULL') {
         $this->load->model('county/mdl_county');
         $this->load->model('subcounty/mdl_subcounty');
         $col='subcounty_name';
@@ -380,14 +420,12 @@ class Reports extends MY_Controller
 
 
       }elseif ($level==4) {
-        $this->load->model('subcounty/mdl_subcounty');
-        $col='subcounty_name';
-        $value=$station;
-        $query_population = $this->mdl_county->get_where_custom($col, $value)->result();
-
+        #code
       }
 
-    //  echo '<pre>',print_r($population),'</pre>';exit;
+    if (count($query)==0) {
+      echo '<div style="margin:5%;font-size:3em;font-weight:400;"> No data at this time.</div>';exit;
+    }
 
 
       $data['query'] =$query;
@@ -398,11 +436,105 @@ class Reports extends MY_Controller
         //echo '<pre>',print_r($subcounties,true),'</pre>';exit;
       }
 
-      function coverage(){
-          echo "You are here";
+      function coverage($level='NULL',$region_id='NULL',$county_id='NULL',$vaccineA='NULL',$vaccineB='NULL',$maxdate='NULL',$mindate='NULL'){
+        $user_object = $this->get_user_object();
+        $user_level = $user_object['user_level'];
+        $this->load->model('dashboard/mdl_dashboard');
+        //$station=str_replace('%20',' ',$station);
+
+        if ($maxdate=='NULL'||$mindate=='NULL') {
+          $maxdate=date('Y-m-d');
+          $mindate=new DateTime(date('Y-m-d'));
+          $interval = new DateInterval('P12M');
+          $mindate=$mindate->sub($interval)->format('Y-m-d');
+        }
+        $maxdate=date('Y-m-d',strtotime($maxdate));
+        $mindate=date('Y-m-d',strtotime($mindate));
+        //echo '<pre>',print_r($maxdate),'</pre>';exit;
+
+
+
+
+
+
+        if ($level!='NULL' && $region_id=='NULL' && $county_id=='NULL') {
+
+
+          $query = $this->mdl_dashboard->all_region_coverage($maxdate,$mindate);
+          //echo '<pre>',print_r($query),'</pre>';exit;
+
+
+    }elseif ($level!='NULL' && $region_id!='NULL' && $county_id=='NULL') {
+
+      $query = $this->mdl_dashboard->all_counties_coverage($maxdate,$mindate,$region_id);
+      //echo '<pre>',print_r($query),'</pre>';exit;
+
+
+
+      }elseif ($county_id!='NULL') {
+
+        $query = $this->mdl_dashboard->all_subcounties_coverage($maxdate,$mindate,$county_id);
+        //echo '<pre>',print_r($query),'</pre>';exit;
+
+
+      }elseif ($subcounty_id!='NULL') {
+        $query = $this->mdl_dashboard->all_subcounties_coverage($maxdate,$mindate,$county_id);
+        //echo '<pre>',print_r($query),'</pre>';exit;
+      }
+
+    if (count($query)==0) {
+      echo '<div style="margin:5%;font-size:3em;font-weight:400;"> No data at this time.</div>';exit;
+    }
+
+
+      $data['query'] =$query;
+      $data['A'] =$vaccineA;
+      $data['B'] =$vaccineB;
+
+
+      $this -> load -> view("reports/coverage",$data);
+      }
+
+      function stock_summary($level='NULL',$region_id='NULL',$county_id='NULL'){
+        $user_object = $this->get_user_object();
+        $user_level = $user_object['user_level'];
+        $this->load->model('dashboard/mdl_dashboard');
+        $this->load->model('vaccines/mdl_vaccines');
+
+
+
+        if ($level!='NULL' && $region_id=='NULL' && $county_id=='NULL') {
+
+
+
+      }elseif ($level!='NULL' && $region_id!='NULL' && $county_id=='NULL') {
+
+
+
+      }elseif ($county_id!='NULL') {
+
+
+
+
+      }elseif ($subcounty_id!='NULL') {
+
+      }
+
+      if (count($query)==0) {
+      echo '<div style="margin:5%;font-size:3em;font-weight:400;"> No data at this time.</div>';exit;
+      }
+
+
+        $data['query'] =$query;
+
+        $this -> load -> view("reports/stock_summary",$data);
       }
 
       function system_usage(){
+          echo "You are here";
+      }
+
+      function coverage_comparison(){
           echo "You are here";
       }
 

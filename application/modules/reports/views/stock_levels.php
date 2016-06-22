@@ -1,4 +1,4 @@
-<div class="well">
+<div class="">
   <div style="min-height: 400px;" id="reports_display">
     <table  class="table table-bordered table-hover table-striped" id="" >
   <thead style="background-color: white">
@@ -45,7 +45,13 @@
                 </td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
                 if ($value[$i]->vaccine_name=='BCG') {
-                echo floor(($value[$i]->balance)/($population[$key]/12));
+                  if ($population[$key]==0) {
+                    echo 'N/A';
+
+                  }else {
+                    echo floor(($value[$i]->balance)/($population[$key]/12));
+                  }
+
               }
               }  ?> </td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
@@ -56,7 +62,12 @@
               </td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
                 if ($value[$i]->vaccine_name=='OPV') {
-                echo floor(($value[$i]->balance)/($population[$key]/12));
+                  if ($population[$key]==0) {
+                    echo 'N/A';
+                  }else {
+                    echo floor(($value[$i]->balance)/($population[$key]/12));
+                  }
+
               }
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
@@ -66,7 +77,12 @@
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
                 if ($value[$i]->vaccine_name=='IPV') {
-                echo floor(($value[$i]->balance)/($population[$key]/12));
+                  if ($population[$key]==0) {
+                    echo 'N/A';
+                  }else {
+                    echo floor(($value[$i]->balance)/($population[$key]/12));
+                  }
+
               }
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
@@ -76,7 +92,12 @@
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
                 if ($value[$i]->vaccine_name=='ROTA-Virus') {
-                echo floor(($value[$i]->balance)/($population[$key]/12));
+                  if ($population[$key]==0) {
+                    echo 'N/A';
+                  }else {
+                    echo floor(($value[$i]->balance)/($population[$key]/12));
+                  }
+
               }
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
@@ -86,7 +107,12 @@
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
                 if ($value[$i]->vaccine_name=='Measles_Diluent') {
-                echo floor(($value[$i]->balance)/($population[$key]/12));
+                  if ($population[$key]==0) {
+                    echo 'N/A';
+                  }else {
+                    echo floor(($value[$i]->balance)/($population[$key]/12));
+                  }
+
               }
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
@@ -96,7 +122,12 @@
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
                 if ($value[$i]->vaccine_name=='TT') {
-                echo floor(($value[$i]->balance)/($population[$key]/12));
+                  if ($population[$key]==0) {
+                    echo 'N/A';
+                  }else {
+                    echo floor(($value[$i]->balance)/($population[$key]/12));
+                  }
+
               }
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
@@ -106,7 +137,12 @@
               }  ?></td>
               <td><?php for ($i=0; $i < sizeof($value); $i++) {
                 if ($value[$i]->vaccine_name=='Yellow-Fever') {
-                echo floor(($value[$i]->balance)/($population[$key]/12));
+                  if ($population[$key]==0) {
+                    echo 'N/A';
+                  }else {
+                    echo floor(($value[$i]->balance)/($population[$key]/12));
+                  }
+
               }
               }  ?></td>
             </tr>

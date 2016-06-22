@@ -10,10 +10,6 @@ private $db = null;
 		parent::__construct();
 	}
 
-
-
-
-
 	function get_location($condition){
         if(!is_null($condition)){
             $this->db->select('location');
@@ -67,6 +63,13 @@ private $db = null;
 		$this->_get_datatables_query($station,$id);
 		$query = $this->db->get();
 		return $query->num_rows();
+	}
+
+	function get_population($level) {
+		$this->db->select('level,population');
+		$query = $this->db->get('tbl_population');
+		$this->db->where('level',$level);
+		return $query->result();
 	}
 
 

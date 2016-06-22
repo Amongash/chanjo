@@ -51,7 +51,7 @@
             <td><?php echo $row['name'] ?></td>
             <td><?php echo $row['totaldpt3'] ?></td>
             <td><?php if ($row['totaldpt1']==0) {
-              echo 'Division by 0';
+              echo 'N/A.';
             }else {
               echo round(($row['totaldpt1'] - $row['totaldpt3'])/$row['totaldpt1']*100, 2);
             }
