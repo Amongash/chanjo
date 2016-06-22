@@ -56,7 +56,7 @@
                                     background-color: #E0F2F7 !important
                                 }</style>
                         <td><?php $data=array('name' => 'quantity','id'=> 'quantity','class'=>'form-control quantity','disabled'=>'','required'=>'' ); echo form_input($data);?></td>
-                        <td><?php $data=array('name' => 'change','id'=> 'change','class'=>'form-control change','required'=>'','type'=>'number' ); echo form_input($data);?></td>
+                        <td><?php $data=array('name' => 'change','id'=> 'change','class'=>'form-control change','required'=>'','type'=>'number','min'=>'0' ); echo form_input($data);?></td>
                         <td><select name="reason" class="form-control reason" id="reason" required>
                                 <option value="" selected="selected">Select Reason</option>
                                 <option value="Breakage" >Breakage</option>
