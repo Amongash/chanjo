@@ -61,6 +61,8 @@
 </div>
 
                     <script type="text/javascript">
+
+
                         var url = "<?php echo base_url('stock/stock_data/'.$id) ?>";
                         var editor; // use a global for the submit and return data rendering in the examples
 
@@ -69,9 +71,8 @@
                                 ajax: url,
                                 table: "#table",
                                 fields: [{
-                                    label: "Date:",
-                                    name: "transaction_date"
-                                        //type: "datetime"
+                                    label: "Batch:",
+                                    name: "batch"
                                 }, {
                                     label: "Quantity:",
                                     name: "quantity"
@@ -116,7 +117,7 @@
                                 }, {
                                     data: "order"
                                 }, {
-                                    data: "transaction_date"
+                                    data: "date"
                                 }, {
                                     data: "type"
                                 }, {
@@ -139,8 +140,22 @@
                                 buttons: [{
                                         extend: "edit",
                                         editor: editor
+                                    },
+                                    {
+                                        extend: "remove",
+                                        editor: editor
+                                    },
+                                    {
+                                        extend: 'collection',
+                                        text: 'Export',
+                                        buttons: [
+                                            'copy',
+                                            'excel',
+                                            'csv',
+                                            'pdf',
+                                            'print'
+                                        ]
                                     }
-
                                 ],
                                 fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
                                     

@@ -99,7 +99,7 @@
                         <td class="col-xs-2"><?php $data = array('name' => 'expiry_date', 'id' => 'expiry_date', 'class' => 'form-control expiry_date', 'readonly' => '');
                         echo form_input($data); ?> </td>
 
-                        <td class="col-xs-2"><?php $data = array('name' => 'quantity', 'id' => 'quantity', 'class' => 'form-control', 'type' => 'number', 'required' => '');
+                        <td class="col-xs-2"><?php $data = array('name' => 'quantity', 'id' => 'quantity', 'class' => 'form-control', 'type' => 'number', 'required' => '', 'min' => '0');
                         echo form_input($data); ?> </td>
                         <td class="small">
                                 <a href="#" class="add btn"><span class="label label-success"><i
