@@ -11,9 +11,14 @@ function get_table() {
     $table = "tbl_vaccines";
     return $table;
 }
+function get_all_vaccines(){
+$table = $this->get_table();
+$query=$this->db->get($table);
+return $query->result();
+}
 
 function getVaccine(){
-        
+
         $call_procedure="call get_vaccines()";
         $query=$this->db->query($call_procedure);
         $query->next_result();
@@ -25,7 +30,7 @@ function getVaccine(){
         $query = $this->db->get('tbl_vaccines');
         return $query->result_array();
     }
-    
+
 
 function get($order_by){
 $table = $this->get_table();

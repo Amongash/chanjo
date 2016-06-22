@@ -15,6 +15,13 @@ class Mdl_county extends CI_Model {
 	    return $table;
 	}
 
+  function get_all(){
+  $table = $this->get_table();
+  $query=$this->db->get($table);
+  return $query->result();
+  }
+
+
 	function get_regions(){
 		$this->db->select('id, region_name');
 		$query = $this->db->get("tbl_regions");

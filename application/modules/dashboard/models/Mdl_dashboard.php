@@ -93,12 +93,12 @@ class Mdl_dashboard extends CI_Model
     function get_subcounty_coverage($maxdate,$mindate,$station)
     {
 
-        $this->db->select("date_format(`months`,'%M %Y') as months, bcg,dpt1,dpt2,dpt3,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,subcounty_name");
+        $this->db->select("months, bcg,dpt1,dpt2,dpt3,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,subcounty_name");
         $this->db->from('v_subcounties_coverage');
         $this->db->where('subcounty_name', $station);
         $this->db->where('months >=', $mindate);
         $this->db->where('months <=', $maxdate);
-        $this->db->order_by(`months`,'asc');
+        $this->db->order_by('months','asc');
         $query = $this->db->get();
 
         return $query->result();
@@ -106,12 +106,12 @@ class Mdl_dashboard extends CI_Model
 
     function get_county_coverage($maxdate,$mindate,$station)
     {
-        $this->db->select("date_format(`months`,'%M %Y') as months, bcg,dpt1,dpt2,dpt3,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,county_name");
+        $this->db->select("months, bcg,dpt1,dpt2,dpt3,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,county_name");
         $this->db->from('v_counties_coverage');
         $this->db->where('county_name', $station);
         $this->db->where('months >=', $mindate);
         $this->db->where('months <=', $maxdate);
-        $this->db->order_by(`months`,'asc');
+        $this->db->order_by('months','asc');
         $query = $this->db->get();
 
           return $query->result();
@@ -120,7 +120,7 @@ class Mdl_dashboard extends CI_Model
     function get_national_coverage($maxdate,$mindate)
     {
 
-      $this->db->select("date_format(`periodname`,'%M %Y') as months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
+      $this->db->select("periodname as months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
       $this->db->from('v_coverage_national');
       $this->db->where('periodname >=', $mindate);
       $this->db->where('periodname <=', $maxdate);
@@ -132,12 +132,12 @@ class Mdl_dashboard extends CI_Model
     function get_region_coverage($maxdate,$mindate,$station)
     {
 
-      $this->db->select("date_format(`months`,'%M %Y') as months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
+      $this->db->select("months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
       $this->db->from('v_regions_coverage');
       $this->db->where('months >=', $mindate);
       $this->db->where('months <=', $maxdate);
       $this->db->where('region_name', $station);
-      $this->db->order_by(`months`,'asc');
+      $this->db->order_by('months','asc');
       $query = $this->db->get();
       return $query->result();
 
@@ -145,7 +145,12 @@ class Mdl_dashboard extends CI_Model
 
     function best_region_dpt3()
     {
+        $maxdate=date('Y-m-d');
+        $mindate=new DateTime(date('Y-m-d'));
+        $interval = new DateInterval('P1M');
+        $mindate=$mindate->sub($interval)->format('m');
         $this->db->select('region_name as name,population,dpt1,dpt3');
+        $this->db->where('MONTH(months)=', $mindate);
         $this->db->order_by('dpt3', 'desc');
         $this->db->limit(3);
         $query = $this->db->get('v_regions_coverage');
@@ -155,7 +160,12 @@ class Mdl_dashboard extends CI_Model
 
     function worst_region_dpt3()
     {
+        $maxdate=date('Y-m-d');
+        $mindate=new DateTime(date('Y-m-d'));
+        $interval = new DateInterval('P1M');
+        $mindate=$mindate->sub($interval)->format('m');
         $this->db->select('region_name as name,population,dpt1,dpt3');
+        $this->db->where('MONTH(months)=', $mindate);
         $this->db->order_by('dpt3', 'asc');
         $this->db->limit(3);
         $query = $this->db->get('v_regions_coverage');
@@ -164,9 +174,13 @@ class Mdl_dashboard extends CI_Model
     }
 
     function best_county_dpt3($station_id)
-    {
+      { $maxdate=date('Y-m-d');
+        $mindate=new DateTime(date('Y-m-d'));
+        $interval = new DateInterval('P1M');
+        $mindate=$mindate->sub($interval)->format('m');  //echo '<pre>',print_r($mindate),'</pre>';exit;
         $this->db->select('county_name as name,population,dpt1,dpt3');
         $this->db->where('region_name', $station_id);
+        $this->db->where('MONTH(months)=', $mindate);
         $this->db->order_by('dpt3', 'desc');
         $this->db->limit(3);
         $query = $this->db->get('v_counties_coverage');
@@ -176,8 +190,13 @@ class Mdl_dashboard extends CI_Model
 
     function worst_county_dpt3($station_id)
     {
+        $maxdate=date('Y-m-d');
+        $mindate=new DateTime(date('Y-m-d'));
+        $interval = new DateInterval('P1M');
+        $mindate=$mindate->sub($interval)->format('m');  //echo '<pre>',print_r($mindate),'</pre>';exit;
         $this->db->select('county_name as name,population,dpt1,dpt3');
         $this->db->where('region_name', $station_id);
+        $this->db->where('MONTH(months)=', $mindate);
         $this->db->order_by('dpt3', 'asc');
         $this->db->limit(3);
         $query = $this->db->get('v_counties_coverage');
@@ -186,9 +205,14 @@ class Mdl_dashboard extends CI_Model
     }
 
     function best_subcounty_dpt3($station_id)
-    {
+      {
+        $maxdate=date('Y-m-d');
+        $mindate=new DateTime(date('Y-m-d'));
+        $interval = new DateInterval('P1M');
+        $mindate=$mindate->sub($interval)->format('m');
         $this->db->select('subcounty_name as name,population,dpt1,dpt3');
         $this->db->where('county_name', $station_id);
+        $this->db->where('MONTH(months)=', $mindate);
         $this->db->order_by('dpt3', 'desc');
         $this->db->limit(3);
         $query = $this->db->get('v_subcounties_coverage');
@@ -198,8 +222,13 @@ class Mdl_dashboard extends CI_Model
 
     function worst_subcounty_dpt3($station_id)
     {
+        $maxdate=date('Y-m-d');
+        $mindate=new DateTime(date('Y-m-d'));
+        $interval = new DateInterval('P1M');
+        $mindate=$mindate->sub($interval)->format('m');
         $this->db->select('subcounty_name as name,population,dpt1,dpt3');
         $this->db->where('county_name', $station_id);
+        $this->db->where('MONTH(months)=', $mindate);
         $this->db->order_by('dpt3', 'asc');
         $this->db->limit(3);
         $query = $this->db->get('v_subcounties_coverage');
@@ -210,8 +239,13 @@ class Mdl_dashboard extends CI_Model
 
     function best_facility_dpt3($station_id)
     {
-        $this->db->select('facility_name as name,dpt1,dpt3');
+        $maxdate=date('Y-m-d');
+        $mindate=new DateTime(date('Y-m-d'));
+        $interval = new DateInterval('P1M');
+        $mindate=$mindate->sub($interval)->format('m');
+        $this->db->select('facility_name as name,population,dpt1,dpt3');
         $this->db->where('subcounty_name', $station_id);
+        $this->db->where('MONTH(months)=', $mindate);
         $this->db->order_by('dpt3', 'desc');
         $this->db->limit(3);
         $query = $this->db->get('v_facilities_utilization');
@@ -221,8 +255,13 @@ class Mdl_dashboard extends CI_Model
 
     function worst_facility_dpt3($station_id)
     {
-        $this->db->select('facility_name as name,dpt1,dpt3');
+      $maxdate=date('Y-m-d');
+      $mindate=new DateTime(date('Y-m-d'));
+      $interval = new DateInterval('P1M');
+      $mindate=$mindate->sub($interval)->format('m');
+        $this->db->select('facility_name as name,population,dpt1,dpt3');
         $this->db->where('subcounty_name', $station_id);
+        $this->db->where('MONTH(months)=', $mindate);
         $this->db->order_by('dpt3', 'asc');
         $this->db->limit(3);
         $query = $this->db->get('v_facilities_utilization');;
@@ -253,7 +292,7 @@ class Mdl_dashboard extends CI_Model
       $this->db->select('sum(vaccine_storage_volume) as total_volume');
       $this->db->from('v_fridges_overview');
       $this->db->where('refrigerator_status', 'Functional');
-      $this->db->where('freezer_capacity' , 'No');
+    //  $this->db->where('freezer_capacity' , 'No');
       $this->db->where('location', $station);
       $query = $this->db->get();
       return $query->result();
@@ -272,8 +311,10 @@ class Mdl_dashboard extends CI_Model
 
     function get_population_national()
     {
-      $this->db->select('sum(under_one_population) as population');
-      $this->db->from('tbl_regions');
+      $level='National';
+      $this->db->select('population');
+      $this->db->from('tbl_population');
+      $this->db->where('level', $level);
       $query = $this->db->get();
       return $query->result();
     }
@@ -313,6 +354,46 @@ class Mdl_dashboard extends CI_Model
         $query = $this->db->get();
 
         return $query->result();
+    }
+
+    function all_region_coverage($maxdate,$mindate)
+    {
+      $this->db->select("region_name as station,months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
+      $this->db->from('v_regions_coverage');
+      $this->db->where('months >=', $mindate);
+      $this->db->where('months <=', $maxdate);
+      $this->db->order_by('months', 'asc');
+      $query = $this->db->get();
+      return $query->result();
+
+    }
+
+    function all_counties_coverage($maxdate,$mindate,$region_id)
+    {
+
+      $this->db->select("county_name as station,months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
+      $this->db->from('v_counties_coverage');
+      $this->db->where('months >=', $mindate);
+      $this->db->where('months <=', $maxdate);
+      $this->db->where('region_id', $region_id);
+      $this->db->order_by('months', 'asc');
+      $query = $this->db->get();
+      return $query->result();
+
+    }
+
+    function all_subcounties_coverage($maxdate,$mindate,$county_id)
+    {
+
+      $this->db->select("subcounty_name as station,months,(`measles 1`) as measles1,(`measles 2`) as measles2,(`measles 3`) as measles3, bcg,dpt1,dpt2,dpt3,opv,opv1,opv2,opv3,pcv1,pcv2,pcv3,rota1,rota2,population");
+      $this->db->from('v_subcounties_coverage');
+      $this->db->where('months >=', $mindate);
+      $this->db->where('months <=', $maxdate);
+      $this->db->where('county_id', $county_id);
+      $this->db->order_by('months', 'asc');
+      $query = $this->db->get();
+      return $query->result();
+
     }
 
 

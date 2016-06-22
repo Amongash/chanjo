@@ -1,14 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Mdl_group extends CI_Model {
+class Mdl_user_levels extends CI_Model {
 
 function __construct() {
 parent::__construct();
 }
 
 function get_table() {
-    $table = "tbl_user_groups";
+    $table = "tbl_user_levels";
     return $table;
 }
 
