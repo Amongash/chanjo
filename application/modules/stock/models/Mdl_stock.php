@@ -28,32 +28,63 @@ class Mdl_Stock extends CI_Model
     {
         // Build our Editor instance and process the data coming from _POST
         // Use the Editor database class
-        Editor::inst($this->editorDb, 'v_transactions_all' )
-        ->fields(
-            Field::inst( 'order' ),
-            Field::inst( 'type' ),
-            Field::inst( 'to_from' )->validator( 'Validate::notEmpty' ),
-            Field::inst( 'batch' ),
-            Field::inst( 'expiry' ),
-            Field::inst( 'quantity' )
-            ->validator( 'Validate::numeric' )
-            ->setFormatter( 'Format::ifEmpty', null ),
-            Field::inst( 'balance' )
-            ->validator( 'Validate::numeric' )
-            ->setFormatter( 'Format::ifEmpty', null ),
-            Field::inst( 'transaction_date' )
-            ->validator( 'Validate::dateFormat', array(
-                "format"  => Format::DATE_ISO_8601,
-                "message" => "Please enter a date in the format yyyy-mm-dd"
-            ) )
-            ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
-            ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 )
-        )
-        ->where( 'station', $station )
-        ->where( 'vaccine_id', $vaccine_id )
+        Editor::inst($this->editorDb, 'tbl_transaction' )
+	        ->field(
+	        Field::inst( 'tbl_transaction.id as order' ),
+	        Field::inst( 'tbl_transaction.timestamp as timestamp' ),
+	        Field::inst( 'tbl_transaction.transaction_date as date' ),
+	        Field::inst( 'tbl_transaction.to_from as to_from' ),
+	        Field::inst( 'tbl_transaction.station as station' ),
+	        Field::inst( 'tbl_transaction_type.type as type' )
+	            ->options( 'tbl_transaction_type', 'id', 'type' ),
+	        Field::inst( 'tbl_transaction_type.type as type' ),
+	        Field::inst( 'tbl_transaction_items.vaccine_id as vaccine_id' ),
+	        Field::inst( 'tbl_transaction_items.batch as batch' ),
+	        Field::inst( 'tbl_transaction_items.expiry_date as expiry' ),
+	        Field::inst( 'tbl_transaction_items.transaction_quantity as quantity' ),
+	        Field::inst( 'tbl_balances.balance as balance' )
+	    )
+	    ->leftJoin( 'tbl_transaction_items', 'tbl_transaction_items.transaction_id', '=', 'tbl_transaction.id' )
+	    ->leftJoin( 'tbl_vaccines', 'tbl_vaccines.id', '=', 'tbl_transaction_items.vaccine_id' )
+	    ->leftJoin( 'tbl_transaction_type', 'tbl_transaction_type.id', '=', 'tbl_transaction.type' )
+	    ->leftJoin( 'tbl_balances', 'tbl_balances.transaction_id', '=', 'tbl_transaction.id', 'tbl_balances.station', '=', 'tbl_transaction.station' , 'tbl_balances.vaccine_id', '=', 'tbl_transaction.vaccine_id')
+	    
+        ->where( 'tbl_transaction.station', $station )
+        ->where( 'tbl_transaction_items.vaccine_id', $vaccine_id )
         ->process( $post )
         ->json();    
     }
+
+    // public function getData($post, $station, $vaccine_id)
+    // {
+    //     // Build our Editor instance and process the data coming from _POST
+    //     // Use the Editor database class
+    //     Editor::inst($this->editorDb, 'v_transactions_all' )
+    //     ->fields(
+    //         Field::inst( 'order' ),
+    //         Field::inst( 'type' ),
+    //         Field::inst( 'to_from' )->validator( 'Validate::notEmpty' ),
+    //         Field::inst( 'batch' ),
+    //         Field::inst( 'expiry' ),
+    //         Field::inst( 'quantity' )
+    //         ->validator( 'Validate::numeric' )
+    //         ->setFormatter( 'Format::ifEmpty', null ),
+    //         Field::inst( 'balance' )
+    //         ->validator( 'Validate::numeric' )
+    //         ->setFormatter( 'Format::ifEmpty', null ),
+    //         Field::inst( 'transaction_date' )
+    //         ->validator( 'Validate::dateFormat', array(
+    //             "format"  => Format::DATE_ISO_8601,
+    //             "message" => "Please enter a date in the format yyyy-mm-dd"
+    //         ) )
+    //         ->getFormatter( 'Format::date_sql_to_format', Format::DATE_ISO_8601 )
+    //         ->setFormatter( 'Format::date_format_to_sql', Format::DATE_ISO_8601 )
+    //     )
+    //     ->where( 'station', $station )
+    //     ->where( 'vaccine_id', $vaccine_id )
+    //     ->process( $post )
+    //     ->json();    
+    // }
 
 	function get_all_physical_counts($selected_vaccine, $station){
 		if (isset($selected_vaccine) && !is_null($selected_vaccine)) {

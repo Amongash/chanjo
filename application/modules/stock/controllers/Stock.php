@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class Stock extends MY_Controller
 {
 
@@ -437,38 +434,6 @@ class Stock extends MY_Controller
 
     }
 
-  //   function stock_data($id){
-  //     	$this->load->model('reports/mdl_reports');
-  //     	$info['user_object'] = $this->get_user_object();
-  //       $station = $info['user_object']['user_statiton'];
-		// $transaction = $this->mdl_reports->get_transactions($station,$id);
-		// $data = array();
-		// $no = $_POST['start'];
-		// foreach ($transaction as $val) {
-		//       $no++;
-		//       $row = array();    
-		//       $row[] = $val->transaction_date;
-  //             $row[] = $val->type;
-		//       $row[] = $val->to_from;
-  //             $row[] = $val->quantity;
-		     
-		//       $row[] = $val->batch;
-  //             $row[] = $val->expiry;
-		      
-		//       $row[] = $val->balance;
-
-		//       $data[] = $row;
-		// }
-
-		// $output = array(
-		//   "draw" => $_POST['draw'],
-		//   "recordsTotal" => $this->mdl_reports->count_transactions_filtered($station,$id),
-  //         "recordsFiltered" => $this->mdl_reports->count_transactions_filtered($station,$id),
-		//   "data" => $data,
-		// );
-
-		// echo json_encode($output);
-  //     }
 
     function get_stock_balance($selected_vaccine)
     {
@@ -535,13 +500,13 @@ class Stock extends MY_Controller
 
     function get_batch_details()
     {
-        // Gets moore details of the batch selected
+        // Gets more details of the batch selected
         $data['user_object'] = $this->get_user_object();
         $station_id = $data['user_object']['user_statiton'];
         $selected_batch = $this->input->post('selected_batch');
         $this->load->model('stock/mdl_stock');
         $data = $this->mdl_stock->get_batch_details($selected_batch, $station_id);
-        /* echo json_encode($selected_vaccine);*/
+       
         echo json_encode($data);
     }
 
