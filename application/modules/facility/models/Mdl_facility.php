@@ -11,6 +11,12 @@ class Mdl_Facility extends CI_Model {
         parent::__construct();
     }
 
+    function get_all(){
+    $table = $this->get_table();
+    $query=$this->db->get($table);
+    return $query->result();
+    }
+
 
 
     function get_table() {
@@ -140,7 +146,7 @@ class Mdl_Facility extends CI_Model {
 
     function loadcountyfromregion($region_id) {
 
-            $query = $this->db->query("SELECT county_name FROM `tbl_counties` WHERE region_id = '{$region_id}'"); 
+            $query = $this->db->query("SELECT county_name FROM `tbl_counties` WHERE region_id = '{$region_id}'");
             if ($query->num_rows > 0) {
                 return $query->result();
             }
@@ -148,7 +154,7 @@ class Mdl_Facility extends CI_Model {
 
     function loadsubcountyfromcounty($county_id) {
 
-        $query = $this->db->query("SELECT subcounty_name FROM `tbl_subcounties` WHERE county_id = '{$county_id}'"); 
+        $query = $this->db->query("SELECT subcounty_name FROM `tbl_subcounties` WHERE county_id = '{$county_id}'");
         if ($query->num_rows > 0) {
             return $query->result();
         }
@@ -157,7 +163,7 @@ class Mdl_Facility extends CI_Model {
 
     function loadfacilityfromsubcouty($subcounty_id) {
 
-        $query = $this->db->query("SELECT facility_name FROM `tbl_facilities` WHERE `subcounty_id` = '{$subcounty_id}'"); 
+        $query = $this->db->query("SELECT facility_name FROM `tbl_facilities` WHERE `subcounty_id` = '{$subcounty_id}'");
         if ($query->num_rows > 0) {
             return $query->result();
         }
@@ -230,7 +236,7 @@ class Mdl_Facility extends CI_Model {
                 $data['facility_id'] = $facility_id;
                 $this->db->insert($table, $data);
             }
-            
+
         }
 
     }

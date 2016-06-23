@@ -56,7 +56,18 @@ Modules::run('secure_tings/is_logged_in');
           }
           //echo '<pre>',print_r($data),'</pre>';exit;
 
+          $this->load->model('vaccines/mdl_vaccines');
+          $this->load->model('users/mdl_user_levels');
+          $this->load->model('region/mdl_region');
 
+
+          //echo '<pre>',print_r($this->mdl_group->get_all()),'</pre>';exit;
+          $data['user_levels'] = json_decode(json_encode($this->mdl_user_levels->get_all()),true);
+          $data['regions'] = json_decode(json_encode($this->mdl_region->get_all()),true);
+          //$data['vaccines'] = json_decode(json_encode($this->mdl_vaccines->get_all()),true);
+
+
+          $data['vaccines'] = $this->mdl_vaccines->get_vaccine_details();
         $data['section'] = "NVIP-Chanjo";
         $data['view_file'] = "dashboard_new";
         $data['module'] = "dashboard";
@@ -470,16 +481,12 @@ Modules::run('secure_tings/is_logged_in');
 
    }
 
-   function coverageFacility(){
+   function coverageFacility($station='NULL'){
      $info['user_object'] = $this->get_user_object();
-     if (isset($_GET['loc']) ) {
-         if (!empty($_GET['loc'])) {
-           $user_level = (int)$_GET['loc'];
-           $station = (int)$_GET['name'];
-           }
-         }else{
-            $user_level = $info['user_object']['user_level'];
-            $station = $info['user_object']['user_statiton'];
+     if ($station =='NULL' ) {
+       $user_level = $info['user_object']['user_level'];
+       $station = $info['user_object']['user_statiton'];
+
          }
      $this->load->model('mdl_dashboard');
      $maxdate=date('Y-m-d');
@@ -487,12 +494,12 @@ Modules::run('secure_tings/is_logged_in');
      $interval = new DateInterval('P12M');
      $mindate=$mindate->sub($interval)->format('Y-m-d');
     //echo '<pre>',print_r($maxdate),'</pre>';exit;
-     $query = $this->mdl_dashboard->get_facility_coverage($facility_name,$mindate,$maxdate);
+     $query = $this->mdl_dashboard->get_facility_coverage($station,$mindate,$maxdate);
      $query=json_decode(json_encode($query),true);
      //
 
      if ($query[0]['population']==0 || $query[0]['population']=='') {
-       $population = $this->mdl_dashboard->get_facility_population($facility_name);
+       $population = $this->mdl_dashboard->get_facility_population($station);
        $pop=json_decode(json_encode($population),true);
        $population=(int)$pop[0]['under_one_population'];
      }else {
@@ -645,6 +652,118 @@ Modules::run('secure_tings/is_logged_in');
 
        $this -> load -> view("coverage_worst",$data);
 
+
+     }
+
+     function cumulative_coverage($level='NULL',$station='NULL',$vaccine='NULL',$region_id='NULL',$county_id='NULL',$subcounty_id='NULL'){
+       $info['user_object'] = $this->get_user_object();
+       $user_level = $info['user_object']['user_level'];
+       $this->load->model('mdl_dashboard');
+       $maxdate=date('Y-m-d');
+       $mindate=new DateTime(date('Y-m-d'));
+       $interval = new DateInterval('P12M');
+       $mindate=$mindate->sub($interval)->format('Y-m-d');
+
+       if ($level =='NULL' || $level =='undefined') {
+
+         $data['user_level']  = $info['user_object']['user_level'];
+         $level= $info['user_object']['user_level'];
+       }else {
+
+         $data['user_level']  = $level;
+       }
+
+       if ($vaccine =='NULL') {
+         $vaccine = 'bcg';
+       }
+
+       if ($station =='NULL') {
+         $station = $info['user_object']['user_statiton'];
+       }
+
+
+
+       $station=str_replace('%20',' ',$station);
+       $vaccine=str_replace('%20',' ',$vaccine);
+       $vaccine=str_replace('%60','`',$vaccine);
+
+       $this->load->model('mdl_dashboard');
+
+
+       if ($level==1) {
+
+         $query = $this->mdl_dashboard->cumulative_coverage_national($maxdate,$mindate,$vaccine);
+         $query_population = $this->mdl_dashboard->get_population_national();
+         $population=$query_population[0]->population;
+
+
+
+       }elseif ($level == 2) {
+         $column_id='region_id';
+
+         $query = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine,$region_id,$column_id);
+         $query_population = $this->mdl_dashboard->get_population_region($station);
+         $population=$query_population[0]->population;
+         //echo '<pre>',print_r($query_population),'</pre>';exit;
+
+       }elseif ($level == 3) {
+         $column_id='county_id';
+
+         $query = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine,$county_id,$column_id);
+         $query_population = $this->mdl_dashboard->get_population_county($station);
+         $population=$query_population[0]->population;
+
+       }elseif ($level == 4) {
+         $column_id='subcounty_id';
+
+         $query = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine,$subcounty_id,$column_id);
+         $query_population = $this->mdl_dashboard->get_population_subcounty($station);
+         $population=$query_population[0]->population;
+
+      }else {
+        $column_id='subcounty_id';
+
+        $query = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine,$station,$column_id);
+        $query_population = $this->mdl_dashboard->get_facility_population($station);
+        $population=$query_population[0]->population;
+
+      }
+
+
+
+      $cumulative_antigen_administered=[];
+      $cumulative_population=[];
+
+      $runningSum = 0;
+      $runningpop = 0;
+
+         foreach ($query as $number => $key) {
+             $runningSum += $key->antigen;
+             $time_data[]=date('M-Y',strtotime($key->months));
+             $cumulative_antigen_administered[] = $runningSum;
+             $runningpop += ceil($population/12);
+             $cumulative_population[] = $runningpop;
+         }
+
+         $data['cumulative_antigen_administered'] = json_encode($cumulative_antigen_administered);
+         $data['cumulative_population'] = json_encode($cumulative_population);
+         $data['colors'] = "['#008080','#6AF9C4']";
+         //$data['graph_title'] = "Stock Balance";
+         //$data['graph_yaxis_title'] = "Stock Balance";
+         $data['graph_id'] = "coverage_cumulative";
+         $data['vaccine'] = json_encode($vaccine.' doses Administered');
+         $data['station'] = json_encode($vaccine.' Cumulative Coverage for '.$station);
+
+
+
+         $data['time_data'] = json_encode($time_data);
+
+
+      //echo '<pre>',print_r(json_encode($vaccine)),'</pre>';exit;
+
+       $this -> load -> view("dashboard/cumulative_line",$data);
+
+       //echo '<pre>',print_r(json_encode($measles),true),'</pre>';
 
      }
 
