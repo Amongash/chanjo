@@ -86,11 +86,6 @@ class MY_Controller extends MX_Controller
 
     function get_user_object()
     {
-        //user emails
-        //$mb = imap_open("{chi-rs31.websitehostserver.net:993/imap/ssl/novalidate-cert}INBOX", 'victor@wkdesigns.co.ke', 'smartguy123');
-
-        //count user emails
-        //$message_count = imap_num_msg($mb);
         $message_count = 4;
 
 
@@ -210,20 +205,6 @@ class MY_Controller extends MX_Controller
         $title = 'NVIP Chanjo';
         return $title;
     }
-
-    function getnumber_email(){
-        $mb = imap_open("{chi-rs31.websitehostserver.net:993/imap/ssl/novalidate-cert}INBOX", 'victor@wkdesigns.co.ke', 'smartguy123')
-        or die('Cannot connect: ' . print_r(imap_errors(), true));
-
-        //$messageCount = imap_num_msg($mb);
-        $data['message_count'] = imap_num_msg($mb);
-
-
-
-        //return $messageCount;
-
-    }
-
 
 
 }
