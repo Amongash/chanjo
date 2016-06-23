@@ -347,7 +347,7 @@ class Mdl_dashboard extends CI_Model
 
     function get_facility_population($station)
     {
-        $this->db->select('under_one_population');
+        $this->db->select('under_one_population as population');
         $this->db->from('tbl_facilities');
         $this->db->where('facility_name', $station);
         $this->db->limit(1);
@@ -395,6 +395,39 @@ class Mdl_dashboard extends CI_Model
       return $query->result();
 
     }
+
+    function cumulative_coverage_national($maxdate,$mindate,$vaccine)
+    {
+
+      $this->db->select("periodname as months, sum($vaccine) as antigen ");
+      $this->db->from('v_coverage_overview');
+      $this->db->where('periodname >=', $mindate);
+      $this->db->where('periodname <=', $maxdate);
+      $this->db->group_by('periodname');
+      $this->db->order_by(`periodname`,'asc');
+      $query = $this->db->get();
+      return $query->result();
+
+    }
+
+    function cumulative_coverage($maxdate,$mindate,$vaccine,$region_id,$column_id)
+    {
+
+      $this->db->select("periodname as months, sum($vaccine) as antigen ");
+      $this->db->from('v_coverage_overview');
+      $this->db->where('periodname >=', $mindate);
+      $this->db->where('periodname <=', $maxdate);
+      $this->db->where($column_id, $region_id);
+      $this->db->group_by('periodname');
+      $this->db->order_by(`periodname`,'asc');
+      $query = $this->db->get();
+      return $query->result();
+
+    }
+
+
+
+
 
 
 }

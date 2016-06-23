@@ -74,7 +74,7 @@
                                 <ul class="drop_down_task dropdown-menu" id="tasks">
                                 </ul>
                               </li>
-                            </ul> 
+                            </ul>
 
                         </div>
                     </div>
@@ -360,7 +360,7 @@
     <script src="<?php echo base_url() ?>assets/plugins/datatables/KeyTable-2.1.0/js/dataTables.keyTable.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/datatables/Select-1.1.0/js/dataTables.select.min.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/datatables/Editor/js/dataTables.editor.js"></script>
-    
+
     <script src="<?php echo base_url() ?>assets/plugins/data-tables/DT_bootstrap.js"></script>
     <script src="<?php echo base_url() ?>assets/plugins/validation/parsley.min.js"></script>
 
@@ -370,7 +370,7 @@
 
 
     <script src="<?php echo base_url() ?>assets/js/jPushMenu.js"></script>
-   
+
     <script src="<?php echo base_url() ?>assets/plugins/select2/js/select2.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/side-chats.js"></script>
     <script src="<?php echo base_url() ?>assets/js/animated.js" type="text/javascript"></script>
