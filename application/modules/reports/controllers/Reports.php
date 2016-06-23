@@ -285,6 +285,11 @@ class Reports extends MY_Controller
         $this->load->model('subcounty/mdl_subcounty');
         echo json_encode($this->mdl_subcounty->get_all(),true);
       }
+      function getallFacilitiesjson(){
+
+        $this->load->model('facility/mdl_facility');
+        echo json_encode($this->mdl_facility->get_all(),true);
+      }
 
       function stock_levels($level='NULL',$region_name='NULL',$region_id='NULL',$county_id='NULL'){
 
