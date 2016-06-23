@@ -15,9 +15,18 @@
   margin-left: 2.6%;
   border-radius: 0 !important;
 }
+#btncoverage{
+  margin-left: 2.6%;
+  border-radius: 0 !important;
+}
 .modal-body{
   font-size: 1.2em !important;
 }
+.modal-dialog {
+    width: 80%; /* respsonsive width */
+    margin-left:10%; /* width/2) */
+}
+
 
 </style>
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
@@ -112,7 +121,9 @@
 
             <h5 class="content-header text-info">Cumulative Coverage</h5>
             </br>
-            <button type="button" id="actions" name="actions" data-toggle="modal" data-target="#myModal" class="btn btn-info btn-sm pull-left">Recommendations</button>
+            <button type="button" id="actions" name="actions" data-toggle="modal" data-target="#myModal" class="btn btn-info btn-sm pull-left">View Recommendations</button>
+            <button type="button" id="btncoverage" name="btncoverage" data-toggle="modal" data-target="#myModalcoverage" class="btn btn-info btn-sm pull-left">View Coverage</button>
+
             <div id="coverage_cumulative" name="coverage_cumulative"></div>
 
 
@@ -210,20 +221,45 @@
 </div><!-- /.modal -->
 
 
+<div id="myModalcoverage" class="modal large fade " tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Coverage</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="mycoverage" name="mycoverage" style="margin-bottom:1%;">
+
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <script type="text/javascript">
 
 var url="<?php echo base_url(); ?>";
-$('#myModal').on('shown.bs.modal', function () {
+$('#myModal,#myModalcoverage').on('shown.bs.modal', function () {
 })
+
+
 
     ajax_fill_data('dashboard/vaccineBalance/NULL',"#stocks");
     ajax_fill_data('dashboard/vaccineBalancemos/NULL/NULL',"#mos");
     ajax_fill_data('dashboard/positiveColdchain/NULL/NULL',"#positive");
-    ajax_fill_data('dashboard/negativeColdchain',"#negative");
-    ajax_fill_data('dashboard/coverage/NULL',"#coverage");
+    ajax_fill_data('dashboard/negativeColdchain/NULL/NULL',"#negative");
+    ajax_fill_data('dashboard/coverage/NULL/NULL',"#mycoverage");
     ajax_fill_data('dashboard/cumulative_coverage/NULL/NULL/NULL',"#coverage_cumulative");
 
     $('#regions,#counties,#subcounties,#facilities').hide();
+  //  $('#btncoverage').on('click', function(){
+
+      //  });
 
     $('#levels').on('change', function(){
       $('#regions,#counties,#subcounties,#facilities').val('NULL');
@@ -314,12 +350,12 @@ $('#myModal').on('shown.bs.modal', function () {
     var vaccine=$('option:selected', '#vaccines').val();
 
 
-      //ajax_fill_data('dashboard/vaccineBalance/'+name,"#stocks");
-      //ajax_fill_data('dashboard/vaccineBalancemos/'+name+'/'+population,"#mos");
+      ajax_fill_data('dashboard/vaccineBalance/'+station,"#stocks");
+      ajax_fill_data('dashboard/vaccineBalancemos/'+level+'/'+station,"#mos");
       ajax_fill_data('dashboard/cumulative_coverage/'+level+'/'+station+'/'+vaccine+'/'+region_id+'/'+county+'/'+subcounty+'/'+facility,"#coverage_cumulative");
-      ajax_fill_data('dashboard/coverage/NULL',"#coverage");
-      //ajax_fill_data('dashboard/negativeColdchain/'+a+'/'+name,"#negative");
-      //ajax_fill_data('dashboard/positiveColdchain/'+a+'/'+name,"#positive");
+      ajax_fill_data('dashboard/coverage/'+level+'/'+station,"#mycoverage");
+      ajax_fill_data('dashboard/negativeColdchain/'+level+'/'+station,"#negative");
+      ajax_fill_data('dashboard/positiveColdchain/'+level+'/'+station,"#positive");
 
 
     });
