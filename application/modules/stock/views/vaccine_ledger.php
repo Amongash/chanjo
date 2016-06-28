@@ -9,6 +9,13 @@
                 <h1 class="bolded" id="bal"><?php echo ($vaccine[0]["vaccine_name"]);?></h1>
 
             </div>
+            
+        </div>
+    </div>
+    <div class="top_right_bar">
+        <div class="top_right">
+            <div class="col-xs-6"> <a href="#" id="theButton" role="button" class="btn btn-primary">show batch summary</a>
+            </div>
         </div>
     </div>
 </div>
@@ -49,133 +56,179 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                
+
                 <h4 class="modal-title" id="myModalLabel">Change in Stock Balance!</h4>
             </div>
             <div class="modal-body">
-                <p>You have changed the stock balance after a transaction.</p>                     
+                <p>You have changed the stock balance after a transaction.</p>
                 <p>You will be redirected to the Stock Adjustment page to update accordingly</p>
-            </div>    
+            </div>
         </div>
     </div>
 </div>
 
-                    <script type="text/javascript">
+<script type="text/javascript">
+    var url = "<?php echo base_url('stock/stock_data/'.$id) ?>";
+    var editor; // use a global for the submit and return data rendering in the examples
 
+    $(document).ready(function() {
+        editor = new $.fn.dataTable.Editor({
+            ajax: url,
+            table: "#table",
+            fields: [{
+                label: "Batch:",
+                name: "batch"
+            }, {
+                label: "Quantity:",
+                name: "quantity"
+            }, {
+                label: "Stock Balance:",
+                name: "balance"
+            }]
+        });
 
-                        var url = "<?php echo base_url('stock/stock_data/'.$id) ?>";
-                        var editor; // use a global for the submit and return data rendering in the examples
+        editor.on('submitSuccess', function(e, json, data) {
+            $("#changeModal").modal('show');
+            var redirect = "<?php echo base_url('stock/adjust_stock') ?>";
+            window.setTimeout(function() {
+                window.location.href = redirect;
+            }, 5000);
 
-                        $(document).ready(function() {
-                            editor = new $.fn.dataTable.Editor({
-                                ajax: url,
-                                table: "#table",
-                                fields: [{
-                                    label: "Batch:",
-                                    name: "batch"
-                                }, {
-                                    label: "Quantity:",
-                                    name: "quantity"
-                                }, {
-                                    label: "Stock Balance:",
-                                    name: "balance"
-                                }]
-                            });
+        });
 
-                            editor.on('submitSuccess', function (e, json, data){
-                                $("#changeModal").modal('show');
-                                var redirect = "<?php echo base_url('stock/adjust_stock') ?>";
-                                window.setTimeout(function() {
-                                    window.location.href = redirect;
-                                }, 5000);
-                               
-                            });
+        // Activate the bubble editor on click of a table cell
+        $('#table').on('click', 'tbody td:not(:first-child)', function(e) {
+            editor.bubble(this);
+        });
 
-                            // Activate the bubble editor on click of a table cell
-                            $('#table').on('click', 'tbody td:not(:first-child)', function(e) {
-                                editor.bubble(this);
-                            });
+        $('#table').DataTable({
+            dom: "Bfrtip",
+            scrollY: 300,
+            paging: false,
+            ajax: url,
+            columnDefs: [{
+                targets: [1],
+                orderData: [1, 0],
+                visible: false
+            }, {
+                targets: 'no-sort',
+                orderable: false
+            }],
+            columns: [{
+                data: null,
+                defaultContent: '',
+                className: 'select-checkbox',
+                orderable: false
+            }, {
+                data: "order"
+            }, {
+                data: "date"
+            }, {
+                data: "type"
+            }, {
+                data: "to_from"
+            }, {
+                data: "quantity"
+            }, {
+                data: "batch"
+            }, {
+                data: "expiry"
+            }, {
+                data: "balance",
+                render: $.fn.dataTable.render.number(',', '.', 0)
+            }],
+            order: [],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            buttons: [{
+                extend: "edit",
+                editor: editor
+            }, {
+                extend: "remove",
+                editor: editor
+            }, {
+                extend: 'collection',
+                text: 'Export',
+                buttons: [
+                    'copy',
+                    'excel',
+                    'csv',
+                    'pdf',
+                    'print'
+                ]
+            }],
+            fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 
-                            $('#table').DataTable({
-                                dom: "Bfrtip",
-                                scrollY: 300,
-                                paging: false,
-                                ajax: url,
-                                columnDefs: [{
-                                    targets: [1],
-                                    orderData: [1, 0],
-                                    visible: false
-                                }, {
-                                    targets: 'no-sort',
-                                    orderable: false
-                                }],
-                                columns: [{
-                                    data: null,
-                                    defaultContent: '',
-                                    className: 'select-checkbox',
-                                    orderable: false
-                                }, {
-                                    data: "order"
-                                }, {
-                                    data: "date"
-                                }, {
-                                    data: "type"
-                                }, {
-                                    data: "to_from"
-                                }, {
-                                    data: "quantity"
-                                }, {
-                                    data: "batch"
-                                }, {
-                                    data: "expiry"
-                                }, {
-                                    data: "balance",
-                                    render: $.fn.dataTable.render.number(',', '.', 0)
-                                }],
-                                order: [],
-                                select: {
-                                    style: 'os',
-                                    selector: 'td:first-child'
-                                },
-                                buttons: [{
-                                        extend: "edit",
-                                        editor: editor
-                                    },
-                                    {
-                                        extend: "remove",
-                                        editor: editor
-                                    },
-                                    {
-                                        extend: 'collection',
-                                        text: 'Export',
-                                        buttons: [
-                                            'copy',
-                                            'excel',
-                                            'csv',
-                                            'pdf',
-                                            'print'
-                                        ]
-                                    }
-                                ],
-                                fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-                                    
-                                    if ( aData['type'] == "Issue" )
-                                    {
-                                        $('td', nRow).css('color', 'Blue');
-                                    }
-                                    else if ( aData['type'] == "Receive" )
-                                    {
-                                        $('td', nRow).css('color', 'Red');
-                                    }
-                                    else if ( aData['type'] == "Physical Count" )
-                                    {
-                                        $('td', nRow).css('color', 'black');
-                                    }
-                                    else if ( aData['type'] == "Adjustment" )
-                                    {
-                                        $('td', nRow).css('color', 'black');
-                                    }
-                                }
-                            });
-                        });
-                    </script>
+                if (aData['type'] == "Issue") {
+                    $('td', nRow).css('color', 'Blue');
+                } else if (aData['type'] == "Receive") {
+                    $('td', nRow).css('color', 'Red');
+                } else if (aData['type'] == "Physical Count") {
+                    $('td', nRow).css('color', 'black');
+                } else if (aData['type'] == "Adjustment") {
+                    $('td', nRow).css('color', 'black');
+                }
+            }
+        });
+    });
+
+    var theTable;
+    $(document).ready(function() {
+
+        $('#theButton').click(function(e) {
+
+            showTheModalTable();
+        });
+
+        theTable = $('#foobar').dataTable({
+            "searching": false,
+            "ordering": false,
+            "paging": false,
+            "scrollY": "300px",
+            "scrollCollapse": true,
+            "info": true
+        });
+
+    });
+
+    function showTheModalTable() {
+        $('#theModal').modal();
+    }
+
+    $('#theModal').on('shown.bs.modal', function(e) {
+        var data = ['data 1', 'data 2', 'data 3', 'data 4']
+        theTable.api().clear();
+
+        theTable.api().row.add(data).draw();
+    })
+</script>
+
+<div id="theModal" class="modal fade" hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
+                <h4 class="modal-title">Batch Summary</h4>
+
+            </div>
+            <div class="modal-body">
+                <div>
+                    <table id="foobar" class="table table-condensed table-striped table-bordered small">
+                        <thead>
+                            <th>col 1</th>
+                            <th>col 2</th>
+                            <th>col 3</th>
+                            <th>col 4</th>
+                        </thead>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
