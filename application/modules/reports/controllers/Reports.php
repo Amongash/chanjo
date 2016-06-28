@@ -543,5 +543,26 @@ class Reports extends MY_Controller
           echo "You are here";
       }
 
+      function stock_allocation(){
+        $this->load->model('vaccines/mdl_vaccines');
+        $data['module'] = "reports";
+        $data['view_file'] = "allocation";
+        $data['page_header'] = $station;
+        $data['section'] = "Stock Allocation";
+        $data['subtitle'] = "Allocations";
+        $data['user_object'] = $this->get_user_object();
+        $data['main_title'] = $this->get_title();
+        $data['vaccines'] = $this->mdl_vaccines->getVaccine();
+        //breadcrumbs
+        $this->load->library('make_bread');
+        $this->make_bread->add('Reports', '', 0);
+        $this->make_bread->add('Stock Allocations', 'reports/stock_allocation', 1);
+
+        $data['breadcrumb'] = $this->make_bread->output();
+
+        // $this->output->enable_profiler(TRUE);
+
+        echo Modules::run('template/' . $this->redirect($this->session->userdata['logged_in']['user_group']), $data);
+      }
 
 }
