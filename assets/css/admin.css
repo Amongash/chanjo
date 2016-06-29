@@ -1954,7 +1954,7 @@ input {
 .inbox_orange .widget_inbox_header{color:#FFFFFF!important;}
 .inbox_blue .widget_inbox ul li a{color:#123e57!important;}
 .information{ padding:15px; color:#FFFFFF; border:none; margin-bottom:20px; display:block; width:100%; float:left;}
-.info{ border-radius:50%; float: left; height:80px; width:80px; }
+.info{ border-radius:10%; float: left; height:80px; width:85px; }
 .info .icon{ font-size:50px; color:#FFFFFF; float:left; margin-right:20px; margin:17px 0px 0px 14px;}
 .red_symbols{background:#e84c3d;}
 .green_symbols{background:#3ac3a9;}

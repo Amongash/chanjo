@@ -418,9 +418,10 @@ class Stock extends MY_Controller
         
         //Pass the database object to the model
         $this->mdl_stock->init($db);
-        
+       
         //Let the model produce the data
         $this->mdl_stock->getData($post, $station, $id);
+        
     }
 
     public function stock_data($id)
