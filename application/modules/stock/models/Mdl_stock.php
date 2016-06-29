@@ -46,7 +46,7 @@ class Mdl_Stock extends CI_Model
 	    ->leftJoin( 'tbl_transaction_items', 'tbl_transaction_items.transaction_id', '=', 'tbl_transaction.id' )
 	    ->leftJoin( 'tbl_vaccines', 'tbl_vaccines.id', '=', 'tbl_transaction_items.vaccine_id' )
 	    ->leftJoin( 'tbl_transaction_type', 'tbl_transaction_type.id', '=', 'tbl_transaction.type' )
-	    ->leftJoin( 'tbl_balances', 'tbl_transaction.id', '=', 'tbl_balances.transaction_id AND `tbl_transaction`.`station` = `tbl_balances`.`station` AND tbl_transaction_items.vaccine_id = tbl_balances.vaccine_id')
+	    ->leftJoin( 'tbl_balances', 'tbl_transaction.id', '=', 'tbl_balances.transaction_id AND tbl_transaction.station = tbl_balances.station AND tbl_transaction_items.vaccine_id = tbl_balances.vaccine_id')
 	   
 
         ->where( 'tbl_transaction.station', $station )
