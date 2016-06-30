@@ -28,7 +28,7 @@ class Mdl_Stock extends CI_Model
     {
         // Build our Editor instance and process the data coming from _POST
         // Use the Editor database class
-        Editor::inst($this->editorDb, 'tbl_transaction' )
+               Editor::inst($this->editorDb, 'tbl_transaction' )
 	        ->field(
 	        Field::inst( 'tbl_transaction.id as order' ),
 	        Field::inst( 'tbl_transaction.timestamp as timestamp' ),
@@ -37,7 +37,6 @@ class Mdl_Stock extends CI_Model
 	        Field::inst( 'tbl_transaction.station as station' ),
 	        Field::inst( 'tbl_transaction_type.type as type' ),
 	        Field::inst( 'tbl_transaction_items.vaccine_id as vaccine_id' ),
-	        Field::inst( 'tbl_vaccines.vaccine_name as vaccine_name' ),
 	        Field::inst( 'tbl_transaction_items.batch as batch' ),
 	        Field::inst( 'tbl_transaction_items.expiry_date as expiry' ),
 	        Field::inst( 'tbl_transaction_items.transaction_quantity as quantity' ),
@@ -46,11 +45,10 @@ class Mdl_Stock extends CI_Model
 	    ->leftJoin( 'tbl_transaction_items', 'tbl_transaction_items.transaction_id', '=', 'tbl_transaction.id' )
 	    ->leftJoin( 'tbl_vaccines', 'tbl_vaccines.id', '=', 'tbl_transaction_items.vaccine_id' )
 	    ->leftJoin( 'tbl_transaction_type', 'tbl_transaction_type.id', '=', 'tbl_transaction.type' )
-	    ->leftJoin( 'tbl_balances', 'tbl_transaction.id', '=', 'tbl_balances.transaction_id AND tbl_transaction.station = tbl_balances.station AND tbl_transaction_items.vaccine_id = tbl_balances.vaccine_id')
-	   
-
+	    ->leftJoin( 'tbl_balances', 'tbl_balances.transaction_id', '=', 'tbl_transaction.id AND tbl_balances.station = tbl_transaction.station AND tbl_balances.vaccine_id = tbl_transaction_items.vaccine_id')
+	    
         ->where( 'tbl_transaction.station', $station )
-        ->where( 'tbl_transaction_items.vaccine_id', $vaccine_id )
+        ->where( 'tbl_transaction_items.vaccine_id', $vaccine_id )	   
         ->process( $post )
         ->json();    
     }
