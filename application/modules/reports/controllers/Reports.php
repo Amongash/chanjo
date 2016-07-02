@@ -815,13 +815,13 @@ class Reports extends MY_Controller
             foreach($population as $key => $value) {
                 $loc= $this->mdl_reports->get_vaccine_balance($value['name'], $vaccine);
 
-                $location[] = array(
-                        'name' => $value['name'],
-                        'population' => $value['population'],
-                        'balance' => 0,
-                        'mos' => 0,
-                        'quantity' => 0
-                    );
+                // $location[] = array(
+                //         'name' => $value['name'],
+                //         'population' => $value['population'],
+                //         'balance' => 0,
+                //         'mos' => 0,
+                //         'quantity' => 0
+                //     );
                 foreach($loc as $key => $val) {
                     if ($val==0 || $val==''){
                       $location[] = array(
@@ -847,9 +847,11 @@ class Reports extends MY_Controller
                         'name' => $value['name'],
                         'population' => $value['population'],
                         'balance' => $val['stock_balance'],
-                        'mos' => (float)$val['stock_balance']/($value['population']/12),
+                        'mos' => number_format($val['stock_balance']/($value['population']/12), 2, '.', ''),
                         'quantity' => $quantity
                       );
+
+                        
                       }
 
                     }
@@ -857,8 +859,41 @@ class Reports extends MY_Controller
 
                 }
 
-
+                
             }
+            foreach ($location as $key => $value) {
+              $mos[] = $value['mos'];
+            }
+            
+            $sum_mos = array_sum($mos);
+            $average_mos = $sum_mos/count($mos); 
+            foreach ($location as $key => $value) {
+              $av = $average_mos-$location[$key]['mos'];
+              if($av > 0){
+                $location[$key]['av']=  $av;
+              } else{
+                $location[$key]['av']=  0;
+              }
+
+              $location[$key]['sum_mos']= $sum_mos;
+              $location[$key]['average_ mos']= $average_mos;            
+            }
+
+            foreach ($location as $key => $value) {
+              $x[] = $value['av'];
+            }
+
+            $sum_av = array_sum($x);
+            foreach ($location as $key => $value) {
+              $location[$key]['sum_av']= $sum_av;
+              if ($sum_av == 0){
+                $location[$key]['y']=  0;
+              }else{
+                $location[$key]['y']=  $location[$key]['av']/$sum_av;
+              }
+              
+            }
+
             $data['data'] = $location;
           }
 

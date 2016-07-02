@@ -105,7 +105,8 @@ $(document).ready(function(){
             { "data": "mos" },
             { "data": "quantity",
                 render: function ( data, type, row, meta ) {
-                  return '<input type="number" class="form-control small" value="'+row.balance*row.quantity+'">';
+                  
+                  return '<input type="number" class="form-control small" value="'+Math.round(row.y*row.quantity)+'">';
                 }
             }
         ]
