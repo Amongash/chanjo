@@ -92,8 +92,8 @@ class DriverMysqlQuery extends Query {
 				$binding['type'] ? $binding['type'] : \PDO::PARAM_STR
 			);
 		}
-
-		//file_put_contents( '/tmp/editor_sql', $sql."\n", FILE_APPEND );
+		$file = $_SERVER['DOCUMENT_ROOT'].'/tmp/editor_sql.txt';
+		file_put_contents( $file, $sql);
 	}
 
 

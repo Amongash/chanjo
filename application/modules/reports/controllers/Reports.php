@@ -750,5 +750,123 @@ class Reports extends MY_Controller
           echo "You are here";
       }
 
+      function stock_allocation() {
+          $this->load->model('vaccines/mdl_vaccines');
+          $info['user_object'] = $this->get_user_object();
+          $station = $info['user_object']['user_statiton'];
+          $data['module'] = "reports";
+          $data['view_file'] = "list_allocation";
+          $data['page_header'] = $station;
+          $data['section'] = "Stock Allocation";
+          $data['subtitle'] = "Allocations";
+          $data['user_object'] = $this->get_user_object();
+          $data['main_title'] = $this->get_title();
+          //breadcrumbs
+          $this->load->library('make_bread');
+          $this->make_bread->add('Reports', '', 0);
+          $this->make_bread->add('Stock Allocations', 'reports/stock_allocation', 1);
+
+          $data['breadcrumb'] = $this->make_bread->output();
+
+          // $this->output->enable_profiler(TRUE);
+
+          echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data);
+      }
+
+      function new_allocation() {
+          $this->load->model('vaccines/mdl_vaccines');
+          $info['user_object'] = $this->get_user_object();
+          $station = $info['user_object']['user_statiton'];
+          $data['module'] = "reports";
+          $data['view_file'] = "allocation";
+          $data['page_header'] = $station;
+          $data['section'] = "Stock Allocation";
+          $data['subtitle'] = "Allocations";
+          $data['user_object'] = $this->get_user_object();
+          $data['main_title'] = $this->get_title();
+          $data['vaccines'] = $this->mdl_vaccines->getVaccine();
+          //breadcrumbs
+          $this->load->library('make_bread');
+          $this->make_bread->add('Reports', '', 0);
+          $this->make_bread->add('Stock Allocations', 'reports/stock_allocation', 1);
+
+          $data['breadcrumb'] = $this->make_bread->output();
+
+          // $this->output->enable_profiler(TRUE);
+
+          echo Modules::run('template/'.$this->redirect($this->session->userdata['logged_in']['user_group']), $data);
+      }
+
+      function target_population($vaccine = null, $quantity= null) {
+          $this->load->model('mdl_reports');
+          $info['user_object'] = $this->get_user_object();
+          $level = $info['user_object']['user_level'];
+          $station = $info['user_object']['user_statiton'];
+          if ($vaccine == null || $quantity == null) {
+             $data['data'] = array(
+                        'name' => '',
+                        'population' => '',
+                        'balance' => '',
+                        'mos' => ''
+                    );
+          } else if (is_numeric($vaccine)==true && is_numeric($quantity)){
+            $population = $this->mdl_reports->get_total_population($station, $level);
+
+            foreach($population as $key => $value) {
+                $loc= $this->mdl_reports->get_vaccine_balance($value['name'], $vaccine);
+
+                $location[] = array(
+                        'name' => $value['name'],
+                        'population' => $value['population'],
+                        'balance' => 0,
+                        'mos' => 0,
+                        'quantity' => 0
+                    );
+                foreach($loc as $key => $val) {
+                    if ($val==0 || $val==''){
+                      $location[] = array(
+                        'name' => $value['name'],
+                        'population' => $value['population'],
+                        'balance' =>  $val['stock_balance'],
+                        'mos' => 'Missing data',
+                        'quantity' => $quantity
+                      );
+
+
+                    }else if ($val>0 ){
+                      if($value['population'] == 0){
+                        $location[] = array(
+                        'name' => $value['name'],
+                        'population' => 0,
+                        'balance' => $val['stock_balance'],
+                        'mos' => 'N/A',
+                        'quantity' => $quantity
+                      );
+                      }else{
+                        $location[] = array(
+                        'name' => $value['name'],
+                        'population' => $value['population'],
+                        'balance' => $val['stock_balance'],
+                        'mos' => (float)$val['stock_balance']/($value['population']/12),
+                        'quantity' => $quantity
+                      );
+                      }
+
+                    }
+
+
+                }
+
+
+            }
+            $data['data'] = $location;
+          }
+
+
+
+           echo json_encode($data);
+
+      }
+
 
 }

@@ -86,11 +86,6 @@ class MY_Controller extends MX_Controller
 
     function get_user_object()
     {
-        //user emails
-        //$mb = imap_open("{chi-rs31.websitehostserver.net:993/imap/ssl/novalidate-cert}INBOX", 'victor@wkdesigns.co.ke', 'smartguy123');
-
-        //count user emails
-        //$message_count = imap_num_msg($mb);
         $message_count = 4;
 
 
@@ -114,13 +109,13 @@ class MY_Controller extends MX_Controller
             $last_activity = ($this->session->userdata['logged_in']['last_activity']);
 
             if ($user_level == '1') {
-                $nation = "KENYA";
+                $nation = "NVIP";
                 $path = $nation;
                 $user_statiton = $nation;
-                $user_statiton_id = 'KENYA';
+                $user_statiton_id = 'NVIP';
                 $statiton_above = "";
             } else if ($user_level == '2') {
-                $nation = "KENYA";
+                $nation = "NVIP";
                 $region = $this->getUserRegion();
                 $region_id = $this->getUserRegionid();
                 $path = $nation . " / " . $region;
@@ -128,7 +123,7 @@ class MY_Controller extends MX_Controller
                 $user_statiton_id = $region_id;
                 $statiton_above = $nation;
             } else if ($user_level == '3') {
-                $nation = "KENYA";
+                $nation = "NVIP";
                 $region = $this->getUserRegion();
                 $county = $this->getUserCounty();
                 $county_id = $this->getUserCountyid();
@@ -137,7 +132,7 @@ class MY_Controller extends MX_Controller
                 $user_statiton_id = $county_id;
                 $statiton_above = $region;
             } else if ($user_level == '4') {
-                $nation = "KENYA";
+                $nation = "NVIP";
                 $region = $this->getUserRegion();
                 $county = $this->getUserCounty();
                 $subcounty = $this->getUserSubcounty();
@@ -147,7 +142,7 @@ class MY_Controller extends MX_Controller
                 $user_statiton_id = $subcounty_id;
                 $statiton_above = $county;
             } else {
-                $nation = "KENYA";
+                $nation = "NVIP";
                 $region = $this->getUserRegion();
                 $county = $this->getUserCounty();
                 $subcounty = $this->getUserSubcounty();
@@ -210,20 +205,6 @@ class MY_Controller extends MX_Controller
         $title = 'NVIP Chanjo';
         return $title;
     }
-
-    function getnumber_email(){
-        $mb = imap_open("{chi-rs31.websitehostserver.net:993/imap/ssl/novalidate-cert}INBOX", 'victor@wkdesigns.co.ke', 'smartguy123')
-        or die('Cannot connect: ' . print_r(imap_errors(), true));
-
-        //$messageCount = imap_num_msg($mb);
-        $data['message_count'] = imap_num_msg($mb);
-
-
-
-        //return $messageCount;
-
-    }
-
 
 
 }

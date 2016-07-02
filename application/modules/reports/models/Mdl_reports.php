@@ -4,7 +4,7 @@ class Mdl_Reports extends CI_Model {
 
 var $order = array('order' => 'desc');
 var $column = array('transaction_date','station','type','to_from','vaccine_name','batch','expiry','quantity','balance');
-private $db = null;
+
 
 	function __construct() {
 		parent::__construct();
@@ -71,6 +71,20 @@ private $db = null;
 		$this->db->where('level',$level);
 		return $query->result();
 	}
+
+    function get_total_population($station,$level) {
+        $call_procedure = "call get_total_population('$station',$level)";
+        $query = $this->db->query($call_procedure);
+        $query->next_result();
+        return $query->result_array();
+    }
+
+    function get_vaccine_balance($station,$vaccine_id) {
+        $call_procedure = 'call get_vaccine_balance("'.$station.'",'.$vaccine_id.')';
+        $query = $this->db->query($call_procedure);
+        $query->next_result();
+        return $query->result_array();
+    }
 
 
 }

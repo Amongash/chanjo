@@ -185,8 +185,9 @@
 
         $('#date_issued').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker('setDate', null);
         // Add another row in the form on click add
+        var $form = $('#stock_issue .add');
 
-        $(document).on('click', '#stock_issue .add', function () {
+        function clone() {
 
             var thisRow = $('#stock_issue tr:last');
             var cloned_object = $(thisRow).clone();
@@ -236,7 +237,7 @@
 
             cloned_object.insertAfter(thisRow).find('input').val('');
 
-        });
+        };
         // Remove a row from the form
         $('#stock_issue').delegate('.remove', 'click', function () {
              if ( $('#stock_issue tbody tr').length == 1) return;
@@ -345,7 +346,7 @@
             // e.unbind(); //unbind. to stop multiple form submit.
         });
 
-
+        
         $(document).on('change', '.issued_to', function () {
             var stock_row = $(this);
             var selected_vaccine =  $('.vaccine').val();
@@ -409,17 +410,14 @@
 
            $(".remaining_quantity").each(function(){  
 
-                var remaining = retrieveFormValues_Array('remaining');
-                console.log(remaining);
-                var total;
-                remaining.reduce(function(prev, cur) {
-                     total = parseInt(prev) + parseInt(cur);
-                    return total;
-                });
-        
-                var remainder = total;
+                var total = $(".total_quantity").val();  
+                var allocated = $(".allocated_quantity").val();        
+                var remainder = total-allocated;
+                console.log(remainder);
                 if (remainder>0 && !isNaN(remainder)) {
                     $(this).val(remainder);
+                    $form.on( "click", clone );
+
                 } else{
                     $(this).val("");
                 };
@@ -445,22 +443,6 @@
         });
 
 
-        // function calculate_remainder(){
-        //     $(".remaining").each(function(){  
-        //         var stock_row = $(this);
-        //         var bal = stock_row.closest("tr").find(".available_quantity").val();
-        //         var issued = stock_row.closest("tr").find(".amt_issued").val();
-                
-
-        //         var remainder = bal-issued;
-        //         if (remainder>0 && !isNaN(remainder)) {
-        //             stock_row.closest("tr").find(".remaining").val(remainder);
-        //         } else{
-        //             stock_row.closest("tr").find(".remaining").val("");
-        //         };
-                
-        //     });
-        // }
 
         function load_balance(selected_vaccine) {
 

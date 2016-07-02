@@ -11,14 +11,23 @@ class Users extends MY_Controller
     }
 
     function index(){
+        $this->load->library('user_agent'); 
         $data['module']="users";
         $data['view_file']="login_form";
         $data['main_title'] = $this->get_title();
-
+        
         if(!isset($this->session->userdata['logged_in'])){
           echo Modules::run('template/home', $data);
         }else{
-          redirect('dashboard');
+            // user is authenticated, lets see if there is a redirect:
+            if( $this->session->userdata('redirect_back') ) {
+                $redirect_url = $this->session->userdata('redirect_back');  // grab value and put into a temp variable so we unset the session value
+                $this->session->unset_userdata('redirect_back');
+                redirect( $redirect_url );
+            }else{
+                redirect('dashboard');
+            }
+            
         }
 
     }
@@ -275,6 +284,7 @@ class Users extends MY_Controller
     function login_process()
     {
         $this->load->library('form_validation');
+        $this->load->library('user_agent');
         $this->form_validation->set_rules('username', 'Username', 'trim|required');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
 
@@ -324,12 +334,20 @@ class Users extends MY_Controller
 
 
                     // Add user data in session
-                     $this->session->set_userdata('logged_in', $userdata);
-
+                    $this->session->set_userdata('logged_in', $userdata);
+                    // save the redirect_back data from referral url (where user first was prior to login)
+                    $this->session->set_userdata('redirect_back', $this->agent->referrer() );  
 
                      if(!empty($this->session->has_userdata('logged_in'))){
-                     
-                        redirect('dashboard');
+                        // user is authenticated, lets see if there is a redirect:
+                        if( $this->session->userdata('redirect_back') ) {
+                            $redirect_url = $this->session->userdata('redirect_back');  // grab value and put into a temp variable so we unset the session value
+                            $this->session->unset_userdata('redirect_back');
+                            redirect( $redirect_url );
+                        }else{
+                            redirect('dashboard');
+                        }
+                        
 
                      }else{
                         show_error('Please contact your system administrator.');
