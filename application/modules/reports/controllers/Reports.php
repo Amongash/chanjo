@@ -535,6 +535,213 @@ class Reports extends MY_Controller
         $this -> load -> view("reports/stock_summary",$data);
       }
 
+      function performance_ranking(){
+        Modules::run('secure_tings/is_logged_in');
+      //  $this->load->model('vaccines/mdl_vaccines');
+      //  $this->load->model('users/mdl_user_levels');
+        $this->load->model('region/mdl_region');
+        $this->load->model('dashboard/mdl_dashboard');
+        $maxdate=date('Y-m-d');
+        $mindate=new DateTime(date('Y-m-d'));
+        $interval = new DateInterval('P12M');
+        $mindate=$mindate->sub($interval)->format('Y-m-d');
+        $user_object = $this->get_user_object();
+        $level = $user_object['user_level'];
+        $station = $user_object['user_statiton'];
+
+        echo '<pre>',print_r($user_object),'</pre>';exit;
+
+
+        if ($level==1) {
+          //get all regions
+
+          $query = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine1);
+
+          $query_population = $this->mdl_dashboard->get_population_national();
+          echo '<pre>',print_r($query1),'</pre>';exit;
+
+
+        }elseif ($level == 2) {
+          //get all counties
+          $column_id='region_id';
+
+          $query1 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine1,$region_id,$column_id);
+          $query2 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine2,$region_id,$column_id);
+          $query3 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine3,$region_id,$column_id);
+          $query_population = $this->mdl_dashboard->get_population_region($station);
+
+          //echo '<pre>',print_r($query_population),'</pre>';exit;
+
+        }elseif ($level == 3) {
+          //get all subcounties
+          $column_id='county_id';
+
+          $query1 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine1,$county_id,$column_id);
+          $query2 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine2,$county_id,$column_id);
+          $query3 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine3,$county_id,$column_id);
+          $query_population = $this->mdl_dashboard->get_population_county($station);
+
+
+        }elseif ($level == 4) {
+          $column_id='subcounty_id';
+
+          $query1 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine1,$subcounty_id,$column_id);
+          $query2 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine2,$subcounty_id,$column_id);
+          $query3 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine3,$subcounty_id,$column_id);
+          $query_population = $this->mdl_dashboard->get_population_subcounty($station);
+
+
+       }else {
+         $column_id='facility_name';
+
+         $query1 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine1,$station,$column_id);
+         $query2 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine2,$station,$column_id);
+         $query3 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine3,$station,$column_id);
+         $query_population = $this->mdl_dashboard->get_facility_population($station);
+
+
+         //echo '<pre>',print_r(($population)),'</pre>';exit;
+
+       }
+       $population=$query_population[0]->population;
+
+
+        $data['module'] = "reports";
+        $data['view_file'] = "performance_ranking";
+        $data['section'] = "Reports";
+        $data['subtitle'] = "Performance Ranking";
+
+        $data['page_title'] = "Performance Ranking";
+        $data['user_object'] = $this->get_user_object();
+        $data['main_title'] = $this->get_title();
+        //breadcrumbs
+        $this->load->library('make_bread');
+        $this->make_bread->add('Reports', '', 0);
+        $this->make_bread->add('Performance Ranking', '', 0);
+        $data['breadcrumb'] = $this->make_bread->output();
+        //$this->output->enable_profiler(TRUE);
+        echo Modules::run('template/' . $this->redirect($this->session->userdata['logged_in']['user_group']), $data);
+
+      }
+
+      function view_population(){
+        Modules::run('secure_tings/is_logged_in');
+        $this->load->model('vaccines/mdl_vaccines');
+        $this->load->model('users/mdl_user_levels');
+        $this->load->model('region/mdl_region');
+        $this->load->model('dashboard/mdl_dashboard');
+        $user_object = $this->get_user_object();
+        $level = $user_object['user_level'];
+        $station = $user_object['user_statiton'];
+
+
+        $data['module'] = "reports";
+        $data['view_file'] = "view_population";
+        $data['section'] = "Population";
+        $data['subtitle'] = "Population";
+
+        $data['page_title'] = "Population";
+        $data['user_object'] = $this->get_user_object();
+
+        $data['main_title'] = $this->get_title();
+
+        if ($level==1) {
+
+          $query_population = $this->mdl_dashboard->get_population_national();
+
+
+        }elseif ($level == 2) {
+
+          $query_population = $this->mdl_dashboard->get_population_region($station);
+
+        }elseif ($level == 3) {
+
+          $query_population = $this->mdl_dashboard->get_population_county($station);
+
+        }elseif ($level == 4) {
+
+          $query_population = $this->mdl_dashboard->get_population_subcounty($station);
+
+       }else {
+
+         $query_population = $this->mdl_dashboard->get_facility_population($station);
+         //
+
+       }
+
+
+       $population=$query_population[0]->population;
+
+       //echo '<pre>',print_r(($station)),'</pre>';exit;
+        //breadcrumbs
+        $this->load->library('make_bread');
+        $this->make_bread->add('Reports', '', 0);
+        $this->make_bread->add('Population Edit', '', 0);
+        $data['breadcrumb'] = $this->make_bread->output();
+        $data['population'] = $population;
+        $data['station'] = $station;
+        $data['message'] = '';
+        //$this->output->enable_profiler(TRUE);
+        echo Modules::run('template/' . $this->redirect($this->session->userdata['logged_in']['user_group']), $data);
+
+      }
+
+      function edit_population($population='NULL'){
+
+        $user_object = $this->get_user_object();
+        $level = $user_object['user_level'];
+        $station = $user_object['user_statiton'];
+
+        if ($level==1) {
+
+          $table='tbl_population';
+          $field='population';
+          $where_val='id';
+          $station=1;
+
+        }elseif ($level == 2) {
+          $table='tbl_population';
+          $field='under_one_population';
+          $where_val='region_name';
+
+
+
+        }elseif ($level == 3) {
+          $table='tbl_counties';
+          $field='under_one_population';
+          $where_val='county_name';
+
+
+
+        }elseif ($level == 4) {
+          $table='tbl_subcounties';
+          $field='under_one_population';
+          $where_val='subcounty_name';
+
+
+
+       }else {
+         $table='tbl_facilities';
+         $field='under_one_population';
+         $where_val='facility_name';
+
+
+
+       }
+
+        $this->db->set($field, $population);
+        $this->db->where($where_val, $station);
+        $this->db->update($table);
+
+        $data['population'] = $population;
+        $data['station'] = $user_object['user_statiton'];
+        $data['message'] = 'Population was updated';
+
+        $this -> load -> view("reports/view_population",$data);
+
+      }
+
+
       function system_usage(){
           echo "You are here";
       }

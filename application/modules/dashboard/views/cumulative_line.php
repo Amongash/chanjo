@@ -10,10 +10,13 @@ $(function () {
             text: <?php echo $station; ?>,
             x: -20 //center
         },
-        colors: ['#C81919', '#199EC8'],
+        colors: ['#C81919', '#199EC8','#0a3f50','#5ebbd8'],
         subtitle: {
             text: 'Source: ',
             x: -20
+        },
+        credits: {
+            enabled: false
         },
         xAxis: {
             categories: <?php echo $time_data; ?>
@@ -41,8 +44,15 @@ $(function () {
             name: 'Cumulative Population Target',
             data:  <?php echo $cumulative_population; ?>
         }, {
-            name: <?php echo $vaccine; ?> ,
+            name: <?php echo $vaccine1; ?> ,
             data: <?php echo $cumulative_antigen_administered; ?>
+        },{
+            name: <?php echo $vaccine2; ?> ,
+            data: <?php echo $cumulative_antigen_administered2; ?>
+        },
+        {
+            name: <?php echo $vaccine3; ?> ,
+            data: <?php echo $cumulative_antigen_administered3; ?>
         }]
     });
 });

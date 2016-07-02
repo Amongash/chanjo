@@ -14,6 +14,9 @@ $(function () {
             text: 'Source: ',
             x: -20
         },
+        credits: {
+            enabled: false
+        },
         xAxis: {
             categories: <?php echo $time_data; ?>
         },
