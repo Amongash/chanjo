@@ -197,50 +197,53 @@ Modules::run('secure_tings/is_logged_in');
 
    }
 
-   function vaccineBalancemos($station='NULL',$population='NULL'){
+   function vaccineBalancemos($level='NULL' ,$station='NULL'){
      $info['user_object'] = $this->get_user_object();
      $user_level = $info['user_object']['user_level'];
 
      if ($station=='NULL') {
        $station = $info['user_object']['user_statiton'];
      }
+     if ($level=='NULL') {
+       $level= $info['user_object']['user_level'];
+     }
      $station=str_replace('%20',' ',$station);
 
      $this->load->model('mdl_dashboard');
 
-     if ($population=='NULL') {
 
-     if ($user_level=='1') {
-       $population = $this->mdl_dashboard->get_population_national();
-       $pop=json_decode(json_encode($population),true);
-       $population=(int)$pop[0]['population'];
 
-     }elseif ($user_level == '2') {
-       $population = $this->mdl_dashboard->get_population_region($station);
-       $pop=json_decode(json_encode($population),true);
-       $population=(int)$pop[0]['population'];
-     }elseif ($user_level == '3') {
-       $population = $this->mdl_dashboard->get_population_county($station);
-       $pop=json_decode(json_encode($population),true);
-       $population=(int)$pop[0]['population'];
-     }elseif ($user_level == '4') {
-      $population = $this->mdl_dashboard->get_population_subcounty($station);
-      $pop=json_decode(json_encode($population),true);
-      $population=(int)$pop[0]['population'];
+     if ($level == 1) {
+       $query_population = $this->mdl_dashboard->get_population_national();
+       $population=$query_population[0]->population;
+
+     }elseif ($level == 2) {
+       $query_population = $this->mdl_dashboard->get_population_region($station);
+       $population=$query_population[0]->population;
+
+     }elseif ($level == 3) {
+       $query_population  = $this->mdl_dashboard->get_population_county($station);
+       $population=$query_population[0]->population;
+     }elseif ($level == 4) {
+      $query_population = $this->mdl_dashboard->get_population_subcounty($station);
+      $population=$query_population[0]->population;
     }else {
-      $population = $this->mdl_dashboard->get_population_facility($station);
-      $pop=json_decode(json_encode($population),true);
-      $population=(int)$pop[0]['population'];
+      $query_population = $this->mdl_dashboard->get_facility_population($station);
+      $population=$query_population[0]->population;
+
+    }
+    if ($population==0) {
+      echo '<div style="margin:5%;font-size:3em;font-weight:400;"> Error! Please make sure Population for this station is not zero.</div>';exit;
     }
 
-   }
-   $query = $this->mdl_dashboard->get_stock_balance($station);
+
+     $query = $this->mdl_dashboard->get_stock_balance($station);
 
 
      $new=json_decode(json_encode($query),true);
      $category_data=[];
      $series_data=[];
-     //echo '<pre>',print_r($new),'</pre>';exit;
+
      foreach ($new as $key =>$value ) {
 
        $category_data[]=$value['vaccine_name'];
@@ -271,49 +274,50 @@ Modules::run('secure_tings/is_logged_in');
      $this -> load -> view("dashboard",$data);
    }
 
-   function positivecoldchain($escalate,$station){
+   function positivecoldchain($level='NULL',$station='NULL'){
 
 
      $station=str_replace('%20',' ',$station);
 
      $info['user_object'] = $this->get_user_object();
 
-     if ($escalate =='NULL' && $station =='NULL') {
+     if ($level =='NULL' && $station =='NULL') {
        $data['user_level']  = $info['user_object']['user_level'];
        $station = $info['user_object']['user_statiton'];
-       $escalate= $info['user_object']['user_level'];
+       $level= $info['user_object']['user_level'];
      }else {
 
-       $data['user_level']  = $escalate;
+       $data['user_level']  = $level;
        $station = $station;
      }
 
      $this->load->model('mdl_dashboard');
 
-     if ($escalate=='1') {
+     if ($level=='1') {
 
-       $query_total = $this->mdl_dashboard->get_vaccine_volume_national($station);
-       $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume_national($station);
-       $total_capacity = $this->mdl_dashboard->get_fridge_cold_chain_capacity_national($station);
+       $query_total = $this->mdl_dashboard->get_vaccine_volume($station);
+       $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume($station);
+       $total_capacity = $this->mdl_dashboard->get_fridge_cold_chain_capacity($station);
 
-     }elseif ($escalate == '2') {
+     }elseif ($level == '2') {
 
-       $query_total = $this->mdl_dashboard->get_vaccine_volume_national($station);
-       $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume_national($station);
-       $total_capacity = $this->mdl_dashboard->get_fridge_cold_chain_capacity_national($station);
+       $query_total = $this->mdl_dashboard->get_vaccine_volume($station);
+       $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume($station);
+       $total_capacity = $this->mdl_dashboard->get_fridge_cold_chain_capacity($station);
 
-     }elseif ($escalate == '3') {
+     }elseif ($level == '3') {
 
-       $query_total = $this->mdl_dashboard->get_vaccine_volume_national($station);
-       $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume_national($station);
-       $total_capacity = $this->mdl_dashboard->get_fridge_cold_chain_capacity_national($station);
-     }elseif ($escalate == '4') {
+       $query_total = $this->mdl_dashboard->get_vaccine_volume($station);
+       $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume($station);
+       $total_capacity = $this->mdl_dashboard->get_fridge_cold_chain_capacity($station);
+     }elseif ($level == '4') {
 
-       $query_total = $this->mdl_dashboard->get_vaccine_volume_national($station);
-       $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume_national($station);
-       $total_capacity = $this->mdl_dashboard->get_fridge_cold_chain_capacity_national($station);
+       $query_total = $this->mdl_dashboard->get_vaccine_volume($station);
+       $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume($station);
+       $total_capacity = $this->mdl_dashboard->get_fridge_cold_chain_capacity($station);
     }else {
-      return coverageFacility($station);
+      echo '<div style="margin:5%;font-size:3em;font-weight:400;"> </div>';exit;
+
     }
   //  echo '<pre>',print_r($query_total),'</pre>';
   //  echo '<pre>',print_r($query_opv),'</pre>';
@@ -336,16 +340,16 @@ Modules::run('secure_tings/is_logged_in');
      $this -> load -> view("pie_template",$data);
    }
 
-   function negativecoldchain($escalate,$station){
+   function negativecoldchain($level='NULL',$station='NULL'){
 
      $station=str_replace('%20',' ',$station);
 
      $info['user_object'] = $this->get_user_object();
 
-     if ($escalate =='NULL' && $station =='NULL') {
+     if ($level =='NULL' && $station =='NULL') {
        $data['user_level']  = $info['user_object']['user_level'];
        $station = $info['user_object']['user_statiton'];
-       $escalate= $info['user_object']['user_level'];
+       $level= $info['user_object']['user_level'];
      }else {
 
        $data['user_level']  = $escalate;
@@ -354,8 +358,8 @@ Modules::run('secure_tings/is_logged_in');
 
 
      $this->load->model('mdl_dashboard');
-     $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume_national();
-     $total_capacity = $this->mdl_dashboard->get_freezer_cold_chain_capacity_national();
+     $query_opv = $this->mdl_dashboard->get_opv_vaccine_volume($station);
+     $total_capacity = $this->mdl_dashboard->get_freezer_cold_chain_capacity($station);
      $total_capacity=json_decode(json_encode($total_capacity),true);
      $query_opv=json_decode(json_encode($query_opv),true);
      $negativecoldchain=$query_opv[0]['volume'];
@@ -366,11 +370,12 @@ Modules::run('secure_tings/is_logged_in');
      $data['legend'] = "Litres";
      $data['colors'] = "['#008080','#6AF9C4']";
      $data['remaining_volume'] = json_encode((float)$unusedcapacity);
-     $data['piedata'] = json_encode((float)$opv_volume);
+     $data['piedata'] = json_encode((float)$negativecoldchain);
      $this -> load -> view("pie_template",$data);
    }
 
-   function coverage($station='NULL',$escalate='NULL'){
+   function coverage($level='NULL',$station='NULL'){
+
      $info['user_object'] = $this->get_user_object();
      $user_level = $info['user_object']['user_level'];
      $this->load->model('mdl_dashboard');
@@ -379,13 +384,13 @@ Modules::run('secure_tings/is_logged_in');
      $interval = new DateInterval('P12M');
      $mindate=$mindate->sub($interval)->format('Y-m-d');
 
-     if ($escalate =='NULL' && $station =='NULL') {
+     if ($level =='NULL' && $station =='NULL') {
        $data['user_level']  = $info['user_object']['user_level'];
        $station = $info['user_object']['user_statiton'];
-       $escalate= $info['user_object']['user_level'];
+       $level= $info['user_object']['user_level'];
      }else {
 
-       $data['user_level']  = $escalate;
+       $data['user_level']  = $level;
        $station_id = $station;
      }
 
@@ -395,25 +400,25 @@ Modules::run('secure_tings/is_logged_in');
      $this->load->model('mdl_dashboard');
 
 
-     if ($escalate=='1') {
+     if ($level == 1) {
 
        $query = $this->mdl_dashboard->get_national_coverage($maxdate,$mindate);
 
-     }elseif ($escalate == '2') {
+     }elseif ($level == 2) {
 
        $query = $this->mdl_dashboard->get_region_coverage($maxdate,$mindate,$station);
 
-     }elseif ($escalate == '3') {
+     }elseif ($level == 3) {
 
        $query = $this->mdl_dashboard->get_county_coverage($maxdate,$mindate,$station);
 
-     }elseif ($escalate == '4') {
+     }elseif ($level == 4) {
 
       $query = $this->mdl_dashboard->get_subcounty_coverage($maxdate,$mindate,$station);
 
     }else {
 
-      return coverageFacility($station);
+      return $this->coverageFacility($station);
 
     }
 
@@ -450,7 +455,7 @@ Modules::run('secure_tings/is_logged_in');
      }
      //echo '<pre>',print_r($time_data),'</pre>';exit;
      $data['graph_title'] = "Coverage";
-     $data['graph_id'] = "coverage";
+     $data['graph_id'] = "mycoverage";
      $data['legend'] = "units here";
      $data['colors'] = "['#008080','#6AF9C4']";
 
@@ -501,7 +506,7 @@ Modules::run('secure_tings/is_logged_in');
      if ($query[0]['population']==0 || $query[0]['population']=='') {
        $population = $this->mdl_dashboard->get_facility_population($station);
        $pop=json_decode(json_encode($population),true);
-       $population=(int)$pop[0]['under_one_population'];
+       $population=(int)$pop[0]['population'];
      }else {
        $population=(int)$query[0]['population'];
      }
@@ -655,7 +660,7 @@ Modules::run('secure_tings/is_logged_in');
 
      }
 
-     function cumulative_coverage($level='NULL',$station='NULL',$vaccine='NULL',$region_id='NULL',$county_id='NULL',$subcounty_id='NULL'){
+     function cumulative_coverage($level='NULL',$station='NULL',$vaccine1='NULL',$vaccine2='NULL',$vaccine3='NULL',$region_id='NULL',$county_id='NULL',$subcounty_id='NULL'){
        $info['user_object'] = $this->get_user_object();
        $user_level = $info['user_object']['user_level'];
        $this->load->model('mdl_dashboard');
@@ -663,6 +668,8 @@ Modules::run('secure_tings/is_logged_in');
        $mindate=new DateTime(date('Y-m-d'));
        $interval = new DateInterval('P12M');
        $mindate=$mindate->sub($interval)->format('Y-m-d');
+
+
 
        if ($level =='NULL' || $level =='undefined') {
 
@@ -673,26 +680,33 @@ Modules::run('secure_tings/is_logged_in');
          $data['user_level']  = $level;
        }
 
-       if ($vaccine =='NULL') {
-         $vaccine = 'bcg';
-       }
-
        if ($station =='NULL') {
          $station = $info['user_object']['user_statiton'];
+       }
+
+       if ($vaccine1 =='undefined' || $vaccine2 =='undefined' || $vaccine3 =='undefined') {
+
+         $vaccine1='bcg';$vaccine2='opv';$vaccine3='opv1';
        }
 
 
 
        $station=str_replace('%20',' ',$station);
-       $vaccine=str_replace('%20',' ',$vaccine);
-       $vaccine=str_replace('%60','`',$vaccine);
+       $vaccine1=str_replace('%20',' ',$vaccine1);
+       $vaccine2=str_replace('%20',' ',$vaccine2);
+       $vaccine3=str_replace('%20',' ',$vaccine3);
+       $vaccine1=str_replace('%60','`',$vaccine1);
+       $vaccine2=str_replace('%60','`',$vaccine2);
+       $vaccine3=str_replace('%60','`',$vaccine3);
 
        $this->load->model('mdl_dashboard');
 
 
        if ($level==1) {
 
-         $query = $this->mdl_dashboard->cumulative_coverage_national($maxdate,$mindate,$vaccine);
+         $query1 = $this->mdl_dashboard->cumulative_coverage_national($maxdate,$mindate,$vaccine1);
+         $query2 = $this->mdl_dashboard->cumulative_coverage_national($maxdate,$mindate,$vaccine2);
+         $query3 = $this->mdl_dashboard->cumulative_coverage_national($maxdate,$mindate,$vaccine3);
          $query_population = $this->mdl_dashboard->get_population_national();
          $population=$query_population[0]->population;
 
@@ -701,7 +715,9 @@ Modules::run('secure_tings/is_logged_in');
        }elseif ($level == 2) {
          $column_id='region_id';
 
-         $query = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine,$region_id,$column_id);
+         $query1 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine1,$region_id,$column_id);
+         $query2 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine2,$region_id,$column_id);
+         $query3 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine3,$region_id,$column_id);
          $query_population = $this->mdl_dashboard->get_population_region($station);
          $population=$query_population[0]->population;
          //echo '<pre>',print_r($query_population),'</pre>';exit;
@@ -709,23 +725,31 @@ Modules::run('secure_tings/is_logged_in');
        }elseif ($level == 3) {
          $column_id='county_id';
 
-         $query = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine,$county_id,$column_id);
+         $query1 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine1,$county_id,$column_id);
+         $query2 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine2,$county_id,$column_id);
+         $query3 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine3,$county_id,$column_id);
          $query_population = $this->mdl_dashboard->get_population_county($station);
          $population=$query_population[0]->population;
 
        }elseif ($level == 4) {
          $column_id='subcounty_id';
 
-         $query = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine,$subcounty_id,$column_id);
+         $query1 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine1,$subcounty_id,$column_id);
+         $query2 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine2,$subcounty_id,$column_id);
+         $query3 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine3,$subcounty_id,$column_id);
          $query_population = $this->mdl_dashboard->get_population_subcounty($station);
          $population=$query_population[0]->population;
 
       }else {
-        $column_id='subcounty_id';
+        $column_id='facility_name';
 
-        $query = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine,$station,$column_id);
+        $query1 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine1,$station,$column_id);
+        $query2 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine2,$station,$column_id);
+        $query3 = $this->mdl_dashboard->cumulative_coverage($maxdate,$mindate,$vaccine3,$station,$column_id);
         $query_population = $this->mdl_dashboard->get_facility_population($station);
+
         $population=$query_population[0]->population;
+        //echo '<pre>',print_r(($population)),'</pre>';exit;
 
       }
 
@@ -734,10 +758,10 @@ Modules::run('secure_tings/is_logged_in');
       $cumulative_antigen_administered=[];
       $cumulative_population=[];
 
-      $runningSum = 0;
+      $runningSum = 0;$runningSum2 = 0;$runningSum3 = 0;
       $runningpop = 0;
 
-         foreach ($query as $number => $key) {
+         foreach ($query1 as $number => $key) {
              $runningSum += $key->antigen;
              $time_data[]=date('M-Y',strtotime($key->months));
              $cumulative_antigen_administered[] = $runningSum;
@@ -745,14 +769,29 @@ Modules::run('secure_tings/is_logged_in');
              $cumulative_population[] = $runningpop;
          }
 
+         foreach ($query2 as $number => $key) {
+             $runningSum2 += $key->antigen;
+             $cumulative_antigen_administered2[] = $runningSum2;
+         }
+
+         foreach ($query3 as $number => $key) {
+             $runningSum3 += $key->antigen;
+             $cumulative_antigen_administered3[] = $runningSum3;
+         }
+         //echo '<pre>',print_r($vaccine1),'</pre>';exit;
+
+
          $data['cumulative_antigen_administered'] = json_encode($cumulative_antigen_administered);
+         $data['cumulative_antigen_administered2'] = json_encode($cumulative_antigen_administered2);
+         $data['cumulative_antigen_administered3'] = json_encode($cumulative_antigen_administered3);
          $data['cumulative_population'] = json_encode($cumulative_population);
          $data['colors'] = "['#008080','#6AF9C4']";
-         //$data['graph_title'] = "Stock Balance";
-         //$data['graph_yaxis_title'] = "Stock Balance";
+
          $data['graph_id'] = "coverage_cumulative";
-         $data['vaccine'] = json_encode($vaccine.' doses Administered');
-         $data['station'] = json_encode($vaccine.' Cumulative Coverage for '.$station);
+         $data['vaccine1'] = json_encode($vaccine1.' doses Administered');
+         $data['vaccine2'] = json_encode($vaccine2.' doses Administered');
+         $data['vaccine3'] = json_encode($vaccine3.' doses Administered');
+         $data['station'] = json_encode(' Immunization Chart for '.$station);
 
 
 

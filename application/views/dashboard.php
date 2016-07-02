@@ -14,6 +14,9 @@
         title: {
             text: '<?php echo $graph_title; ?>'
         },
+        credits: {
+            enabled: false
+        },
         subtitle: {
             text: 'Source: '
         },

@@ -14,6 +14,9 @@ $('#<?php echo $graph_id; ?>').highcharts({
     title: {
         text: '<?php echo $graph_title; ?>'
     },
+    credits: {
+            enabled: false
+        },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>: <b>{point.y} Lts</b>'
     },

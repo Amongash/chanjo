@@ -268,7 +268,7 @@ class Mdl_dashboard extends CI_Model
 
         return $query;
     }
-    function get_vaccine_volume_national($station)
+    function get_vaccine_volume($station)
     {
       $this->db->select('sum(balance*vaccine_volume)/1000 as volume');
       $this->db->from('v_vaccine_balance');
@@ -277,7 +277,7 @@ class Mdl_dashboard extends CI_Model
       return $query->result();
 
     }
-    function get_opv_vaccine_volume_national($station)
+    function get_opv_vaccine_volume($station)
     {
       $this->db->select('sum(balance*vaccine_volume)/1000 as volume');
       $this->db->from('v_vaccine_balance');
@@ -287,7 +287,7 @@ class Mdl_dashboard extends CI_Model
       return $query->result();
 
     }
-    function get_fridge_cold_chain_capacity_national($station)
+    function get_fridge_cold_chain_capacity($station)
     {
       $this->db->select('sum(vaccine_storage_volume) as total_volume');
       $this->db->from('v_fridges_overview');
@@ -298,7 +298,7 @@ class Mdl_dashboard extends CI_Model
       return $query->result();
 
     }
-    function get_freezer_cold_chain_capacity_national()
+    function get_freezer_cold_chain_capacity()
     {
       $this->db->select('sum(vaccine_storage_volume) as total_volume');
       $this->db->from('v_fridges_overview');
@@ -410,14 +410,14 @@ class Mdl_dashboard extends CI_Model
 
     }
 
-    function cumulative_coverage($maxdate,$mindate,$vaccine,$region_id,$column_id)
+    function cumulative_coverage($maxdate,$mindate,$vaccine,$station,$column_id)
     {
 
       $this->db->select("periodname as months, sum($vaccine) as antigen ");
       $this->db->from('v_coverage_overview');
       $this->db->where('periodname >=', $mindate);
       $this->db->where('periodname <=', $maxdate);
-      $this->db->where($column_id, $region_id);
+      $this->db->where($column_id, $station);
       $this->db->group_by('periodname');
       $this->db->order_by(`periodname`,'asc');
       $query = $this->db->get();

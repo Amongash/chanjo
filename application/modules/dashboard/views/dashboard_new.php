@@ -15,9 +15,18 @@
   margin-left: 2.6%;
   border-radius: 0 !important;
 }
+#btncoverage{
+  margin-left: 2.6%;
+  border-radius: 0 !important;
+}
 .modal-body{
   font-size: 1.2em !important;
 }
+.modal-dialog {
+    width: 80%; /* respsonsive width */
+    margin-left:10%; /* width/2) */
+}
+
 
 </style>
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
@@ -30,28 +39,6 @@
 
 
   <div class="form-inline row">
-
-    <select id="vaccines" name="vaccines" class="form-control custom-select  ">
-      <option value="NULL">- Select Vaccine -</option>
-      <option value="bcg">BCG </option>
-      <option value="opv">OPV 0 </option>
-      <option value="opv1">OPV 1 </option>
-      <option value="opv2">OPV 2 </option>
-      <option value="opv3">OPV 3 </option>
-      <option value="dpt1">DPT 1 </option>
-      <option value="dpt2">DPT 2 </option>
-      <option value="dpt3">DPT 3 </option>
-      <option value="pcv1">PCV 1 </option>
-      <option value="pcv2">PCV 2 </option>
-      <option value="pcv3">PCV 3 </option>
-      <option value="`measles 1`">Measles 1</option>
-      <option value="`measles 2`">Measles 2 </option>
-      <option value="`measles 3`">Measles 3 </option>
-      <option value="rota1">Rota 1  </option>
-      <option value="rota2">Rota 2 </option>
-
-    </select>
-
     <select id="levels" class=" form-control custom-select" >
       <option value="NULL">- Select Level -</option>
       <?php
@@ -110,10 +97,43 @@
 
         <div class="col-lg-12">
 
-            <h5 class="content-header text-info">Cumulative Coverage</h5>
+            <h5 class="content-header text-info">Immunization Chart</h5>
             </br>
-            <button type="button" id="actions" name="actions" data-toggle="modal" data-target="#myModal" class="btn btn-info btn-sm pull-left">Recommendations</button>
-            <div id="coverage_cumulative" name="coverage_cumulative"></div>
+            <div id="" name="" class="row">
+            <button type="button" id="actions" name="actions" data-toggle="modal" data-target="#myModal" class="btn btn-info btn-sm pull-left">View Recommendations</button>
+            <button type="button" id="btncoverage" name="btncoverage" data-toggle="modal" data-target="#myModalcoverage" class="btn btn-info btn-sm pull-left">View Coverage</button>
+          </div>
+            <div id="" name="" class="row" style="padding:5px;">
+
+
+
+                <div class="form-inline">
+         <p><strong  style="margin:5px;">Select vaccines(Max 3)</strong></p>
+         <input class="single-checkbox"type="checkbox" name="antigens[]" value="bcg">BCG
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="opv">OPV 0
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="opv1">OPV 1
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="opv2">OPV 2
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="opv3">OPV 3
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="dpt1">DPT 1
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="dpt2">DPT 2
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="dpt2">DPT 3
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="`measles 1`">MEASLES 1
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="`measles 2`">MEASLES 2
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="`measles 3`">MEASLES 3
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="pcv1">PCV 1
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="pcv2">PCV 2
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="pcv3">PCV 3
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="rota1">ROTA 1
+         <input class="single-checkbox" type="checkbox" name="antigens[]" value="rota2">ROTA 2
+                </div>
+
+
+
+
+              <div id="coverage_cumulative" name="coverage_cumulative"></div>
+
+
+            </div>
 
 
         </div>
@@ -187,19 +207,39 @@
 
           <p class="bg-info col-md-12" style="padding:1%;">
           <span class="badge ">Ideal</span>
-      If the <b>antigen line</b> (blue) appears <strong>close and above</strong> cummulative target polulation (red) please adjust...
+      If the <b>antigen line</b> (blue) appears <strong>close and above</strong> cummulative target polulation (red) you are doing Well. Click <a href="<?php echo base_url('reports/performance_ranking') ?>">here</a>  to view.
 
       </p>
           <p class="bg-warning col-md-12" style="padding:1%;">
   				<span class="badge">Incorrect</span>
-  		If the <b>antigen line</b> (blue) appears <strong>above</strong> cummulative target polulation (red) please adjust...
+  		If the <b>antigen line</b> (blue) appears <strong>above</strong> the population line separating widely,click <a href="<?php echo base_url('reports/view_population') ?>">here</a> to amend your target population
 
   		</p>
       <p class="bg-danger col-md-12" style="padding:1%;">
       <span class="badge">Incorrect</span>
-  If the <b>antigen line</b> (blue) appears <strong>below</strong> cummulative target polulation (red) please adjust...
+  If the <b>antigen line</b> (blue) appears <strong>below</strong> the population line separating widely. Check which of your facilities are contributing to this.Click <a id="pf" href="#">here</a> to see
 
   </p>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div id="myModalcoverage" class="modal large fade " tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Coverage</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="mycoverage" name="mycoverage" style="margin-bottom:1%;">
+
           </div>
       </div>
       <div class="modal-footer">
@@ -213,17 +253,29 @@
 <script type="text/javascript">
 
 var url="<?php echo base_url(); ?>";
-$('#myModal').on('shown.bs.modal', function () {
+$('#myModal,#myModalcoverage').on('shown.bs.modal', function () {
 })
+
+var limit = 3;
+$('input.single-checkbox').on('change', function(evt) {
+   if($(this).siblings(':checked').length >= limit) {
+       this.checked = false;
+       alert('Limit exceeded.You can only select a maximum of 3 Antigents')
+   }
+});
+
 
     ajax_fill_data('dashboard/vaccineBalance/NULL',"#stocks");
     ajax_fill_data('dashboard/vaccineBalancemos/NULL/NULL',"#mos");
     ajax_fill_data('dashboard/positiveColdchain/NULL/NULL',"#positive");
-    ajax_fill_data('dashboard/negativeColdchain',"#negative");
-    ajax_fill_data('dashboard/coverage/NULL',"#coverage");
-    ajax_fill_data('dashboard/cumulative_coverage/NULL/NULL/NULL',"#coverage_cumulative");
+    ajax_fill_data('dashboard/negativeColdchain/NULL/NULL',"#negative");
+    ajax_fill_data('dashboard/coverage/NULL/NULL',"#mycoverage");
+    ajax_fill_data('dashboard/cumulative_coverage/NULL/NULL/dpt1/dpt2/dpt3',"#coverage_cumulative");
 
     $('#regions,#counties,#subcounties,#facilities').hide();
+  //  $('#btncoverage').on('click', function(){
+
+      //  });
 
     $('#levels').on('change', function(){
       $('#regions,#counties,#subcounties,#facilities').val('NULL');
@@ -289,6 +341,12 @@ $('#myModal').on('shown.bs.modal', function () {
 
     $( "#filter_all" ).click(function() {
 
+      var vaccine_antigens = [];
+        $(':checkbox:checked').each(function(i){
+          vaccine_antigens[i] = $(this).val();
+        });
+        console.log(vaccine_antigens);
+
       var level=$('option:selected', '#levels').attr('data-id');
       var region_name=$('option:selected', '#regions').text();
       var region_id=$('option:selected', '#regions').val();
@@ -314,12 +372,12 @@ $('#myModal').on('shown.bs.modal', function () {
     var vaccine=$('option:selected', '#vaccines').val();
 
 
-      //ajax_fill_data('dashboard/vaccineBalance/'+name,"#stocks");
-      //ajax_fill_data('dashboard/vaccineBalancemos/'+name+'/'+population,"#mos");
-      ajax_fill_data('dashboard/cumulative_coverage/'+level+'/'+station+'/'+vaccine+'/'+region_id+'/'+county+'/'+subcounty+'/'+facility,"#coverage_cumulative");
-      ajax_fill_data('dashboard/coverage/NULL',"#coverage");
-      //ajax_fill_data('dashboard/negativeColdchain/'+a+'/'+name,"#negative");
-      //ajax_fill_data('dashboard/positiveColdchain/'+a+'/'+name,"#positive");
+      ajax_fill_data('dashboard/vaccineBalance/'+station,"#stocks");
+      ajax_fill_data('dashboard/vaccineBalancemos/'+level+'/'+station,"#mos");
+      ajax_fill_data('dashboard/cumulative_coverage/'+level+'/'+station+'/'+vaccine_antigens[0]+'/'+vaccine_antigens[1]+'/'+vaccine_antigens[2]+'/'+region_id+'/'+county+'/'+subcounty+'/'+facility,"#coverage_cumulative");
+      ajax_fill_data('dashboard/coverage/'+level+'/'+station,"#mycoverage");
+      ajax_fill_data('dashboard/negativeColdchain/'+level+'/'+station,"#negative");
+      ajax_fill_data('dashboard/positiveColdchain/'+level+'/'+station,"#positive");
 
 
     });
