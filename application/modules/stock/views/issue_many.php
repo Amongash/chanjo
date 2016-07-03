@@ -185,10 +185,10 @@
 
         $('#date_issued').datepicker({dateFormat: "yy-mm-dd", maxDate: 0}).datepicker('setDate', null);
         // Add another row in the form on click add
-        var $form = $('#stock_issue .add');
+        var form = $('#stock_issue .add');
+        var remainder = 0;
 
-        function clone() {
-
+         $(document).on('click', '#stock_issue .add', function () {
             var thisRow = $('#stock_issue tr:last');
             var cloned_object = $(thisRow).clone();
 
@@ -237,7 +237,8 @@
 
             cloned_object.insertAfter(thisRow).find('input').val('');
 
-        };
+        });
+
         // Remove a row from the form
         $('#stock_issue').delegate('.remove', 'click', function () {
              if ( $('#stock_issue tbody tr').length == 1) return;
@@ -413,10 +414,8 @@
                 var total = $(".total_quantity").val();  
                 var allocated = $(".allocated_quantity").val();        
                 var remainder = total-allocated;
-                console.log(remainder);
                 if (remainder>0 && !isNaN(remainder)) {
-                    $(this).val(remainder);
-                    $form.on( "click", clone );
+                    $(this).val(remainder);                    
 
                 } else{
                     $(this).val("");
@@ -430,9 +429,10 @@
                 var issued = stock_row.closest("tr").find(".amt_issued").val();
                 
 
-                var remainder = bal-issued;
-                if (remainder>0 && !isNaN(remainder)) {
-                    stock_row.closest("tr").find(".remaining").val(remainder);
+                var remaining = bal-issued;
+                console.log(remaining);
+                if (remaining>0 && !isNaN(remaining)) {
+                    stock_row.closest("tr").find(".remaining").val(remaining);
                 } else{
                     stock_row.closest("tr").find(".remaining").val("");
                 };
@@ -441,8 +441,8 @@
            
 
         });
-
-
+           
+       
 
         function load_balance(selected_vaccine) {
 

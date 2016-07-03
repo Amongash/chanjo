@@ -123,6 +123,9 @@
                                 <li>
                                     <a href="<?php echo site_url('order/list_orders'); ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Stock Requests</b> </a>
                                 </li>
+                                <li>
+                                    <a href="<?php echo site_url('reports/stock_allocation'); ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Stock Allocation</b> </a>
+                                </li>
 
                             </ul>
                         </li>

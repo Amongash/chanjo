@@ -127,8 +127,10 @@
                                 </li>
                                 <!-- <li> <a href="<?php //echo site_url('stock/transfer_stock');?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Transfer Stocks</b> </a> </li> -->
                                 <li>
-                                    <a href="<?php echo site_url("order/list_orders") ?>" class="left_nav_sub_active">
-                                        <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Stock Requests</b> </a>
+                                    <a href="<?php echo site_url('order/list_orders'); ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Stock Requests</b> </a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo site_url('reports/stock_allocation'); ?>"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Stock Allocation</b> </a>
                                 </li>
                                 <!--  <li> <a href="#" class="left_nav_sub_active"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Arrival Tracking</b> </a> </li> -->
                                 <!-- <li> <a href="#"> <span>&nbsp;</span> <i class="fa fa-circle"></i> <b>Settings</b> </a> </li> -->

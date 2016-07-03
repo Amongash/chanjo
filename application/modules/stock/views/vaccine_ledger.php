@@ -14,7 +14,7 @@
     </div>
     <div class="top_right_bar">
         <div class="top_right">
-            <div class="col-xs-6"> <a href="#" id="theButton" role="button" class="btn btn-primary">show batch summary</a>
+            <!-- <div class="col-xs-6"> <a href="#" id="theButton" role="button" class="btn btn-primary">show batch summary</a> -->
             </div>
         </div>
     </div>
